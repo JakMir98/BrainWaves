@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BrainWaves.Views.ScanPage">
+    <Grid>
+        <StackLayout Orientation="Vertical">
+            <Button x:Name="ScanButton" 
+                    Margin="10"
+                    Clicked="ScanButton_Clicked"
+                    Text="Scan" />
+            <ListView x:Name="scannedDeviceListView"
+                      Footer=""
+                      ItemTapped="FoundBluetoothDevicesListView_ItemTapped" />
+        </StackLayout>
+        <ActivityIndicator x:Name="IsBusyIndicator"
+                           Scale="0.3" />
+    </Grid>
+</ContentPage>

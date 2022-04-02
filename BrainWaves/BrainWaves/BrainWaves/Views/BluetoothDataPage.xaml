@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BrainWaves.Views.BluetoothDataPage">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="6*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.ColumnSpan="2"
+                    x:Name="InitButton"
+                    Margin="10"
+                    Clicked="InitalizeCommandButton_Clicked"
+                    Text="Explicit Init" />
+
+            <Button Grid.Row="1" Grid.Column="0"
+                    x:Name="StartReceivingButton"
+                    Margin="10"
+                    Clicked="StartReceivingButton_Clicked"
+                    Text="Start receiving" />
+
+            <Button Grid.Row="1" Grid.Column="1"
+                    x:Name="StopReceivingButton"
+                    Margin="10"
+                    Clicked="StopReceivingButton_Clicked"
+                    Text="Stop receiving" />
+
+            <Button Grid.Row="2" Grid.ColumnSpan="2"
+                    x:Name="DisconnectButton"
+                    Margin="10"
+                    Clicked="DisconnectButton_Clicked"
+                    Text="Disconnect" />
+
+            <Entry Grid.Row="3" Grid.Column="0"
+                   x:Name="CommandTxt"
+                   Text="ATZ"
+                   TextColor="Black"/>
+
+            <Button Grid.Row="3" Grid.Column="1"
+                    x:Name="SendCommadButton"
+                    Margin="10"
+                    Clicked="SendCommandButton_Clicked"
+                    Text="Send command" />
+
+            <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
+                <StackLayout>
+                    <Label x:Name="Output"
+                       TextColor="Black"
+                       VerticalOptions="CenterAndExpand" />
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
