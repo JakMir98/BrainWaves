@@ -1,6 +1,10 @@
-﻿using BrainWaves.Services;
+﻿using BrainWaves.Helpers;
 using BrainWaves.Views;
+using Rg.Plugins.Popup.Services;
 using System;
+using System.Globalization;
+using System.Threading;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,9 +15,10 @@ namespace BrainWaves
 
         public App()
         {
+            string language = Preferences.Get(Constants.PrefsCurrentLanguage, new CultureInfo(Constants.EnglishLanguageCode, false).Name);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(language, false);
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
 
@@ -27,6 +32,11 @@ namespace BrainWaves
 
         protected override void OnResume()
         {
+        }
+
+        public static async void ClosePopup()
+        {
+            await PopupNavigation.Instance.PopAsync();
         }
     }
 }

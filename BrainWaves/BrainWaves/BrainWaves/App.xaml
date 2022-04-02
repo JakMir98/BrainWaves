@@ -6,27 +6,91 @@
         Define global resources and styles here, that apply to all pages in your app.
     -->
     <Application.Resources>
-        <ResourceDictionary>
-            <Color x:Key="Primary">#2196F3</Color>
-            <Style TargetType="Button">
-                <Setter Property="TextColor" Value="White"></Setter>
-                <Setter Property="VisualStateManager.VisualStateGroups">
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Disabled">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#332196F3" />
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </Setter>
-            </Style>
-        </ResourceDictionary>        
+
+        <Color x:Key="PrimaryColor">#004004</Color>
+        <Color x:Key="PrimaryPurple">#614244</Color>
+        <Color x:Key="BackgroundColorDark">#222222</Color>
+        <Color x:Key="ButtonDisabledColor">#808080</Color>
+        
+        <Style x:Key="LabelStyleTitle" TargetType="Label">
+            <Setter Property="FontSize" Value="Title" />
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+
+        <Style x:Key="LabelStyleNormal" TargetType="Label">
+            <Setter Property="FontSize" Value="Default" />
+            <Setter Property="TextColor" Value="White" />
+        </Style>
+
+        <Style x:Key="ButtonStyleNormal" TargetType="Button">
+            <Setter Property="FontSize" Value="Small" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius">
+                <Setter.Value>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="iOS,Android" Value="30"></On>
+                        <On Platform="macOS,UWP" Value="60"></On>
+                    </OnPlatform>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark=ForestGreen}"/>
+            <Setter Property="HeightRequest">
+                <Setter.Value>
+                    <OnPlatform x:TypeArguments="x:Double">
+                        <On Platform="iOS,Android" Value="40"></On>
+                        <On Platform="macOS,UWP" Value="40"></On>
+                    </OnPlatform>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="WidthRequest" Value="200"/>
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark=ForestGreen}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="#332196F3" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SimpleEntry" TargetType="Entry">
+            <Setter Property="TextColor">
+                <Setter.Value>
+                    <OnPlatform x:TypeArguments="Color">
+                        <On Platform="iOS,Android,macOS" Value="#FFFFFF"></On>
+                        <On Platform="UWP" Value="#000000"></On>
+                    </OnPlatform>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
+            <Setter Property="WidthRequest" Value="300"/>
+            <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        </Style>
+
+        <Style x:Key="FramePopupStyle" TargetType="Frame">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="HasShadow" Value="True"/>
+            <Setter Property="CornerRadius" Value="40"/>
+            <Setter Property="BorderColor" Value="Black"/>
+            <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+            <Setter Property="VerticalOptions" Value="CenterAndExpand"/>
+        </Style>
+
+        <Style TargetType="NavigationPage">
+            <Setter Property="BarBackgroundColor" Value="{StaticResource PrimaryColor}" />
+            <Setter Property="BarTextColor" Value="White" />
+        </Style>
+        
     </Application.Resources>
 </Application>
