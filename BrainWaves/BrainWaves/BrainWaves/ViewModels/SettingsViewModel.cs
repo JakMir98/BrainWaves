@@ -1,4 +1,5 @@
 ﻿using BrainWaves.Helpers;
+using BrainWaves.Views;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,6 +16,10 @@ namespace BrainWaves.ViewModels
         private List<string> availableLanguages;
         private string selectedLanguage;
         private bool firstStartup = true;
+        private bool isAutomaticServiceChoosingActive;
+        private string serviceUUID;
+        private string sendCharacteristicUUID;
+        private string receiveCharacteristicUUID;
 
         public SettingsViewModel()
         {
@@ -28,6 +33,10 @@ namespace BrainWaves.ViewModels
 
             selectedLanguage = Preferences.Get(Constants.PrefsCurrentLanguage, 
                 new CultureInfo(Constants.EnglishLanguageCode, false).Name);
+            isAutomaticServiceChoosingActive = Preferences.Get(Constants.PrefsAutomaticServiceChossing, true);
+            serviceUUID = Preferences.Get(Constants.PrefsSavedServiceUUID, Resources.Strings.Resource.EmptyText);
+            sendCharacteristicUUID = Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Resources.Strings.Resource.EmptyText);
+            receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Resources.Strings.Resource.EmptyText);
 
             OSAppTheme currentTheme = Application.Current.RequestedTheme;
             if (currentTheme == OSAppTheme.Light)
@@ -68,6 +77,46 @@ namespace BrainWaves.ViewModels
             }
         }
 
+        public bool IsAutomaticServiceChoosingActive
+        {
+            get => isAutomaticServiceChoosingActive;
+            set
+            {
+                SetProperty(ref isAutomaticServiceChoosingActive, value);
+                Preferences.Set(Constants.PrefsAutomaticServiceChossing, value);
+            }
+        }
+
+        public string ServiceUUID
+        {
+            get => serviceUUID;
+            set
+            {
+                SetProperty(ref serviceUUID, value);
+                Preferences.Set(Constants.PrefsSavedServiceUUID, value);
+            }
+        }
+
+        public string SendCharacteristicUUID
+        {
+            get => sendCharacteristicUUID;
+            set
+            {
+                SetProperty(ref sendCharacteristicUUID, value);
+                Preferences.Set(Constants.PrefsSavedSendCharacteristicUUID, value);
+            }
+        }
+
+        public string ReceiveCharacteristicUUID
+        {
+            get => receiveCharacteristicUUID;
+            set
+            {
+                SetProperty(ref receiveCharacteristicUUID, value);
+                Preferences.Set(Constants.PrefsSavedReceiveCharacteristicUUID, value);
+            }
+        }
+
         private void HandleThemeChange(bool value)
         {
             if (value)
@@ -103,7 +152,7 @@ namespace BrainWaves.ViewModels
             }
             else
             {
-                Application.Current.MainPage = new AppShell();
+                Application.Current.MainPage = new ScanPage();
             }
         }
     }

@@ -22,11 +22,13 @@ namespace BrainWaves.ViewModels
         private bool isScanning = false;
         public ICommand ScanDevicesCommand { private set; get; }
         public ICommand StopScanningCommand { private set; get; }
+        public ICommand GoToSettingsCommand { private set; get; }
         public ScanViewModel()
         {
             Title = Resources.Strings.Resource.FindDevice;
             ScanDevicesCommand = new Command(async () => await ScanDevices());
             StopScanningCommand = new Command(async () => await StopScanning());
+            GoToSettingsCommand = new Command(async () => await GoToSettings());
         }
 
         public ObservableCollection<IDevice> GattDevices
@@ -127,6 +129,11 @@ namespace BrainWaves.ViewModels
         {
             await bluetoothAdapter.StopScanningForDevicesAsync();
             IsScanning = false;
+        }
+
+        private async Task GoToSettings()
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new SettingsPage());
         }
     }
 }

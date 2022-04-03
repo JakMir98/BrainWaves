@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
-             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings" xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings" 
+             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              Title="{Binding Title}"
              x:Name="ScanPageRef"
              BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
@@ -10,8 +11,15 @@
     <ContentPage.BindingContext>
         <viewModels:ScanViewModel/>
     </ContentPage.BindingContext>
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{Static resource:Resource.Settings}" Command="{Binding GoToSettingsCommand}"
+                 IconImageSource="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}"
+                 Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
     <Grid>
-        <StackLayout Orientation="Vertical" BackgroundColor="Black" Margin="20">
+        <StackLayout Orientation="Vertical" BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}" Margin="20">
             <Button  Style="{StaticResource ButtonStyleNormal}"
                     Margin="10" Command="{Binding ScanDevicesCommand}"
                     Text="{Static resource:Resource.ScanButtonText}" 

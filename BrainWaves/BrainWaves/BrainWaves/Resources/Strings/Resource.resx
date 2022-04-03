@@ -120,14 +120,26 @@
   <data name="ApplicationNeedPermissionText" xml:space="preserve">
     <value>Appliaction needs perrmission</value>
   </data>
+  <data name="AutomaticServiceChoosing" xml:space="preserve">
+    <value>Automatic service and characteristic choosing</value>
+  </data>
   <data name="BLEData" xml:space="preserve">
     <value>Bluetooth data</value>
+  </data>
+  <data name="CharacteristicReceiveUUIDLabel" xml:space="preserve">
+    <value>Receiving characteristic UUID</value>
+  </data>
+  <data name="CharacteristicSendUUIDLabel" xml:space="preserve">
+    <value>Sending characteristic UUID</value>
   </data>
   <data name="Charts" xml:space="preserve">
     <value>Charts</value>
   </data>
   <data name="ConnectText" xml:space="preserve">
     <value>Connect</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>Empty</value>
   </data>
   <data name="ErrorConnectingBLE" xml:space="preserve">
     <value>Error connecting to BLE device</value>
@@ -152,6 +164,9 @@
   </data>
   <data name="ScanButtonText" xml:space="preserve">
     <value>Scan</value>
+  </data>
+  <data name="ServiceUUIDLabel" xml:space="preserve">
+    <value>Service UUID</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>

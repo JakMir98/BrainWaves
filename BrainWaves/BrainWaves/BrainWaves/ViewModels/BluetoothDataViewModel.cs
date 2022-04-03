@@ -1,6 +1,7 @@
 ﻿using BrainWaves.Helpers;
 using BrainWaves.Popups;
 using BrainWaves.Views;
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Rg.Plugins.Popup.Services;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
@@ -31,10 +33,20 @@ namespace BrainWaves.ViewModels
         public ICommand StopReceivingCommand { private set; get; }
         public ICommand GoToChartsCommand { private set; get; }
 
-        public BluetoothDataViewModel()
+        public BluetoothDataViewModel(IDevice connectedDevice)
         {
+            _connectedDevice = connectedDevice;
+            _bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
             Title = Resources.Strings.Resource.BLEData;
-            InitalizeConnectionCommand = new Command(async () => await GetCharacteristicWithoutUUID());
+            if(Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
+            {
+                InitalizeConnectionCommand = new Command(async () => await GetCharacteristicWithoutUUID());
+            }
+            else
+            {
+                InitalizeConnectionCommand = new Command(async () => await GetCharacteristic());
+            }
+            
             SendCommand = new Command(Send);
             DisconnectCommand = new Command(async () => await Disconnect());
             StartReceivingCommand = new Command(StartReceiving);
@@ -65,17 +77,16 @@ namespace BrainWaves.ViewModels
         {
             try
             {
-                var service = await _connectedDevice.GetServiceAsync(Constants.UartGattServiceId);
+                var service = await _connectedDevice.GetServiceAsync(Guid.Parse
+                    (Preferences.Get(Constants.PrefsSavedServiceUUID, Constants.UartGattServiceId.ToString())));
 
                 if (service != null)
                 {
-                    sendCharacteristic = await service.GetCharacteristicAsync(Constants.GattCharacteristicReceiveId);
-                    receiveCharacteristic = await service.GetCharacteristicAsync(Constants.GattCharacteristicSendId);
-
-                    OutputText = $"Send: read:{sendCharacteristic.CanRead} write:{sendCharacteristic.CanWrite} update:{sendCharacteristic.CanUpdate}\n" +
-                        $"Receive: read:{receiveCharacteristic.CanRead} write:{receiveCharacteristic.CanWrite} update:{receiveCharacteristic.CanUpdate}\n";
-
-                    areButtonsEnabled = true;
+                    sendCharacteristic = await service.GetCharacteristicAsync(Guid.Parse
+                        (Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Constants.GattCharacteristicReceiveId.ToString())));
+                    receiveCharacteristic = await service.GetCharacteristicAsync(Guid.Parse
+                        (Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Constants.GattCharacteristicSendId.ToString())));
+                    AreButtonsEnabled = true;
                 }
                 else
                 {
@@ -108,7 +119,7 @@ namespace BrainWaves.ViewModels
                             {
                                 receiveCharacteristic = characteristic;
                             }
-                            areButtonsEnabled = true;
+                            AreButtonsEnabled = true;
                         }
                     }
                     else

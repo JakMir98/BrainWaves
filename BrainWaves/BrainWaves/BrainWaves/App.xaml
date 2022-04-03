@@ -77,8 +77,9 @@
         </Style>
 
         <Style x:Key="FramePopupStyle" TargetType="Frame">
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="Padding" Value="5" />
+            <Setter Property="WidthRequest" Value="200" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="10" />
             <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
             <Setter Property="HasShadow" Value="True"/>
             <Setter Property="CornerRadius" Value="40"/>

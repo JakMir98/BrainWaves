@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace BrainWaves.Helpers
 {
-    public class InverseBoolConverter : IValueConverter
+    public class InverseBoolConverter : IValueConverter, IMarkupExtension
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -14,6 +15,11 @@ namespace BrainWaves.Helpers
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;
+        }
+
+        public object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
         }
     }
 }

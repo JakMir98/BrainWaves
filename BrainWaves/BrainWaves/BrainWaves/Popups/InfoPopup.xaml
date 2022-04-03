@@ -49,7 +49,7 @@
                 HorizontalOptions="CenterAndExpand"
                 TextColor="White"
                 Text="OK"
-                Style="{StaticResource ButtonStyleRed}"/>
+                Style="{StaticResource ButtonStyleNormal}"/>
         </StackLayout>
     </Frame>
 </pages:PopupPage>

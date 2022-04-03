@@ -120,14 +120,26 @@
   <data name="ApplicationNeedPermissionText" xml:space="preserve">
     <value>Aplikacja wymaga zezwolenia</value>
   </data>
+  <data name="AutomaticServiceChoosing" xml:space="preserve">
+    <value>Automatyczne wybieranie serwisu</value>
+  </data>
   <data name="BLEData" xml:space="preserve">
     <value>Dane modułu bluetooth</value>
+  </data>
+  <data name="CharacteristicReceiveUUIDLabel" xml:space="preserve">
+    <value>UUID charakterystyki odbierania</value>
+  </data>
+  <data name="CharacteristicSendUUIDLabel" xml:space="preserve">
+    <value>UUID charakterystyki wysyłania</value>
   </data>
   <data name="Charts" xml:space="preserve">
     <value>Wykresy</value>
   </data>
   <data name="ConnectText" xml:space="preserve">
     <value>Połącz</value>
+  </data>
+  <data name="EmptyText" xml:space="preserve">
+    <value>Pusty</value>
   </data>
   <data name="ErrorConnectingBLE" xml:space="preserve">
     <value>Błąd podczas połączenia bluetooth</value>
@@ -152,6 +164,9 @@
   </data>
   <data name="ScanButtonText" xml:space="preserve">
     <value>Wyszukaj</value>
+  </data>
+  <data name="ServiceUUIDLabel" xml:space="preserve">
+    <value>UUID serwisu</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Ustawienia</value>

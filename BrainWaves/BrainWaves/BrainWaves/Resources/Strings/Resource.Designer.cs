@@ -70,11 +70,38 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Automatic service and characteristic choosing.
+        /// </summary>
+        internal static string AutomaticServiceChoosing {
+            get {
+                return ResourceManager.GetString("AutomaticServiceChoosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Bluetooth data.
         /// </summary>
         internal static string BLEData {
             get {
                 return ResourceManager.GetString("BLEData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Receiving characteristic UUID.
+        /// </summary>
+        internal static string CharacteristicReceiveUUIDLabel {
+            get {
+                return ResourceManager.GetString("CharacteristicReceiveUUIDLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Sending characteristic UUID.
+        /// </summary>
+        internal static string CharacteristicSendUUIDLabel {
+            get {
+                return ResourceManager.GetString("CharacteristicSendUUIDLabel", resourceCulture);
             }
         }
         
@@ -93,6 +120,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string ConnectText {
             get {
                 return ResourceManager.GetString("ConnectText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Empty.
+        /// </summary>
+        internal static string EmptyText {
+            get {
+                return ResourceManager.GetString("EmptyText", resourceCulture);
             }
         }
         
@@ -165,6 +201,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string ScanButtonText {
             get {
                 return ResourceManager.GetString("ScanButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Service UUID.
+        /// </summary>
+        internal static string ServiceUUIDLabel {
+            get {
+                return ResourceManager.GetString("ServiceUUIDLabel", resourceCulture);
             }
         }
         

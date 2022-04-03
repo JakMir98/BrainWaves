@@ -19,5 +19,9 @@ namespace BrainWaves.Helpers
         public const string PrefsTheme = "theme";
         public const string PrefsDarkTheme = "dark";
         public const string PrefsLightTheme = "light";
+        public const string PrefsAutomaticServiceChossing = "autoServiceChoosing";
+        public const string PrefsSavedServiceUUID = "savedServiceUUID";
+        public const string PrefsSavedSendCharacteristicUUID = "savedSendCharUUID";
+        public const string PrefsSavedReceiveCharacteristicUUID = "savedReceiveCharUUID";
     }
 }
