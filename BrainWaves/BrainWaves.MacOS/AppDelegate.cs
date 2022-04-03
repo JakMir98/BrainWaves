@@ -16,7 +16,6 @@ namespace BrainWaves.MacOS
             var rect = new CoreGraphics.CGRect(200, 1000, 1024, 768);
             window = new NSWindow(rect, style, NSBackingStore.Buffered, false);
             window.Title = "BrainWaves"; // choose your own Title here
-            window.TitleVisibility = NSWindowTitleVisibility.Hidden;
         }
 
         public override NSWindow MainWindow

@@ -20,6 +20,7 @@ namespace BrainWaves.ViewModels
         private IAdapter bluetoothAdapter;
         private ObservableCollection<IDevice> gattDevices = new ObservableCollection<IDevice>();
         private bool isScanning = false;
+        private bool canScan = true;
         public ICommand ScanDevicesCommand { private set; get; }
         public ICommand StopScanningCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
@@ -43,6 +44,12 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref isScanning, value);
         }
 
+        public bool CanScan
+        {
+            get => canScan;
+            set => SetProperty(ref canScan, value);
+        }
+
         public async Task SetupAdapterAsync()
         {
             try
@@ -57,6 +64,7 @@ namespace BrainWaves.ViewModels
             catch (Exception ex)
             {
                 await PopupNavigation.Instance.PushAsync(new InfoPopup(Resources.Strings.Resource.ErrorTitle, ex.Message));
+                CanScan = false;
             }
         }
 
@@ -74,25 +82,28 @@ namespace BrainWaves.ViewModels
 
         private async Task ScanDevices()
         {
-            IsBusy = true;
-            IsScanning = true;
-            if (!await PermissionsGrantedAsync())
+            if(canScan)
             {
-                await PopupNavigation.Instance.PushAsync(new InfoPopup(
-                    Resources.Strings.Resource.PerrmisionRequiredTitle,
-                    Resources.Strings.Resource.ApplicationNeedPermissionText));
+                IsBusy = true;
+                IsScanning = true;
+                if (!await PermissionsGrantedAsync())
+                {
+                    await PopupNavigation.Instance.PushAsync(new InfoPopup(
+                        Resources.Strings.Resource.PerrmisionRequiredTitle,
+                        Resources.Strings.Resource.ApplicationNeedPermissionText));
+                    IsBusy = false;
+                    return;
+                }
+
+                gattDevices.Clear();
+
+                foreach (var device in bluetoothAdapter.ConnectedDevices)
+                    gattDevices.Add(device);
+
+                await bluetoothAdapter.StartScanningForDevicesAsync();
+                IsScanning = false;
                 IsBusy = false;
-                return;
             }
-
-            gattDevices.Clear();
-
-            foreach (var device in bluetoothAdapter.ConnectedDevices)
-                gattDevices.Add(device);
-
-            await bluetoothAdapter.StartScanningForDevicesAsync();
-            IsScanning = false;
-            IsBusy = false;
         }
 
 

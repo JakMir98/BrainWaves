@@ -52,6 +52,7 @@ namespace BrainWaves.ViewModels
             StartReceivingCommand = new Command(StartReceiving);
             StopReceivingCommand = new Command(StopReceiving);
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
+            GoBackCommand = new Command(async () => await GoBack());
         }
 
         public string OutputText

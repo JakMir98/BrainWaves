@@ -19,7 +19,7 @@ namespace BrainWaves.ViewModels
         {
             Title = Resources.Strings.Resource.Charts;
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
-
+            GoBackCommand = new Command(async () => await GoBack());
             SetupCharts();
         }
 

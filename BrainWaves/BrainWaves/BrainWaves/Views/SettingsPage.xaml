@@ -5,6 +5,7 @@
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
              x:Class="BrainWaves.Views.SettingsPage">
@@ -13,7 +14,15 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <ScrollView Orientation="Vertical">
-            <StackLayout Orientation="Vertical"  Margin="20">
+            <StackLayout Orientation="Vertical">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start" BackgroundColor="Green">
+                    <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
+                             Command="{Binding GoBackCommand}" HorizontalOptions="Start"
+                             Margin="20,5,0,5" Scale="0.8" BackgroundColor="Transparent"/>
+                    
+                    <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
+                       VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
+                </StackLayout>
                 <customControls:SwitchWithLabel VerticalOptions="Center" HorizontalOptions="Center" 
                                          TitleText="{Static resource:Resource.Theme}" IsChecked="{Binding IsDarkThemeOn}" />
 

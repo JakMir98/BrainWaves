@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -20,7 +22,7 @@ namespace BrainWaves.ViewModels
         private string serviceUUID;
         private string sendCharacteristicUUID;
         private string receiveCharacteristicUUID;
-
+        
         public SettingsViewModel()
         {
             Title = Resources.Strings.Resource.Settings;
@@ -49,6 +51,8 @@ namespace BrainWaves.ViewModels
                 IsDarkThemeOn = true;
                 Preferences.Set(Constants.PrefsTheme, Constants.PrefsDarkTheme);
             }
+
+            GoBackCommand = new Command(async () => await GoBack());
         }
 
         public bool IsDarkThemeOn

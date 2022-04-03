@@ -10,11 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\back.png" />
     <None Remove="Resources\Images\search.png" />
     <None Remove="Resources\Images\settings.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Images\back.png" />
     <EmbeddedResource Include="Resources\Images\search.png" />
     <EmbeddedResource Include="Resources\Images\settings.png" />
   </ItemGroup>
@@ -29,6 +31,9 @@
 
   <ItemGroup>
     <EmbeddedResource Update="CustomControls\CheckboxWithLabel.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="CustomControls\CustomToolbar.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="CustomControls\SwitchWithLabel.xaml">

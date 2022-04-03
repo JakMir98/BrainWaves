@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
@@ -9,6 +11,11 @@ namespace BrainWaves.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         bool isBusy = false;
+        public ICommand GoBackCommand { protected set; get; }
+        protected async Task GoBack()
+        {
+            await Application.Current.MainPage.Navigation.PopAsync();
+        }
         public bool IsBusy
         {
             get { return isBusy; }

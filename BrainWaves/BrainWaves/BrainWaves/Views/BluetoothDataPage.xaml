@@ -3,53 +3,66 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="6*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <StackLayout Orientation="Vertical">
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start" BackgroundColor="Green">
+            <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
+                             Command="{Binding GoBackCommand}" HorizontalOptions="Start"
+                             Margin="20,5,0,5" Scale="0.8" BackgroundColor="Transparent"/>
 
-        <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource ButtonStyleNormal}"
+            <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
+                       VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
+        </StackLayout>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="6*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource ButtonStyleNormal}"
                     Margin="10" Text="Explicit Init" Command="{Binding InitalizeConnectionCommand}"/>
 
-        <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource ButtonStyleNormal}"
+            <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource ButtonStyleNormal}"
                 Margin="10" Text="Charts" Command="{Binding GoToChartsCommand}"/>
 
-        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource ButtonStyleNormal}"
+            <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource ButtonStyleNormal}"
                 Margin="10" IsVisible="{Binding AreButtonsEnabled}" Command="{Binding StartReceivingCommand}"
                 Text="Start receiving" />
 
-        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource ButtonStyleNormal}"
+            <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource ButtonStyleNormal}"
                 Margin="10" IsVisible="{Binding AreButtonsEnabled}" Command="{Binding StopReceivingCommand}"
                 Text="Stop receiving" />
 
-        <Button Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource ButtonStyleNormal}"
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource ButtonStyleNormal}"
                 Margin="10" Text="Disconnect" Command="{Binding DisconnectCommand}"/>
 
-        <Entry Grid.Row="3" Grid.Column="0" Style="{StaticResource SimpleEntry}"
+            <Entry Grid.Row="3" Grid.Column="0" Style="{StaticResource SimpleEntry}"
                Text="{Binding EntryText}" TextColor="Black"/>
 
-        <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource ButtonStyleNormal}"
+            <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource ButtonStyleNormal}"
                 Margin="10" IsVisible="{Binding AreButtonsEnabled}"
                 Text="Send command" Command="{Binding SendCommand}"/>
 
-        <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
-            <StackLayout>
-                <Label x:Name="Output" Text="{Binding OutputText}"
+            <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
+                <StackLayout>
+                    <Label x:Name="Output" Text="{Binding OutputText}"
                        TextColor="White"
                        VerticalOptions="CenterAndExpand" />
-            </StackLayout>
-        </ScrollView>
-    </Grid>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </StackLayout>
+    
 </ContentPage>
