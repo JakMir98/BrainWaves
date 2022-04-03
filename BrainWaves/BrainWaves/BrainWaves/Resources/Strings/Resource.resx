@@ -177,4 +177,7 @@
   <data name="Theme" xml:space="preserve">
     <value>Theme</value>
   </data>
+  <data name="GoBackText" xml:space="preserve">
+    <value>Go back</value>
+  </data>
 </root>

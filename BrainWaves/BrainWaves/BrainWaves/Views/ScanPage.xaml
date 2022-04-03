@@ -15,12 +15,22 @@
 
     <Grid>
         <StackLayout Orientation="Vertical" BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start" BackgroundColor="Green">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start" BackgroundColor="{StaticResource PrimaryColor}">
                 <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
                        VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
-                <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}" 
-                             Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
-                             Margin="0,5,20,5" Scale="0.8" BackgroundColor="Transparent"/>
+                <OnPlatform x:TypeArguments="View">
+                    <On Platform="iOS, Android, UWP">
+                        <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}" 
+                                     Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
+                                     Margin="0,5,20,5" Scale="0.8" BackgroundColor="Transparent"/>
+                    </On>
+                    <On Platform="macOS">
+                        <Button Text="{Static resource:Resource.Settings}" TextColor="Black"
+                                BackgroundColor="{StaticResource PrimaryColor}"
+                            Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
+                            Margin="0,5,20,5" Scale="0.8" />
+                    </On>
+                </OnPlatform>
             </StackLayout>
             
             <Button  Style="{StaticResource ButtonStyleNormal}"

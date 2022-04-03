@@ -15,10 +15,20 @@
     <ContentPage.Content>
         <ScrollView Orientation="Vertical">
             <StackLayout Orientation="Vertical">
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start" BackgroundColor="Green">
-                    <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
-                             Command="{Binding GoBackCommand}" HorizontalOptions="Start"
-                             Margin="20,5,0,5" Scale="0.8" BackgroundColor="Transparent"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start"
+                             BackgroundColor="{StaticResource PrimaryColor}">
+                    <OnPlatform x:TypeArguments="View">
+                        <On Platform="iOS, Android, UWP">
+                            <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
+                                         Command="{Binding GoBackCommand}" HorizontalOptions="Start"
+                                         Margin="20,5,0,5" Scale="0.8" BackgroundColor="Transparent"/>
+                        </On>
+                        <On Platform="macOS">
+                            <Button Text="{Static resource:Resource.GoBackText}" TextColor="Black" BackgroundColor="{StaticResource PrimaryColor}"
+                                Command="{Binding GoBackCommand}" HorizontalOptions="Start"
+                                Margin="20,5,0,5" Scale="0.8" />
+                        </On>
+                    </OnPlatform>
                     
                     <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
                        VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>

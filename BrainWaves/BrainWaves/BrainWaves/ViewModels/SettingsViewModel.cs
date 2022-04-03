@@ -156,7 +156,7 @@ namespace BrainWaves.ViewModels
             }
             else
             {
-                Application.Current.MainPage = new ScanPage();
+                Application.Current.MainPage = new NavigationPage(new ScanPage());
             }
         }
     }
