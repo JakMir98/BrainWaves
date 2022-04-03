@@ -2,12 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
     <ContentPage.BindingContext>
         <viewModels:BluetoothDataViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <Grid>
+        <Grid
+            Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
@@ -20,45 +24,51 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Row="0" Grid.ColumnSpan="2"
-                    x:Name="InitButton"
+            <Button Grid.Row="0" Grid.Column="0"
+                    x:Name="InitButton" Style="{StaticResource ButtonStyleNormal}"
                     Margin="10"
                     Clicked="InitalizeCommandButton_Clicked"
                     Text="Explicit Init" />
 
-            <Button Grid.Row="1" Grid.Column="0"
-                    x:Name="StartReceivingButton"
+            <Button Grid.Row="0" Grid.Column="1"
+                    x:Name="ChartsButton" Style="{StaticResource ButtonStyleNormal}"
                     Margin="10"
+                    Clicked="ChartsButton_Clicked"
+                    Text="Charts" />
+
+            <Button Grid.Row="1" Grid.Column="0"
+                    x:Name="StartReceivingButton" Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10" IsVisible="{Binding AreButtonsEnabled}"
                     Clicked="StartReceivingButton_Clicked"
                     Text="Start receiving" />
 
             <Button Grid.Row="1" Grid.Column="1"
-                    x:Name="StopReceivingButton"
-                    Margin="10"
+                    x:Name="StopReceivingButton" Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10" IsVisible="{Binding AreButtonsEnabled}"
                     Clicked="StopReceivingButton_Clicked"
                     Text="Stop receiving" />
 
             <Button Grid.Row="2" Grid.ColumnSpan="2"
-                    x:Name="DisconnectButton"
+                    x:Name="DisconnectButton" Style="{StaticResource ButtonStyleNormal}"
                     Margin="10"
                     Clicked="DisconnectButton_Clicked"
                     Text="Disconnect" />
 
             <Entry Grid.Row="3" Grid.Column="0"
-                   x:Name="CommandTxt"
-                   Text="ATZ"
+                   x:Name="CommandTxt" Style="{StaticResource SimpleEntry}"
+                   Text="{Binding EntryText}"
                    TextColor="Black"/>
 
             <Button Grid.Row="3" Grid.Column="1"
-                    x:Name="SendCommadButton"
-                    Margin="10"
+                    x:Name="SendCommadButton" Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10" IsVisible="{Binding AreButtonsEnabled}"
                     Clicked="SendCommandButton_Clicked"
                     Text="Send command" />
 
             <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
                 <StackLayout>
-                    <Label x:Name="Output"
-                       TextColor="Black"
+                    <Label x:Name="Output" Text="{Binding OutputText}"
+                       TextColor="White"
                        VerticalOptions="CenterAndExpand" />
                 </StackLayout>
             </ScrollView>

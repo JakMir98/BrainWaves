@@ -19,7 +19,7 @@
    A connect hander associated with the server starts a background task that performs notification
    every couple of seconds.
 */
-#include "Arduino.h"
+
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -119,7 +119,7 @@ void loop() {
         writeCharacteristic.setValue(value);
         writeCharacteristic.notify();
         value++;
-        delay(3); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
+        delay(1000); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
     }
     // disconnecting
     if (!deviceConnected && oldDeviceConnected) {

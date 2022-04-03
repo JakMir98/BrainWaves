@@ -1,16 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
+             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels" 
+             xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
              x:Class="BrainWaves.Views.SettingsPage">
     <ContentPage.BindingContext>
         <viewModels:SettingsViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView Orientation="Vertical">
+            <StackLayout Orientation="Vertical"  Margin="20">
+                <customControls:SwitchWithLabel VerticalOptions="Center" HorizontalOptions="Center" 
+                                         TitleText="{Static resource:Resource.Theme}" IsChecked="{Binding IsDarkThemeOn}" />
+
+                <Picker
+                    Title="{Binding SelectedLanguage}"
+                    TitleColor="NavajoWhite"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    WidthRequest="250"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="20"
+                    ItemsSource="{Binding AvailableLanguages}"
+                    SelectedItem="{Binding SelectedLanguage}">
+                </Picker>
+
+                <Entry 
+                    Placeholder="How much time in minutes"
+                    Text="{Binding TimeToSleep, Mode=TwoWay}"
+                    PlaceholderColor="NavajoWhite"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    WidthRequest="250"
+                    Margin="20"
+                    Style="{StaticResource SimpleEntry}"/>
+
+                <Entry 
+                    Placeholder="Sampling freq"
+                    Text="{Binding TimeToSleep, Mode=TwoWay}"
+                    PlaceholderColor="NavajoWhite"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    WidthRequest="250"
+                    Margin="20"
+                    Style="{StaticResource SimpleEntry}"/>
+
+                <ActivityIndicator
+                    Color="Red"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"/>
+
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

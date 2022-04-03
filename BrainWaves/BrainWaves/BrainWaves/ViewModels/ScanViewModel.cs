@@ -1,10 +1,132 @@
-﻿using System;
+﻿using BrainWaves.Popups;
+using BrainWaves.Views;
+using Plugin.BLE;
+using Plugin.BLE.Abstractions;
+using Plugin.BLE.Abstractions.Contracts;
+using Rg.Plugins.Popup.Services;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
 {
     public class ScanViewModel : BaseViewModel
     {
+        private IAdapter bluetoothAdapter;
+        private ObservableCollection<IDevice> gattDevices = new ObservableCollection<IDevice>();
+        private bool isScanning = false;
+        public ICommand ScanDevicesCommand { private set; get; }
+        public ICommand StopScanningCommand { private set; get; }
+        public ScanViewModel()
+        {
+            Title = Resources.Strings.Resource.FindDevice;
+            ScanDevicesCommand = new Command(async () => await ScanDevices());
+            StopScanningCommand = new Command(async () => await StopScanning());
+        }
+
+        public ObservableCollection<IDevice> GattDevices
+        {
+            get => gattDevices;
+            set => SetProperty(ref gattDevices, value);
+        }
+
+        public bool IsScanning
+        {
+            get => isScanning;
+            set => SetProperty(ref isScanning, value);
+        }
+
+        public async Task SetupAdapterAsync()
+        {
+            try
+            {
+                bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+                bluetoothAdapter.DeviceDiscovered += (sender, foundBleDevice) =>
+                {
+                    if (foundBleDevice.Device != null && !string.IsNullOrEmpty(foundBleDevice.Device.Name))
+                        gattDevices.Add(foundBleDevice.Device);
+                };
+            }
+            catch (Exception ex)
+            {
+                await PopupNavigation.Instance.PushAsync(new InfoPopup(Resources.Strings.Resource.ErrorTitle, ex.Message));
+            }
+        }
+
+        private async Task<bool> PermissionsGrantedAsync()
+        {
+            var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
+
+            if (locationPermissionStatus != PermissionStatus.Granted)
+            {
+                var status = await Permissions.RequestAsync<Permissions.LocationAlways>();
+                return status == PermissionStatus.Granted;
+            }
+            return true;
+        }
+
+        private async Task ScanDevices()
+        {
+            IsBusy = true;
+            IsScanning = true;
+            if (!await PermissionsGrantedAsync())
+            {
+                await PopupNavigation.Instance.PushAsync(new InfoPopup(
+                    Resources.Strings.Resource.PerrmisionRequiredTitle,
+                    Resources.Strings.Resource.ApplicationNeedPermissionText));
+                IsBusy = false;
+                return;
+            }
+
+            gattDevices.Clear();
+
+            foreach (var device in bluetoothAdapter.ConnectedDevices)
+                gattDevices.Add(device);
+
+            await bluetoothAdapter.StartScanningForDevicesAsync();
+            IsScanning = false;
+            IsBusy = false;
+        }
+
+
+        public async Task ItemClicked(object sender, ItemTappedEventArgs e)
+        {
+            IsBusy = true;
+            await StopScanning();
+
+            IDevice selectedItem = e.Item as IDevice;
+
+            if (selectedItem.State == DeviceState.Connected)
+            {
+                await Application.Current.MainPage.Navigation.PushAsync(new BluetoothDataPage(selectedItem));
+            }
+            else
+            {
+                try
+                {
+                    var connectParameters = new ConnectParameters(false, true);
+                    await bluetoothAdapter.ConnectToDeviceAsync(selectedItem, connectParameters);
+                    await Application.Current.MainPage.Navigation.PushAsync(new BluetoothDataPage(selectedItem));
+                }
+                catch
+                {
+                    await PopupNavigation.Instance.PushAsync(new InfoPopup(
+                            Resources.Strings.Resource.ErrorTitle,
+                            Resources.Strings.Resource.ApplicationNeedPermissionText + $" {selectedItem.Name ?? "N/A"}"));
+                }
+            }
+            IsBusy = false;
+        }
+
+        private async Task StopScanning()
+        {
+            await bluetoothAdapter.StopScanningForDevicesAsync();
+            IsScanning = false;
+        }
     }
 }

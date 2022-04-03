@@ -2,15 +2,50 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms" 
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
              x:Class="BrainWaves.Views.ChartsPage">
     <ContentPage.BindingContext>
         <viewModels:ChartsViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView>
+            <StackLayout Margin="20">
+                <Label 
+                    Text="Time domain"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Large"
+                    Style="{StaticResource LabelStyleNormal}"/>
+                <microchart:ChartView
+                    x:Name="ChartHumidity"
+                    Chart="{Binding FrequencyChart}"
+                    HeightRequest="250"
+                    Margin="0,0,0,40"/>
+
+                <Label 
+                    Text="Frequency domain"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Large"
+                    Style="{StaticResource LabelStyleNormal}"/>
+                <microchart:ChartView
+                    x:Name="ChartSoilMoisture"
+                    Chart="{Binding FrequencyChart}"
+                    HeightRequest="250"
+                    Margin="0,0,0,40"/>
+
+                <Button 
+                    Command="{Binding ExportToExcelCommand}"
+                    Text="{Static resource:Resource.ExportToExcell}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="0,20,0,60"
+                    WidthRequest="250"
+                    Style="{StaticResource ButtonStyleNormal}"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

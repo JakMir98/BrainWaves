@@ -1,0 +1,104 @@
+﻿
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace BrainWaves.CustomControls
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SwitchWithLabel : ContentView
+    {
+        public SwitchWithLabel()
+        {
+            InitializeComponent();
+        }
+
+        public static readonly BindableProperty TitleTextProperty = BindableProperty.Create(nameof(TitleText),
+            typeof(string),
+            typeof(SwitchWithLabel),
+            defaultValue: string.Empty,
+            defaultBindingMode: BindingMode.OneWay,
+            propertyChanged: TitleTextPropertyChanged);
+
+        private static void TitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.SwitchText.Text = newValue?.ToString();
+        }
+
+        public string TitleText
+        {
+            get => GetValue(TitleTextProperty)?.ToString();
+            set => SetValue(TitleTextProperty, value);
+        }
+
+        public static readonly BindableProperty IsCheckedProperty = BindableProperty.Create(nameof(IsChecked),
+            typeof(bool),
+            typeof(SwitchWithLabel),
+            defaultValue: false,
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: IsCheckedPropertyChanged);
+
+        private static void IsCheckedPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.SwitchToggle.IsToggled = (bool)newValue;
+        }
+
+        public bool IsChecked
+        {
+            get => (bool)GetValue(IsCheckedProperty);
+            set => SetValue(IsCheckedProperty, value);
+        }
+
+        public static readonly BindableProperty HorizontalOptionProperty = BindableProperty.Create(nameof(HorizontalOptionProperty),
+            typeof(LayoutOptions),
+            typeof(SwitchWithLabel),
+            propertyChanged: HorizontalOptionPropertyChanged);
+
+        private static void HorizontalOptionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.StackParent.HorizontalOptions = (LayoutOptions)newValue;
+        }
+
+        public LayoutOptions HorizontalOptionsProp
+        {
+            get => (LayoutOptions)GetValue(HorizontalOptionProperty);
+            set => SetValue(HorizontalOptionProperty, value);
+        }
+
+        public static readonly BindableProperty VerticalOptionProperty = BindableProperty.Create(nameof(VerticalOptionProperty),
+            typeof(LayoutOptions),
+            typeof(SwitchWithLabel),
+            propertyChanged: VerticalOptionPropertyChanged);
+
+        private static void VerticalOptionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.StackParent.VerticalOptions = (LayoutOptions)newValue;
+        }
+
+        public LayoutOptions VerticalOptionsProp
+        {
+            get => (LayoutOptions)GetValue(VerticalOptionProperty);
+            set => SetValue(VerticalOptionProperty, value);
+        }
+
+        public static readonly BindableProperty MarginOptionProperty = BindableProperty.Create(nameof(MarginOptionProperty),
+            typeof(LayoutOptions),
+            typeof(SwitchWithLabel),
+            propertyChanged: MarginOptionPropertyChanged);
+
+        private static void MarginOptionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.StackParent.Margin = (Thickness)newValue;
+        }
+
+        public Thickness MarginOptionsProp
+        {
+            get => (Thickness)GetValue(VerticalOptionProperty);
+            set => SetValue(VerticalOptionProperty, value);
+        }
+    }
+}

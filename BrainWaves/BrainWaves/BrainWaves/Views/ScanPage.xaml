@@ -2,21 +2,30 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings" xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             Title="{Binding Title}"
+             x:Name="ScanPageRef"
+             BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
              x:Class="BrainWaves.Views.ScanPage">
     <ContentPage.BindingContext>
         <viewModels:ScanViewModel/>
     </ContentPage.BindingContext>
     <Grid>
-        <StackLayout Orientation="Vertical">
-            <Button x:Name="ScanButton" 
-                    Margin="10"
-                    Clicked="ScanButton_Clicked"
-                    Text="Scan" />
-            <ListView x:Name="scannedDeviceListView"
-                      Footer=""
-                      ItemTapped="FoundBluetoothDevicesListView_ItemTapped" />
+        <StackLayout Orientation="Vertical" BackgroundColor="Black" Margin="20">
+            <Button  Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10" Command="{Binding ScanDevicesCommand}"
+                    Text="{Static resource:Resource.ScanButtonText}" 
+                    IsVisible="{Binding IsScanning, Converter={helpers:InverseBoolConverter}}"/>
+
+            <Button  Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10" Command="{Binding StopScanningCommand}"
+                    Text="{Static resource:Resource.StopScanningText}"
+                    IsVisible="{Binding IsScanning}"/>
+
+            <ListView x:Name="DevicesList" ItemsSource="{Binding GattDevices}" ItemTapped="DevicesList_ItemTapped"
+                      IsPullToRefreshEnabled="True" RefreshCommand="{Binding ScanDevicesCommand}">
+            </ListView>
         </StackLayout>
-        <ActivityIndicator x:Name="IsBusyIndicator"
-                           Scale="0.3" />
+        <ActivityIndicator Scale="0.3" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
     </Grid>
 </ContentPage>

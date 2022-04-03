@@ -3,6 +3,7 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:BrainWaves.Views"
        Title="BrainWaves"
+       xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
        x:Class="BrainWaves.AppShell">
 
     <!--
@@ -17,9 +18,9 @@
                 <Setter Property="Shell.BackgroundColor" Value="{StaticResource PrimaryColor}" />
                 <Setter Property="Shell.ForegroundColor" Value="White" />
                 <Setter Property="Shell.TitleColor" Value="White" />
-                <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
+                <Setter Property="Shell.DisabledColor" Value="{StaticResource ButtonDisabledColor}" />
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource PrimaryPurple}" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource PrimaryColor}" />
                 <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
                 <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
                 <Setter Property="Shell.TabBarTitleColor" Value="White"/>
@@ -30,8 +31,8 @@
     </Shell.Resources>
 
     <TabBar>
-        <ShellContent Title="Find device" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:ScanPage}" />
-        <ShellContent Title="Settings" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:SettingsPage}" />
+        <ShellContent Title="{Static resource:Resource.FindDevice}" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:ScanPage}" />
+        <ShellContent Title="{Static resource:Resource.Settings}" Icon="icon_feed.png" ContentTemplate="{DataTemplate local:SettingsPage}" />
     </TabBar>
 
 

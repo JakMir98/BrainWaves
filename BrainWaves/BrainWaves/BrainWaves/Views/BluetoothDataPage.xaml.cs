@@ -16,7 +16,6 @@ namespace BrainWaves.Views
     {
         private readonly IDevice _connectedDevice;
         private readonly IAdapter _bluetoothAdapter;
-        private ICharacteristic sendReceiveCharacteristic;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
 
@@ -25,15 +24,17 @@ namespace BrainWaves.Views
             InitializeComponent();
             _connectedDevice = connectedDevice;
             _bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+            StartReceivingButton.IsEnabled = false;
+            StopReceivingButton.IsEnabled = false;
+            SendCommadButton.IsEnabled = false;
             //InitButton.IsEnabled = !(ScanButton.IsEnabled = false);
         }
 
         private async void InitalizeCommandButton_Clicked(object sender, EventArgs e)
         {
-            await GetCharacteristic();
+            await GetCharacteristicWithoutUUID();
         }
 
-        
         private async Task GetCharacteristic()
         {
             try
@@ -44,6 +45,10 @@ namespace BrainWaves.Views
                 {
                     sendCharacteristic = await service.GetCharacteristicAsync(Constants.GattCharacteristicReceiveId);
                     receiveCharacteristic = await service.GetCharacteristicAsync(Constants.GattCharacteristicSendId);
+
+                    Output.Text = $"Send: read:{sendCharacteristic.CanRead} write:{sendCharacteristic.CanWrite} update:{sendCharacteristic.CanUpdate}\n" +
+                        $"Receive: read:{receiveCharacteristic.CanRead} write:{receiveCharacteristic.CanWrite} update:{receiveCharacteristic.CanUpdate}\n";
+
                     StartReceivingButton.IsEnabled = true;
                     StopReceivingButton.IsEnabled = true;
                     SendCommadButton.IsEnabled = true;
@@ -59,7 +64,7 @@ namespace BrainWaves.Views
             }
         }
 
-        private async void GetCharacteristicOLD()
+        private async Task GetCharacteristicWithoutUUID()
         {
             try
             {
@@ -71,26 +76,17 @@ namespace BrainWaves.Views
                         var characteristics = await service.GetCharacteristicsAsync();
                         foreach (var characteristic in characteristics)
                         {
-                            if (characteristic.CanWrite && characteristic.CanRead)
+                            if(characteristic.CanWrite)
                             {
-                                sendReceiveCharacteristic = await service.GetCharacteristicAsync(Constants.UartGattCharacteristicSendReceiveId);
-                                if (sendReceiveCharacteristic != null)
-                                {
-                                    var descriptors = await sendReceiveCharacteristic.GetDescriptorsAsync();
-                                    sendReceiveCharacteristic.ValueUpdated += (o, args) =>
-                                    {
-                                        var receivedBytes = args.Characteristic.Value;
-                                        Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
-                                        {
-                                            Output.Text += Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length) + Environment.NewLine;
-                                        });
-                                    };
-
-                                    await sendReceiveCharacteristic.StartUpdatesAsync();
-                                    InitButton.IsEnabled = !(SendCommadButton.IsEnabled = true);
-                                }
-                                break;
+                                sendCharacteristic = characteristic;
                             }
+                            else if(characteristic.CanUpdate)
+                            {
+                                receiveCharacteristic = characteristic;
+                            }
+                            StartReceivingButton.IsEnabled = true;
+                            StopReceivingButton.IsEnabled = true;
+                            SendCommadButton.IsEnabled = true;
                         }
                     }
                     else
@@ -98,8 +94,6 @@ namespace BrainWaves.Views
                         Output.Text += "UART GATT service not found." + Environment.NewLine;
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -149,7 +143,6 @@ namespace BrainWaves.Views
         private void StopReceivingButton_Clicked(object sender, EventArgs e)
         {
             receiveCharacteristic.ValueUpdated -= ReadValues;
-
         }
 
         private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
@@ -159,6 +152,11 @@ namespace BrainWaves.Views
             {
                 Output.Text += Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length) + Environment.NewLine;
             });
+        }
+
+        private async void ChartsButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ChartsPage());
         }
     }
 }
