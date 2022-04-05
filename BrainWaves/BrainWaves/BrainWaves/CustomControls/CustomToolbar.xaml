@@ -1,29 +1,81 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings" 
+             x:Name="CustomToolbarParent"
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              x:Class="BrainWaves.CustomControls.CustomToolbar">
   <ContentView.Content>
-      <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"
-                   VerticalOptions="Start" BackgroundColor="{StaticResource PrimaryColor}">
-          <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
-                    VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
-          <OnPlatform x:TypeArguments="View">
-            <On Platform="iOS, Android, UWP">
-                <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}" 
-                             Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
-                             Margin="0,5,20,5" Scale="0.8" BackgroundColor="Transparent"/>
-            </On>
-            <On Platform="macOS">
-                <Button Text="Settings"
-                    Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
-                    Margin="0,5,20,5" Scale="0.8" BackgroundColor="Red"/>
-            </On>
-        </OnPlatform>
-            
-            
+      <StackLayout
+          x:Name="StackParent"
+          Orientation="Horizontal"
+          HorizontalOptions="FillAndExpand"
+          VerticalOptions="Start"
+          BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}">
+
+          <Frame
+              x:Name="FrameLeftButton"
+              BackgroundColor="Transparent"
+              HorizontalOptions="Start"
+              IsVisible="{Binding LeftButtonIsVisible, Source={x:Reference CustomToolbarParent}}">
+            <OnPlatform x:TypeArguments="View">
+                <On Platform="iOS, Android, UWP">
+                    <ImageButton
+                        x:Name="LeftButtonImage"
+                        Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
+                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonICommandProp}"
+                        Margin="20,5,0,5"
+                        Scale="0.8"
+                        BackgroundColor="Transparent"/>
+                </On>
+                <On Platform="macOS">
+                    <Button
+                        x:Name="LeftButton"
+                        Text="{Binding LeftButtonTitleText, Source={x:Reference CustomToolbarParent}}"
+                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonICommandProp}"
+                        Margin="20,5,0,5"
+                        Scale="0.8"
+                        BackgroundColor="Transparent"/>
+                </On>
+              </OnPlatform>
+          </Frame>
+
+          
+
+          <Label
+              x:Name="ToolbarLabel"
+              Text="{Binding TitleText, Source={x:Reference CustomToolbarParent}}"
+              Style="{StaticResource LabelStyleTitle}"
+              TextColor="{Binding CustomTextColorProp, Source={x:Reference CustomToolbarParent}}" 
+              VerticalOptions="Center"
+              HorizontalOptions="Start"
+              Margin="20,0,0,0"/>
+
+          <Frame
+              x:Name="FrameRightButton"
+              BackgroundColor="Transparent"
+              HorizontalOptions="EndAndExpand"
+              IsVisible="{Binding RightButtonIsVisible, Source={x:Reference CustomToolbarParent}}">
+              <OnPlatform x:TypeArguments="View">
+                <On Platform="iOS, Android, UWP">
+                    <ImageButton
+                        x:Name="RightButtonImage"
+                        Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}" 
+                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=CheckCommand}"
+                        Margin="0,5,20,5"
+                        Scale="0.8"
+                        BackgroundColor="Transparent"/>
+                </On>
+                <On Platform="macOS">
+                    <Button
+                        x:Name="RightButton"
+                        Text="{Binding RightButtonTitleText, Source={x:Reference CustomToolbarParent}}"
+                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=CheckCommand}"
+                        Margin="0,5,20,5"
+                        Scale="0.8"
+                        BackgroundColor="Transparent"/>
+                </On>
+            </OnPlatform>
+          </Frame>
       </StackLayout>
-      
   </ContentView.Content>
 </ContentView>

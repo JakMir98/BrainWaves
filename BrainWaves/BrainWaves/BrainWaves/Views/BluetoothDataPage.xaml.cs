@@ -1,12 +1,5 @@
-﻿using BrainWaves.Helpers;
-using BrainWaves.ViewModels;
-using Plugin.BLE;
+﻿using BrainWaves.ViewModels;
 using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

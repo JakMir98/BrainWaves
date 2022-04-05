@@ -82,22 +82,5 @@ namespace BrainWaves.CustomControls
             get => (LayoutOptions)GetValue(VerticalOptionProperty);
             set => SetValue(VerticalOptionProperty, value);
         }
-
-        public static readonly BindableProperty MarginOptionProperty = BindableProperty.Create(nameof(MarginOptionProperty),
-            typeof(LayoutOptions),
-            typeof(SwitchWithLabel),
-            propertyChanged: MarginOptionPropertyChanged);
-
-        private static void MarginOptionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var control = (SwitchWithLabel)bindable;
-            control.StackParent.Margin = (Thickness)newValue;
-        }
-
-        public Thickness MarginOptionsProp
-        {
-            get => (Thickness)GetValue(VerticalOptionProperty);
-            set => SetValue(VerticalOptionProperty, value);
-        }
     }
 }

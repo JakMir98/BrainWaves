@@ -1,21 +1,23 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="CustomSwitchParent"
              x:Class="BrainWaves.CustomControls.SwitchWithLabel">
   <ContentView.Content>
         <StackLayout 
                 x:Name="StackParent"
                 Orientation="Horizontal"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                Margin="20">
+                VerticalOptions="{Binding VerticalOptionsProp, Source={x:Reference CustomSwitchParent}}"
+                HorizontalOptions="{Binding HorizontalOptionsProp, Source={x:Reference CustomSwitchParent}}">
             <Label 
                 x:Name="SwitchText"
                 VerticalOptions="Center"
+                Text="{Binding TitleText, Source={x:Reference CustomSwitchParent}}"
                 Style="{StaticResource LabelStyleNormal}"/>
             <Switch 
                 x:Name="SwitchToggle"
-                VerticalOptions="Center"/>
+                VerticalOptions="Center"
+                IsToggled="{Binding IsChecked, Source={x:Reference CustomSwitchParent}}"/>
 
         </StackLayout>
     </ContentView.Content>

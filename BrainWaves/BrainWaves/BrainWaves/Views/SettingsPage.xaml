@@ -33,10 +33,11 @@
                     <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
                        VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
                 </StackLayout>
-                <customControls:SwitchWithLabel VerticalOptions="Center" HorizontalOptions="Center" 
-                                         TitleText="{Static resource:Resource.Theme}" IsChecked="{Binding IsDarkThemeOn}" />
-
-                <Switch IsToggled="{Binding IsDarkThemeOn}"/>
+                <customControls:SwitchWithLabel
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="20" 
+                    TitleText="{Static resource:Resource.Theme}" IsChecked="{Binding IsDarkThemeOn}" />
 
                 <Picker
                     Title="{Binding SelectedLanguage}"
@@ -72,26 +73,44 @@
                     Margin="20"
                     Style="{StaticResource SimpleEntry}"/>
 
-                <customControls:CheckboxWithLabel VerticalOptions="Center" HorizontalOptions="Center" 
-                                         TitleText="{Static resource:Resource.AutomaticServiceChoosing}" 
-                                         IsChecked="{Binding IsAutomaticServiceChoosingActive}"/>
+                <StackLayout
+                    Orientation="Vertical"
+                    Margin="20">
+                    <customControls:CheckboxWithLabel
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center" 
+                        TitleText="{Static resource:Resource.AutomaticServiceChoosing}" 
+                        IsChecked="{Binding IsAutomaticServiceChoosingActive}"/>
 
-                <Label IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                       Text="{Static resource:Resource.ServiceUUIDLabel}" Style="{StaticResource LabelStyleNormal}"
-                       TextColor="White"/>
-                <Entry IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                       Placeholder="{Static resource:Resource.ServiceUUIDLabel}" Text="{Binding ServiceUUID}"/>
+                    <Label
+                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                        Text="{Static resource:Resource.ServiceUUIDLabel}"
+                        Style="{StaticResource LabelStyleNormal}"
+                        TextColor="White"/>
+                    <Entry
+                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                        Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
+                        Text="{Binding ServiceUUID}"/>
                 
-                <Label IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                       Text="{Static resource:Resource.CharacteristicSendUUIDLabel}" Style="{StaticResource LabelStyleNormal}"/>
-                <Entry IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                       Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}" Text="{Binding SendCharacteristicUUID}"/>
+                    <Label
+                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                        Text="{Static resource:Resource.CharacteristicSendUUIDLabel}"
+                        Style="{StaticResource LabelStyleNormal}"/>
+                    <Entry
+                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                        Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}"
+                        Text="{Binding SendCharacteristicUUID}"/>
                 
-                <Label IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                       Text="{Static resource:Resource.CharacteristicReceiveUUIDLabel}" Style="{StaticResource LabelStyleNormal}"/>
-                <Entry IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                       Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}" Text="{Binding ReceiveCharacteristicUUID}"/>
+                    <Label
+                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                        Text="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
+                        Style="{StaticResource LabelStyleNormal}"/>
+                    <Entry
+                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                        Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
+                        Text="{Binding ReceiveCharacteristicUUID}"/>
                 
+                </StackLayout>
 
                 <ActivityIndicator
                     Color="Red"

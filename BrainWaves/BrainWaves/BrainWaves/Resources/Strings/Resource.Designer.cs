@@ -172,5 +172,17 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("GoBackText", resourceCulture);
             }
         }
+        
+        internal static string BleOff {
+            get {
+                return ResourceManager.GetString("BleOff", resourceCulture);
+            }
+        }
+        
+        internal static string BleUnavailable {
+            get {
+                return ResourceManager.GetString("BleUnavailable", resourceCulture);
+            }
+        }
     }
 }

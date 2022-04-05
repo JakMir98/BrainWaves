@@ -21,15 +21,37 @@ namespace BrainWaves.ViewModels
         private ObservableCollection<IDevice> gattDevices = new ObservableCollection<IDevice>();
         private bool isScanning = false;
         private bool canScan = true;
+        private string infoMessage;
+        private bool isInfoVisible;
+
         public ICommand ScanDevicesCommand { private set; get; }
         public ICommand StopScanningCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
+
         public ScanViewModel()
         {
             Title = Resources.Strings.Resource.FindDevice;
             ScanDevicesCommand = new Command(async () => await ScanDevices());
             StopScanningCommand = new Command(async () => await StopScanning());
             GoToSettingsCommand = new Command(async () => await GoToSettings());
+
+            var ble = CrossBluetoothLE.Current;
+            if(ble.State == BluetoothState.Off)
+            {
+                IsInfoVisible = true;
+                CanScan = false;
+                InfoMessage = Resources.Strings.Resource.BleOff;
+            }
+            else if(ble.State == BluetoothState.Unavailable)
+            {
+                IsInfoVisible = true;
+                CanScan = false;
+                InfoMessage = Resources.Strings.Resource.BleUnavailable;
+            }
+            else
+            {
+                IsInfoVisible = false;
+            }
         }
 
         public ObservableCollection<IDevice> GattDevices
@@ -48,6 +70,18 @@ namespace BrainWaves.ViewModels
         {
             get => canScan;
             set => SetProperty(ref canScan, value);
+        }
+
+        public string InfoMessage
+        {
+            get => infoMessage;
+            set => SetProperty(ref infoMessage, value);
+        }
+
+        public bool IsInfoVisible
+        {
+            get => isInfoVisible;
+            set => SetProperty(ref isInfoVisible, value);
         }
 
         public async Task SetupAdapterAsync()

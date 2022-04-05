@@ -180,4 +180,10 @@
   <data name="GoBackText" xml:space="preserve">
     <value>Cofnij</value>
   </data>
+  <data name="BleOff" xml:space="preserve">
+    <value>Bluetooth jest wyłączony</value>
+  </data>
+  <data name="BleUnavailable" xml:space="preserve">
+    <value>Bluetooth jest niedostępny</value>
+  </data>
 </root>

@@ -1,21 +1,23 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="CustomCheckboxParent"
              x:Class="BrainWaves.CustomControls.CheckboxWithLabel">
   <ContentView.Content>
         <StackLayout
                 x:Name="StackParent"
                 Orientation="Horizontal"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center"
-                IsVisible="{Binding RelayControlVisibility, Mode=TwoWay}">
+                VerticalOptions="{Binding VerticalOptions, Source={x:Reference CustomCheckboxParent}}" 
+                HorizontalOptions="{Binding HorizontalOptions, Source={x:Reference CustomCheckboxParent}}">
             <Label 
                 x:Name="SwitchText"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center"
-                Style="{StaticResource LabelStyleNormal}"/>
+                Style="{StaticResource LabelStyleNormal}"
+                Text="{Binding TitleText, Source={x:Reference CustomCheckboxParent}}"/>
             <CheckBox 
-                x:Name="CheckboxToggle"/>
+                x:Name="CheckboxToggle"
+                IsChecked="{Binding IsChecked, Source={x:Reference CustomCheckboxParent}}"/>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -4,6 +4,7 @@
              xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings" 
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
              x:Name="ScanPageRef"
@@ -15,38 +16,50 @@
 
     <Grid>
         <StackLayout Orientation="Vertical" BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start" BackgroundColor="{StaticResource PrimaryColor}">
-                <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
-                       VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
-                <OnPlatform x:TypeArguments="View">
-                    <On Platform="iOS, Android, UWP">
-                        <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}" 
-                                     Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
-                                     Margin="0,5,20,5" Scale="0.8" BackgroundColor="Transparent"/>
-                    </On>
-                    <On Platform="macOS">
-                        <Button Text="{Static resource:Resource.Settings}" TextColor="Black"
-                                BackgroundColor="{StaticResource PrimaryColor}"
-                            Command="{Binding GoToSettingsCommand}" HorizontalOptions="EndAndExpand"
-                            Margin="0,5,20,5" Scale="0.8" />
-                    </On>
-                </OnPlatform>
-            </StackLayout>
+            <customControls:CustomToolbar
+                BackgroundColorProp="{StaticResource PrimaryColor}"
+                LeftButtonIsVisible="False"
+                TitleText="{Binding Title}"
+                CustomTextColorProp="White"
+                RightButtonIsVisible="True"
+                RightButtonTitleText="{Static resource:Resource.Settings}"
+                RightButtonCommandParameter="{Binding GoToSettingsCommand}"/>
             
-            <Button  Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10" Command="{Binding ScanDevicesCommand}"
-                    Text="{Static resource:Resource.ScanButtonText}" 
-                    IsVisible="{Binding IsScanning, Converter={helpers:InverseBoolConverter}}"/>
+            <Button
+                Style="{StaticResource ButtonStyleNormal}"
+                WidthRequest="200"
+                Margin="10"
+                Command="{Binding ScanDevicesCommand}"
+                Text="{Static resource:Resource.ScanButtonText}" 
+                IsVisible="{Binding IsScanning, Converter={helpers:InverseBoolConverter}}"/>
 
-            <Button  Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10" Command="{Binding StopScanningCommand}"
-                    Text="{Static resource:Resource.StopScanningText}"
-                    IsVisible="{Binding IsScanning}"/>
+            <Button
+                Style="{StaticResource ButtonStyleNormal}"
+                Margin="10"
+                Command="{Binding StopScanningCommand}"
+                Text="{Static resource:Resource.StopScanningText}"
+                IsVisible="{Binding IsScanning}"/>
 
-            <ListView x:Name="DevicesList" ItemsSource="{Binding GattDevices}" ItemTapped="DevicesList_ItemTapped"
-                      IsPullToRefreshEnabled="True" RefreshCommand="{Binding ScanDevicesCommand}">
+            <Label
+                Text="{Binding InfoMessage}"
+                Style="{StaticResource LabelStyleNormal}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="{Binding IsInfoVisible}"
+                TextColor="White"/>
+
+            <ActivityIndicator
+                IsVisible="{Binding IsBusy}"
+                IsRunning="{Binding IsBusy}" />
+
+            <ListView
+                x:Name="DevicesList"
+                ItemsSource="{Binding GattDevices}"
+                ItemTapped="DevicesList_ItemTapped"
+                IsPullToRefreshEnabled="True"
+                RefreshCommand="{Binding ScanDevicesCommand}">
             </ListView>
         </StackLayout>
-        <ActivityIndicator Scale="0.3" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+        
     </Grid>
 </ContentPage>

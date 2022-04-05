@@ -48,5 +48,39 @@ namespace BrainWaves.CustomControls
             get => (bool)GetValue(IsCheckedProperty);
             set => SetValue(IsCheckedProperty, value);
         }
+
+        public static readonly BindableProperty HorizontalOptionProperty = BindableProperty.Create(nameof(HorizontalOptionProperty),
+            typeof(LayoutOptions),
+            typeof(CheckboxWithLabel),
+            propertyChanged: HorizontalOptionPropertyChanged);
+
+        private static void HorizontalOptionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CheckboxWithLabel)bindable;
+            control.StackParent.HorizontalOptions = (LayoutOptions)newValue;
+        }
+
+        public LayoutOptions HorizontalOptionsProp
+        {
+            get => (LayoutOptions)GetValue(HorizontalOptionProperty);
+            set => SetValue(HorizontalOptionProperty, value);
+        }
+
+        public static readonly BindableProperty VerticalOptionProperty = BindableProperty.Create(nameof(VerticalOptionProperty),
+            typeof(LayoutOptions),
+            typeof(CheckboxWithLabel),
+            propertyChanged: VerticalOptionPropertyChanged);
+
+        private static void VerticalOptionPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CheckboxWithLabel)bindable;
+            control.StackParent.VerticalOptions = (LayoutOptions)newValue;
+        }
+
+        public LayoutOptions VerticalOptionsProp
+        {
+            get => (LayoutOptions)GetValue(VerticalOptionProperty);
+            set => SetValue(VerticalOptionProperty, value);
+        }
     }
 }
