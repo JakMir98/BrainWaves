@@ -35,23 +35,27 @@ namespace BrainWaves.ViewModels
             StopScanningCommand = new Command(async () => await StopScanning());
             GoToSettingsCommand = new Command(async () => await GoToSettings());
 
-            var ble = CrossBluetoothLE.Current;
-            if(ble.State == BluetoothState.Off)
+            if(!canScan)
             {
-                IsInfoVisible = true;
-                CanScan = false;
-                InfoMessage = Resources.Strings.Resource.BleOff;
+                var ble = CrossBluetoothLE.Current;
+                if (ble.State == BluetoothState.Off)
+                {
+                    IsInfoVisible = true;
+                    CanScan = false;
+                    InfoMessage = Resources.Strings.Resource.BleOff;
+                }
+                else if (ble.State == BluetoothState.Unavailable)
+                {
+                    IsInfoVisible = true;
+                    CanScan = false;
+                    InfoMessage = Resources.Strings.Resource.BleUnavailable;
+                }
+                else
+                {
+                    IsInfoVisible = false;
+                }
             }
-            else if(ble.State == BluetoothState.Unavailable)
-            {
-                IsInfoVisible = true;
-                CanScan = false;
-                InfoMessage = Resources.Strings.Resource.BleUnavailable;
-            }
-            else
-            {
-                IsInfoVisible = false;
-            }
+            
         }
 
         public ObservableCollection<IDevice> GattDevices

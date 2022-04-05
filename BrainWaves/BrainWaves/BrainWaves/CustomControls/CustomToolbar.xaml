@@ -39,8 +39,6 @@
               </OnPlatform>
           </Frame>
 
-          
-
           <Label
               x:Name="ToolbarLabel"
               Text="{Binding TitleText, Source={x:Reference CustomToolbarParent}}"

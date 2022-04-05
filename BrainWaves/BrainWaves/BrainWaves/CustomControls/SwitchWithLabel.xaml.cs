@@ -11,6 +11,27 @@ namespace BrainWaves.CustomControls
             InitializeComponent();
         }
 
+        public static readonly BindableProperty CustomBackgroundColorProperty =
+            BindableProperty.Create(
+                nameof(BackgroundColorProp),
+                typeof(Color),
+                typeof(SwitchWithLabel),
+                defaultValue: Color.Transparent,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: BackgroundColorPropertyChanged);
+
+        private static void BackgroundColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.BackgroundColor = (Color)newValue;
+        }
+
+        public Color BackgroundColorProp
+        {
+            get => (Color)GetValue(CustomBackgroundColorProperty);
+            set => SetValue(CustomBackgroundColorProperty, value);
+        }
+
         public static readonly BindableProperty TitleTextProperty = BindableProperty.Create(nameof(TitleText),
             typeof(string),
             typeof(SwitchWithLabel),

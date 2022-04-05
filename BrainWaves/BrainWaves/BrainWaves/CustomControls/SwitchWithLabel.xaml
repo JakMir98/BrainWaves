@@ -8,7 +8,8 @@
                 x:Name="StackParent"
                 Orientation="Horizontal"
                 VerticalOptions="{Binding VerticalOptionsProp, Source={x:Reference CustomSwitchParent}}"
-                HorizontalOptions="{Binding HorizontalOptionsProp, Source={x:Reference CustomSwitchParent}}">
+                HorizontalOptions="{Binding HorizontalOptionsProp, Source={x:Reference CustomSwitchParent}}"
+                BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomSwitchParent}}">
             <Label 
                 x:Name="SwitchText"
                 VerticalOptions="Center"
