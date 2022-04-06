@@ -13,6 +13,7 @@
     <None Remove="Resources\Images\back.png" />
     <None Remove="Resources\Images\search.png" />
     <None Remove="Resources\Images\settings.png" />
+    <None Remove="DocumentFormat.OpenXml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,7 @@
     <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
   </ItemGroup>
 
   <ItemGroup>
