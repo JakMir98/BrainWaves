@@ -13,9 +13,10 @@ namespace BrainWaves.Helpers
         //public static Guid UartGattCharacteristicSendId = Guid.Parse("0000FFF2-0000-1000-8000-00805f9b34fb");
         //public static Guid SpecialNotificationDescriptorId = Guid.Parse("00002902-0000-1000-8000-00805f9b34fb");
 
-        public const string PrefsCurrentLanguage = "currentLanguage";
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";
+
+        public const string PrefsCurrentLanguage = "currentLanguage";
         public const string PrefsTheme = "theme";
         public const string PrefsDarkTheme = "dark";
         public const string PrefsLightTheme = "light";
@@ -25,5 +26,7 @@ namespace BrainWaves.Helpers
         public const string PrefsSavedReceiveCharacteristicUUID = "savedReceiveCharUUID";
         public const string PrefsSavedSamplingFrequency = "savedSamplingFreq";
         public const string PrefsSavedTimeToReadMindInMinutes = "savedTimeToReadMind";
+
+        public const string ExcellSheetName = "Samples";
     }
 }

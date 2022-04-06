@@ -17,7 +17,7 @@ namespace BrainWaves.ViewModels
         private const int MinSamplingFrequency = 80; //Hz
         private const int MaxSamplingFrequency = 500; //Hz
         private const int MinTimeToReadInMinutes = 1; 
-        private const int MaxTimeToReadInMinutes = 30; 
+        private const int MaxTimeToReadInMinutes = 60; // max = 1khz * 3600 = 36MHZ/h 
 
         private bool isDarkThemeOn = false;
         private List<string> availableLanguages;
