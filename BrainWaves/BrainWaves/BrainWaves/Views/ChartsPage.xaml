@@ -10,9 +10,6 @@
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.ChartsPage">
-    <ContentPage.BindingContext>
-        <viewModels:ChartsViewModel/>
-    </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
             <customControls:CustomToolbar
@@ -34,8 +31,8 @@
                         FontSize="Large"
                         Style="{StaticResource LabelStyleNormal}"/>
                     <microchart:ChartView
-                        x:Name="ChartHumidity"
-                        Chart="{Binding FrequencyChart}"
+                        x:Name="ChartTime"
+                        Chart="{Binding TimeChart}"
                         HeightRequest="250"
                         Margin="0,0,0,40"/>
 
@@ -46,7 +43,7 @@
                         FontSize="Large"
                         Style="{StaticResource LabelStyleNormal}"/>
                     <microchart:ChartView
-                        x:Name="ChartSoilMoisture"
+                        x:Name="ChartFreq"
                         Chart="{Binding FrequencyChart}"
                         HeightRequest="250"
                         Margin="0,0,0,40"/>

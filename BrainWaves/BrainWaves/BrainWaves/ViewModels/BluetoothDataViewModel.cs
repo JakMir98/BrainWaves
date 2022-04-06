@@ -21,6 +21,7 @@ namespace BrainWaves.ViewModels
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
+        private List<string> samples = new List<string>();
 
         private bool areButtonsEnabled = false;
         private string outputText;
@@ -37,6 +38,7 @@ namespace BrainWaves.ViewModels
         {
             _connectedDevice = connectedDevice;
             _bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+            //samples.Capacity = ;
             Title = Resources.Strings.Resource.BLEData;
             if(Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
             {
@@ -185,13 +187,32 @@ namespace BrainWaves.ViewModels
             var t = Task.Run(() =>
             {
                 var receivedBytes = args.Characteristic.Value;
-                OutputText += Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length) + Environment.NewLine;
+                var stringValue = Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length);
+                if (string.Equals(stringValue, "End"))
+                {
+                    OutputText += "End of samples";
+                }
+                else
+                {
+                    samples.Add(stringValue);
+                    OutputText += stringValue + ", ";
+                }
             });
         }
 
         private async Task GoToChartsPage()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new ChartsPage());
+            IsBusy = true;
+            List<float> floatSamples = new List<float>();
+            foreach(var sample in samples)
+            {
+                if(float.TryParse(sample, out var value))
+                {
+                    floatSamples.Add(value);
+                }
+            }
+            await Application.Current.MainPage.Navigation.PushAsync(new ChartsPage(floatSamples));
+            IsBusy = false;
         }
     }
 }

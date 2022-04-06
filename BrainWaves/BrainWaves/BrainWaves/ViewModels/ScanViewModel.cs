@@ -95,7 +95,7 @@ namespace BrainWaves.ViewModels
                 bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
                 bluetoothAdapter.DeviceDiscovered += (sender, foundBleDevice) =>
                 {
-                    if (foundBleDevice.Device != null && !string.IsNullOrEmpty(foundBleDevice.Device.Name))
+                    if (foundBleDevice.Device != null && !string.IsNullOrEmpty(foundBleDevice.Device.Name) && !gattDevices.Contains(foundBleDevice.Device))
                         gattDevices.Add(foundBleDevice.Device);
                 };
             }
@@ -133,10 +133,10 @@ namespace BrainWaves.ViewModels
                     return;
                 }
 
-                gattDevices.Clear();
+                GattDevices.Clear();
 
                 foreach (var device in bluetoothAdapter.ConnectedDevices)
-                    gattDevices.Add(device);
+                    GattDevices.Add(device);
 
                 await bluetoothAdapter.StartScanningForDevicesAsync();
                 IsScanning = false;

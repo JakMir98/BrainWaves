@@ -84,7 +84,7 @@
                Grid.Column="0"
                Style="{StaticResource SimpleEntry}"
                Text="{Binding EntryText}"
-                TextColor="Black"/>
+               TextColor="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}"/>
 
             <Button
                 Grid.Row="3"

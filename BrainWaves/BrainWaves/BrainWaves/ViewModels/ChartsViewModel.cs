@@ -9,15 +9,22 @@ namespace BrainWaves.ViewModels
 {
     public class ChartsViewModel : BaseViewModel
     {
-        private Chart frequencyChart;
+        private const string FrequencyColor = "#FF1493";
+        private const string TimeColor = "#00BFFF";
 
+        private Chart frequencyChart;
+        private Chart timeChart;
+        private List<float> samples = new List<float>();
         public ICommand ExportToExcelCommand { private set; get; }
         
-        public ChartsViewModel()
+        public ChartsViewModel(List<float> _samples)
         {
             Title = Resources.Strings.Resource.Charts;
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
+            
+            samples = _samples;
+
             SetupCharts();
         }
 
@@ -27,26 +34,40 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref frequencyChart, value);
         }
 
+        public Chart TimeChart
+        {
+            get => timeChart;
+            set => SetProperty(ref timeChart, value);
+        }
+
         private void SetupCharts()
         {
             List<ChartEntry> frequencyRecords = new List<ChartEntry>();
-            /*
-            foreach (var item in GetChosenRecords())
+            
+            List<ChartEntry> timeRecords = new List<ChartEntry>();
+            foreach (var item in samples)
             {
-                humidityRecords.Add(new ChartEntry(item.Humidity)
+                timeRecords.Add(new ChartEntry(item)
                 {
-                    Label = $"{item.ID}.",
-                    ValueLabel = $"{item.Humidity}%",
-                    Color = SkiaSharp.SKColor.Parse(HumidityColor),
+                    ValueLabel = $"{item}V",
+                    Color = SkiaSharp.SKColor.Parse(TimeColor),
                     TextColor = SKColors.White,
                     ValueLabelColor = SKColors.White,
                 });
             }
-            */
 
             FrequencyChart = new LineChart
             {
                 Entries = frequencyRecords,
+                ValueLabelOrientation = Orientation.Horizontal,
+                LabelOrientation = Orientation.Horizontal,
+                BackgroundColor = SKColors.Transparent,
+                LabelColor = SKColors.White
+            };
+
+            TimeChart = new LineChart
+            {
+                Entries = timeRecords,
                 ValueLabelOrientation = Orientation.Horizontal,
                 LabelOrientation = Orientation.Horizontal,
                 BackgroundColor = SKColors.Transparent,

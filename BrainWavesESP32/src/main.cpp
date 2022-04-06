@@ -63,6 +63,9 @@ class ServerCallbacks: public BLEServerCallbacks {
 class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
       std::string value = pCharacteristic->getValue();
+      int v = atoi(value.c_str());
+
+      if(value.compare("start") == 0)
 
       if (value.length() > 0) {
         Serial.println("*********");
