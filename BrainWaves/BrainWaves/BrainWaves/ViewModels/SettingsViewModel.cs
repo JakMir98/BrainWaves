@@ -14,6 +14,11 @@ namespace BrainWaves.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
+        private const int MinSamplingFrequency = 80; //Hz
+        private const int MaxSamplingFrequency = 500; //Hz
+        private const int MinTimeToReadInMinutes = 1; 
+        private const int MaxTimeToReadInMinutes = 30; 
+
         private bool isDarkThemeOn = false;
         private List<string> availableLanguages;
         private string selectedLanguage;
@@ -22,7 +27,11 @@ namespace BrainWaves.ViewModels
         private string serviceUUID;
         private string sendCharacteristicUUID;
         private string receiveCharacteristicUUID;
-        
+        private int timeToReadMindInMinutes;
+        private int samplingFrequency;
+        private Color entryTimeToReadMindColor;
+        private Color entrySamplingFreqColor;
+
         public SettingsViewModel()
         {
             Title = Resources.Strings.Resource.Settings;
@@ -39,6 +48,8 @@ namespace BrainWaves.ViewModels
             serviceUUID = Preferences.Get(Constants.PrefsSavedServiceUUID, Resources.Strings.Resource.EmptyText);
             sendCharacteristicUUID = Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Resources.Strings.Resource.EmptyText);
             receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Resources.Strings.Resource.EmptyText);
+            timeToReadMindInMinutes = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, MinTimeToReadInMinutes);
+            samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, MinSamplingFrequency);
 
             OSAppTheme currentTheme = Application.Current.RequestedTheme;
             if (currentTheme == OSAppTheme.Light)
@@ -118,6 +129,76 @@ namespace BrainWaves.ViewModels
             {
                 SetProperty(ref receiveCharacteristicUUID, value);
                 Preferences.Set(Constants.PrefsSavedReceiveCharacteristicUUID, value);
+            }
+        }
+
+        public int TimeToReadMindInMinutes
+        {
+            get => timeToReadMindInMinutes;
+            set
+            {
+                int tempVal;
+                if(value > MaxTimeToReadInMinutes)
+                {
+                    tempVal = MaxTimeToReadInMinutes;
+                    EntryTimeToReadMindColor = Color.Red;
+                }
+                else if(value < MinTimeToReadInMinutes)
+                {
+                    tempVal = MinTimeToReadInMinutes;
+                    EntryTimeToReadMindColor = Color.Red;
+                }
+                else
+                {
+                    tempVal = value;
+                    EntryTimeToReadMindColor = Color.Transparent;
+                }
+                SetProperty(ref timeToReadMindInMinutes, tempVal);
+                Preferences.Set(Constants.PrefsSavedTimeToReadMindInMinutes, tempVal);
+            }
+        }
+
+        public int SamplingFrequency
+        {
+            get => samplingFrequency;
+            set
+            {
+                int tempVal;
+                if (value > MaxSamplingFrequency)
+                {
+                    tempVal = MaxSamplingFrequency;
+                    EntrySamplingFreqColor = Color.Red;
+                }
+                else if (value < MinSamplingFrequency)
+                {
+                    tempVal = MinSamplingFrequency;
+                    EntrySamplingFreqColor = Color.Red;
+                }
+                else
+                {
+                    tempVal = value;
+                    EntrySamplingFreqColor = Color.Transparent;
+                }
+                SetProperty(ref samplingFrequency, tempVal);
+                Preferences.Set(Constants.PrefsSavedSamplingFrequency, tempVal);
+            }
+        }
+
+        public Color EntryTimeToReadMindColor
+        {
+            get => entryTimeToReadMindColor;
+            set
+            {
+                SetProperty(ref entryTimeToReadMindColor, value);
+            }
+        }
+
+        public Color EntrySamplingFreqColor
+        {
+            get => entrySamplingFreqColor;
+            set
+            {
+                SetProperty(ref entrySamplingFreqColor, value);
             }
         }
 

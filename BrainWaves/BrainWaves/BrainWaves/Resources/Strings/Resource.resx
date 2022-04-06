@@ -186,4 +186,10 @@
   <data name="BleUnavailable" xml:space="preserve">
     <value>Bluetooth is unavailable</value>
   </data>
+  <data name="SamplingFreq" xml:space="preserve">
+    <value>Sampling frequency</value>
+  </data>
+  <data name="TimeToReadMindInMin" xml:space="preserve">
+    <value>Time to read data in minutes</value>
+  </data>
 </root>

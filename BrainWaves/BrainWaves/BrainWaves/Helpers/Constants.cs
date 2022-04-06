@@ -23,5 +23,7 @@ namespace BrainWaves.Helpers
         public const string PrefsSavedServiceUUID = "savedServiceUUID";
         public const string PrefsSavedSendCharacteristicUUID = "savedSendCharUUID";
         public const string PrefsSavedReceiveCharacteristicUUID = "savedReceiveCharUUID";
+        public const string PrefsSavedSamplingFrequency = "savedSamplingFreq";
+        public const string PrefsSavedTimeToReadMindInMinutes = "savedTimeToReadMind";
     }
 }

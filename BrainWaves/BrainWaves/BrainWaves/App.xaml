@@ -11,16 +11,22 @@
         <Color x:Key="PrimaryPurple">#614244</Color>
         <Color x:Key="BackgroundColorDark">#222222</Color>
         <Color x:Key="ButtonDisabledColor">#808080</Color>
-        
+
+        <Color x:Key="BackgroundColorDarkTheme">#000000</Color>
+        <Color x:Key="BackgroundColorLight">#68A0B1</Color>
+
+        <Color x:Key="TextColorDarkTheme">#FFFFFF</Color>
+        <Color x:Key="TextColorLight">#000000</Color>
+
         <Style x:Key="LabelStyleTitle" TargetType="Label">
             <Setter Property="FontSize" Value="Title" />
             <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="TextColor" Value="White" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}" />
         </Style>
 
         <Style x:Key="LabelStyleNormal" TargetType="Label">
             <Setter Property="FontSize" Value="Default" />
-            <Setter Property="TextColor" Value="White" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}" />
         </Style>
 
         <Style x:Key="ButtonStyleNormal" TargetType="Button">
@@ -90,7 +96,7 @@
 
         <Style TargetType="NavigationPage">
             <Setter Property="BarBackgroundColor" Value="{StaticResource PrimaryColor}" />
-            <Setter Property="BarTextColor" Value="White" />
+            <Setter Property="BarTextColor" Value="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}" />
         </Style>
         
     </Application.Resources>

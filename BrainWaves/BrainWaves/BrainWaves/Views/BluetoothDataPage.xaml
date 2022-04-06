@@ -7,7 +7,7 @@
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
 
     <StackLayout

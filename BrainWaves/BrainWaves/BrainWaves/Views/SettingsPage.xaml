@@ -7,7 +7,7 @@
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
-             BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"    
              x:Class="BrainWaves.Views.SettingsPage">
     <ContentPage.BindingContext>
         <viewModels:SettingsViewModel/>
@@ -45,26 +45,40 @@
                         SelectedItem="{Binding SelectedLanguage}">
                     </Picker>
 
+                    <Label
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{Static resource:Resource.TimeToReadMindInMin}"
+                        Style="{StaticResource LabelStyleNormal}"
+                        TextColor="NavajoWhite"/>
                     <Entry 
-                        Placeholder="How much time in minutes"
-                        Text="{Binding TimeToSleep, Mode=TwoWay}"
+                        Placeholder="{Static resource:Resource.TimeToReadMindInMin}"
+                        Text="{Binding TimeToReadMindInMinutes, Mode=TwoWay}"
                         PlaceholderColor="NavajoWhite"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         WidthRequest="250"
-                        Margin="20"
+                        Margin="20, 10, 20, 20"
+                        BackgroundColor="{Binding EntryTimeToReadMindColor}"
                         Style="{StaticResource SimpleEntry}"/>
 
+                    <Label
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{Static resource:Resource.SamplingFreq}"
+                        Style="{StaticResource LabelStyleNormal}"
+                        TextColor="NavajoWhite"/>
                     <Entry 
-                        Placeholder="Sampling freq"
-                        Text="{Binding TimeToSleep, Mode=TwoWay}"
+                        Placeholder="{Static resource:Resource.SamplingFreq}"
+                        Text="{Binding SamplingFrequency, Mode=TwoWay}"
                         PlaceholderColor="NavajoWhite"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         WidthRequest="250"
-                        Margin="20"
+                        Margin="20, 10, 20, 20"
+                        BackgroundColor="{Binding EntrySamplingFreqColor}"
                         Style="{StaticResource SimpleEntry}"/>
 
                     <StackLayout
@@ -79,8 +93,7 @@
                         <Label
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Text="{Static resource:Resource.ServiceUUIDLabel}"
-                            Style="{StaticResource LabelStyleNormal}"
-                            TextColor="White"/>
+                            Style="{StaticResource LabelStyleNormal}"/>
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
