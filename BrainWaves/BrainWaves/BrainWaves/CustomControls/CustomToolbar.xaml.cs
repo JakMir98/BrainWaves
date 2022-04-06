@@ -245,9 +245,6 @@ namespace BrainWaves.CustomControls
                typeof(CustomToolbar),
                null);
 
-        public event EventHandler LeftButtonClickedEvent;
-        public event EventHandler LeftButtonCheckedChanged;
-
         public ICommand LeftButtonCommand
         {
             get { return (ICommand)GetValue(LeftButtonCommandProperty); }
@@ -415,9 +412,6 @@ namespace BrainWaves.CustomControls
                typeof(object),
                typeof(CustomToolbar),
                null);
-
-        public event EventHandler RightButtonClickedEvent;
-        public event EventHandler RightButtonCheckedChanged;
 
         public ICommand RightButtonCommand
         {
