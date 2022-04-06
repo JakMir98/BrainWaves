@@ -18,15 +18,18 @@
         <StackLayout Orientation="Vertical" BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}">
             <customControls:CustomToolbar
                 BackgroundColorProp="{StaticResource PrimaryColor}"
-                LeftButtonIsVisible="False"
+                LeftButtonIsVisibleProp="False"
                 TitleText="{Binding Title}"
                 CustomTextColorProp="White"
-                RightButtonIsVisible="True"
-                RightButtonTitleText="{Static resource:Resource.Settings}"
-                RightButtonCommandParameter="{Binding GoToSettingsCommand}"/>
+                RightButtonIsVisibleProp="True"
+                RightButtonTitleTextProp="{Static resource:Resource.Settings}"
+                RightButtonCommand="{Binding GoToSettingsCommand}"
+                RightButtonCommandParameter="{Binding GoToSettingsCommand}"
+                RightButtonTextColorProp="White"/>
             
             <Button
                 Style="{StaticResource ButtonStyleNormal}"
+                BorderWidth="2"
                 WidthRequest="200"
                 Margin="10"
                 Command="{Binding ScanDevicesCommand}"

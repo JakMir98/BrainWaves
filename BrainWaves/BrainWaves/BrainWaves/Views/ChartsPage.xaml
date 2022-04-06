@@ -5,6 +5,7 @@
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}"
@@ -13,67 +14,53 @@
         <viewModels:ChartsViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <ScrollView>
-            <StackLayout>
-                <StackLayout
-                    Orientation="Horizontal"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="Start"
-                    BackgroundColor="{StaticResource PrimaryColor}">
-                    <OnPlatform x:TypeArguments="View">
-                        <On Platform="iOS, Android, UWP">
-                            <ImageButton
-                                Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
-                                Command="{Binding GoBackCommand}"
-                                HorizontalOptions="Start"
-                                Margin="20,5,0,5"
-                                Scale="0.8"
-                                BackgroundColor="Transparent"/>
-                        </On>
-                        <On Platform="macOS">
-                            <Button
-                                Text="{Static resource:Resource.GoBackText}" TextColor="Black" BackgroundColor="{StaticResource PrimaryColor}"
-                                Command="{Binding GoBackCommand}" HorizontalOptions="Start"
-                                Margin="20,5,0,5" Scale="0.8" />
-                        </On>
-                    </OnPlatform>
-                    <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
-                       VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
+        <StackLayout>
+            <customControls:CustomToolbar
+                    BackgroundColorProp="{StaticResource PrimaryColor}"
+                    LeftButtonIsVisibleProp="True"
+                    LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
+                    LeftButtonCommand="{Binding GoBackCommand}"
+                    LeftButtonCommandParameter="{Binding GoBackCommand}"
+                    LeftButtonTextColorProp="White"
+                    TitleText="{Binding Title}"
+                    CustomTextColorProp="White"
+                    RightButtonIsVisibleProp="False"/>
+            <ScrollView>
+                <StackLayout>
+                    <Label 
+                        Text="Time domain"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        FontSize="Large"
+                        Style="{StaticResource LabelStyleNormal}"/>
+                    <microchart:ChartView
+                        x:Name="ChartHumidity"
+                        Chart="{Binding FrequencyChart}"
+                        HeightRequest="250"
+                        Margin="0,0,0,40"/>
+
+                    <Label 
+                        Text="Frequency domain"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        FontSize="Large"
+                        Style="{StaticResource LabelStyleNormal}"/>
+                    <microchart:ChartView
+                        x:Name="ChartSoilMoisture"
+                        Chart="{Binding FrequencyChart}"
+                        HeightRequest="250"
+                        Margin="0,0,0,40"/>
+
+                    <Button 
+                        Command="{Binding ExportToExcelCommand}"
+                        Text="{Static resource:Resource.ExportToExcell}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="0,20,0,60"
+                        WidthRequest="250"
+                        Style="{StaticResource ButtonStyleNormal}"/>
                 </StackLayout>
-
-                <Label 
-                    Text="Time domain"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    FontSize="Large"
-                    Style="{StaticResource LabelStyleNormal}"/>
-                <microchart:ChartView
-                    x:Name="ChartHumidity"
-                    Chart="{Binding FrequencyChart}"
-                    HeightRequest="250"
-                    Margin="0,0,0,40"/>
-
-                <Label 
-                    Text="Frequency domain"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    FontSize="Large"
-                    Style="{StaticResource LabelStyleNormal}"/>
-                <microchart:ChartView
-                    x:Name="ChartSoilMoisture"
-                    Chart="{Binding FrequencyChart}"
-                    HeightRequest="250"
-                    Margin="0,0,0,40"/>
-
-                <Button 
-                    Command="{Binding ExportToExcelCommand}"
-                    Text="{Static resource:Resource.ExportToExcell}"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Margin="0,20,0,60"
-                    WidthRequest="250"
-                    Style="{StaticResource ButtonStyleNormal}"/>
-            </StackLayout>
-        </ScrollView>
+            </ScrollView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

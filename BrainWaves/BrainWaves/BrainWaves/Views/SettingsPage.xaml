@@ -13,113 +13,108 @@
         <viewModels:SettingsViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <ScrollView Orientation="Vertical">
-            <StackLayout Orientation="Vertical">
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start"
-                             BackgroundColor="{StaticResource PrimaryColor}">
-                    <OnPlatform x:TypeArguments="View">
-                        <On Platform="iOS, Android, UWP">
-                            <ImageButton Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
-                                         Command="{Binding GoBackCommand}" HorizontalOptions="Start"
-                                         Margin="20,5,0,5" Scale="0.8" BackgroundColor="Transparent"/>
-                        </On>
-                        <On Platform="macOS">
-                            <Button Text="{Static resource:Resource.GoBackText}" TextColor="Black" BackgroundColor="{StaticResource PrimaryColor}"
-                                Command="{Binding GoBackCommand}" HorizontalOptions="Start"
-                                Margin="20,5,0,5" Scale="0.8" />
-                        </On>
-                    </OnPlatform>
-                    
-                    <Label Text="{Binding Title}" Style="{StaticResource LabelStyleTitle}" TextColor="White" 
-                       VerticalOptions="Center" HorizontalOptions="Start" Margin="20,0,0,0"/>
-                </StackLayout>
-                <customControls:SwitchWithLabel
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Margin="20" 
-                    TitleText="{Static resource:Resource.Theme}" IsChecked="{Binding IsDarkThemeOn}" />
-
-                <Picker
-                    Title="{Binding SelectedLanguage}"
-                    TitleColor="NavajoWhite"
-                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
-                    WidthRequest="250"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Margin="20"
-                    ItemsSource="{Binding AvailableLanguages}"
-                    SelectedItem="{Binding SelectedLanguage}">
-                </Picker>
-
-                <Entry 
-                    Placeholder="How much time in minutes"
-                    Text="{Binding TimeToSleep, Mode=TwoWay}"
-                    PlaceholderColor="NavajoWhite"
-                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    WidthRequest="250"
-                    Margin="20"
-                    Style="{StaticResource SimpleEntry}"/>
-
-                <Entry 
-                    Placeholder="Sampling freq"
-                    Text="{Binding TimeToSleep, Mode=TwoWay}"
-                    PlaceholderColor="NavajoWhite"
-                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    WidthRequest="250"
-                    Margin="20"
-                    Style="{StaticResource SimpleEntry}"/>
-
-                <StackLayout
-                    Orientation="Vertical"
-                    Margin="20">
-                    <customControls:CheckboxWithLabel
+        <StackLayout>
+            <customControls:CustomToolbar
+                    BackgroundColorProp="{StaticResource PrimaryColor}"
+                    LeftButtonIsVisibleProp="True"
+                    LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
+                    LeftButtonCommand="{Binding GoBackCommand}"
+                    LeftButtonCommandParameter="{Binding GoBackCommand}"
+                    LeftButtonTextColorProp="White"
+                    TitleText="{Binding Title}"
+                    CustomTextColorProp="White"
+                    RightButtonIsVisibleProp="False"/>
+            <ScrollView Orientation="Vertical">
+                <StackLayout Orientation="Vertical">
+                    <customControls:SwitchWithLabel
                         VerticalOptions="Center"
-                        HorizontalOptions="Center" 
-                        TitleText="{Static resource:Resource.AutomaticServiceChoosing}" 
-                        IsChecked="{Binding IsAutomaticServiceChoosingActive}"/>
+                        HorizontalOptions="Center"
+                        Margin="20" 
+                        TitleText="{Static resource:Resource.Theme}"
+                        IsChecked="{Binding IsDarkThemeOn}" />
 
-                    <Label
-                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                        Text="{Static resource:Resource.ServiceUUIDLabel}"
-                        Style="{StaticResource LabelStyleNormal}"
-                        TextColor="White"/>
-                    <Entry
-                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                        Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
-                        Text="{Binding ServiceUUID}"/>
+                    <Picker
+                        Title="{Binding SelectedLanguage}"
+                        TitleColor="NavajoWhite"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        WidthRequest="250"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="20"
+                        ItemsSource="{Binding AvailableLanguages}"
+                        SelectedItem="{Binding SelectedLanguage}">
+                    </Picker>
+
+                    <Entry 
+                        Placeholder="How much time in minutes"
+                        Text="{Binding TimeToSleep, Mode=TwoWay}"
+                        PlaceholderColor="NavajoWhite"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        WidthRequest="250"
+                        Margin="20"
+                        Style="{StaticResource SimpleEntry}"/>
+
+                    <Entry 
+                        Placeholder="Sampling freq"
+                        Text="{Binding TimeToSleep, Mode=TwoWay}"
+                        PlaceholderColor="NavajoWhite"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        WidthRequest="250"
+                        Margin="20"
+                        Style="{StaticResource SimpleEntry}"/>
+
+                    <StackLayout
+                        Orientation="Vertical"
+                        Margin="20">
+                        <customControls:CheckboxWithLabel
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center" 
+                            TitleText="{Static resource:Resource.AutomaticServiceChoosing}" 
+                            IsChecked="{Binding IsAutomaticServiceChoosingActive}"/>
+
+                        <Label
+                            IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                            Text="{Static resource:Resource.ServiceUUIDLabel}"
+                            Style="{StaticResource LabelStyleNormal}"
+                            TextColor="White"/>
+                        <Entry
+                            IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                            Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
+                            Text="{Binding ServiceUUID}"/>
                 
-                    <Label
-                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                        Text="{Static resource:Resource.CharacteristicSendUUIDLabel}"
-                        Style="{StaticResource LabelStyleNormal}"/>
-                    <Entry
-                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                        Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}"
-                        Text="{Binding SendCharacteristicUUID}"/>
+                        <Label
+                            IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                            Text="{Static resource:Resource.CharacteristicSendUUIDLabel}"
+                            Style="{StaticResource LabelStyleNormal}"/>
+                        <Entry
+                            IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                            Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}"
+                            Text="{Binding SendCharacteristicUUID}"/>
                 
-                    <Label
-                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                        Text="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
-                        Style="{StaticResource LabelStyleNormal}"/>
-                    <Entry
-                        IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
-                        Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
-                        Text="{Binding ReceiveCharacteristicUUID}"/>
+                        <Label
+                            IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                            Text="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
+                            Style="{StaticResource LabelStyleNormal}"/>
+                        <Entry
+                            IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
+                            Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
+                            Text="{Binding ReceiveCharacteristicUUID}"/>
                 
+                    </StackLayout>
+
+                    <ActivityIndicator
+                        Color="Red"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}"/>
+
                 </StackLayout>
-
-                <ActivityIndicator
-                    Color="Red"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    IsRunning="{Binding IsBusy}"
-                    IsVisible="{Binding IsBusy}"/>
-
-            </StackLayout>
-        </ScrollView>
+            </ScrollView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

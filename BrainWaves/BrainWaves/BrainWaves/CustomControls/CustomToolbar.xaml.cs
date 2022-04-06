@@ -8,35 +8,24 @@ namespace BrainWaves.CustomControls
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CustomToolbar : ContentView
     {
+        private static Color DefaultBorderColor = Color.Silver;
+        private static double DefaultBorderWidth = 0.5;
+        private static int DefaultCornerRadius = 10;
+
         public CustomToolbar()
         {
             InitializeComponent();
-            /*
-            RightButton.SetBinding(Image.SourceProperty, new Binding(nameof(RightButtonImageSourceProp), source: this));
-            
-            this.GestureRecognizers.Add(new TapGestureRecognizer
-            {
-                RightButtonICommandProp = new Command(() =>
-                {
-                    RightButtonClickedEvent?.Invoke(this, EventArgs.Empty);
-
-                    if(RightButtonICommandProp != null)
-                    {
-                        if (RightButtonICommandProp.CanExecute(RightButtonCommandParameter))
-                            RightButtonICommandProp.Execute(RightButtonCommandParameter);
-                    }
-                })
-            });
-            */
         }
 
         #region Stack Parent
-        public static readonly BindableProperty CustomBackgroundColorProperty = BindableProperty.Create(nameof(BackgroundColorProp),
-            typeof(Color),
-            typeof(CustomToolbar),
-            defaultValue: Color.Transparent,
-            defaultBindingMode: BindingMode.OneWay,
-            propertyChanged: BackgroundColorPropertyChanged);
+        public static readonly BindableProperty CustomBackgroundColorProperty =
+            BindableProperty.Create(
+                nameof(BackgroundColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: Color.Transparent,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: BackgroundColorPropertyChanged);
 
         private static void BackgroundColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -48,6 +37,27 @@ namespace BrainWaves.CustomControls
         {
             get => (Color)GetValue(CustomBackgroundColorProperty);
             set => SetValue(CustomBackgroundColorProperty, value);
+        }
+
+        public static readonly BindableProperty ToolbarHeightProperty =
+            BindableProperty.Create(
+                nameof(ToolbarHeightProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultValue: 50.0,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: ToolbarHeightPropertyChanged);
+
+        private static void ToolbarHeightPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.HeightRequest = (double)newValue;
+        }
+
+        public double ToolbarHeightProp
+        {
+            get => (double)GetValue(ToolbarHeightProperty);
+            set => SetValue(ToolbarHeightProperty, value);
         }
         #endregion
 
@@ -73,12 +83,14 @@ namespace BrainWaves.CustomControls
             set => SetValue(TitleTextProperty, value);
         }
 
-        public static readonly BindableProperty CustomTextColorProperty = BindableProperty.Create(nameof(CustomTextColorProp),
-            typeof(Color),
-            typeof(CustomToolbar),
-            defaultValue: Color.White,
-            defaultBindingMode: BindingMode.OneWay,
-            propertyChanged: CustomTextColorPropertyChanged);
+        public static readonly BindableProperty CustomTextColorProperty =
+            BindableProperty.Create(
+                nameof(CustomTextColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: CustomTextColorPropertyChanged);
 
         private static void CustomTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -93,80 +105,30 @@ namespace BrainWaves.CustomControls
         }
         #endregion
 
-        #region Buttons
-        public static void Execute(ICommand command)
-        {
-            if (command == null) return;
-            if (command.CanExecute(null))
-            {
-                command.Execute(null);
-            }
-        }
-
-
         #region Left button
         public static readonly BindableProperty LeftButtonIsVisibleProperty = 
-            BindableProperty.Create(nameof(LeftButtonIsVisible),
+            BindableProperty.Create(nameof(LeftButtonIsVisibleProp),
                 typeof(bool),
                 typeof(CustomToolbar),
-                defaultValue: false,
+                defaultValue: true,
                 defaultBindingMode: BindingMode.OneWay,
                 propertyChanged: LeftButtonIsVisiblePropertyChanged);
 
         private static void LeftButtonIsVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (CustomToolbar)bindable;
-            control.FrameLeftButton.IsVisible = (bool)newValue;
+            control.LeftButton.IsVisible = (bool)newValue;
         }
 
-        public bool LeftButtonIsVisible
+        public bool LeftButtonIsVisibleProp
         {
             get => (bool)GetValue(LeftButtonIsVisibleProperty);
             set => SetValue(LeftButtonIsVisibleProperty, value);
         }
 
-        public static readonly BindableProperty LeftButtonImageSourceProperty =
-            BindableProperty.Create(nameof(LeftButtonImageSourceProp),
-                typeof(string),
-                typeof(CustomToolbar),
-                propertyChanged: LeftButtonImageSourcePropertyChanged,
-                defaultValue: null);
-
-        private static void LeftButtonImageSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var control = (CustomToolbar)bindable;
-            control.LeftButton.ImageSource = (string)newValue;
-        }
-
-        public string LeftButtonImageSourceProp
-        {
-            get => GetValue(LeftButtonIsVisibleProperty).ToString();
-            set => SetValue(LeftButtonIsVisibleProperty, value);
-        }
-
-        public static readonly BindableProperty LeftButtonICommandProperty =
-            BindableProperty.Create(
-                nameof(LeftButtonICommandProp),
-                typeof(ICommand),
-                typeof(CustomToolbar),
-                propertyChanged: LeftButtonICommandPropertyChanged);
-
-        private static void LeftButtonICommandPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var control = (CustomToolbar)bindable;
-            control.LeftButton.Command = (ICommand)newValue;
-            control.LeftButtonImage.Command = (ICommand)newValue;
-        }
-
-        public ICommand LeftButtonICommandProp
-        {
-            get => (ICommand)GetValue(LeftButtonICommandProperty);
-            set => SetValue(LeftButtonICommandProperty, value);
-        }
-
         public static readonly BindableProperty LeftButtonTitleTextProperty =
             BindableProperty.Create(
-                nameof(LeftButtonTitleText),
+                nameof(LeftButtonTitleTextProp),
                 typeof(string),
                 typeof(CustomToolbar),
                 defaultValue: string.Empty,
@@ -179,85 +141,165 @@ namespace BrainWaves.CustomControls
             control.LeftButton.Text = newValue?.ToString();
         }
 
-        public string LeftButtonTitleText
+        public string LeftButtonTitleTextProp
         {
-            get => GetValue(TitleTextProperty)?.ToString();
-            set => SetValue(TitleTextProperty, value);
+            get => GetValue(LeftButtonTitleTextProperty)?.ToString();
+            set => SetValue(LeftButtonTitleTextProperty, value);
+        }
+
+        public static readonly BindableProperty LeftButtonTextColorProperty =
+            BindableProperty.Create(
+                nameof(LeftButtonTextColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LeftButtonTextColorPropertyChanged);
+
+        private static void LeftButtonTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.LeftButton.TextColor = (Color)newValue;
+        }
+
+        public Color LeftButtonTextColorProp
+        {
+            get => (Color)GetValue(CustomTextColorProperty);
+            set => SetValue(CustomTextColorProperty, value);
+        }
+
+        public static readonly BindableProperty LeftButtonBorderColorProperty =
+            BindableProperty.Create(
+                nameof(LeftButtonBorderColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: DefaultBorderColor,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LeftButtonBorderColorPropertyChanged);
+
+        private static void LeftButtonBorderColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.LeftButton.BorderColor = (Color)newValue;
+        }
+
+        public Color LeftButtonBorderColorProp
+        {
+            get => (Color)GetValue(LeftButtonBorderColorProperty);
+            set => SetValue(LeftButtonBorderColorProperty, value);
+        }
+
+        public static readonly BindableProperty LeftButtonBorderWidthProperty =
+            BindableProperty.Create(
+                nameof(LeftButtonBorderWidthProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultValue: DefaultBorderWidth,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LeftButtonBorderWidthPropertyChanged);
+
+        private static void LeftButtonBorderWidthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.LeftButton.BorderWidth = (double)newValue;
+        }
+
+        public double LeftButtonBorderWidthProp
+        {
+            get => (double)GetValue(LeftButtonBorderWidthProperty);
+            set => SetValue(LeftButtonBorderWidthProperty, value);
+        }
+
+        public static readonly BindableProperty LeftButtonCornerRadiusProperty =
+            BindableProperty.Create(
+                nameof(LeftButtonCornerRadiusProp),
+                typeof(int),
+                typeof(CustomToolbar),
+                defaultValue: DefaultCornerRadius,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LeftButtonCornerRadiusPropertyChanged);
+
+        private static void LeftButtonCornerRadiusPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.LeftButton.CornerRadius = (int)newValue;
+        }
+
+        public int LeftButtonCornerRadiusProp
+        {
+            get => (int)GetValue(LeftButtonCornerRadiusProperty);
+            set => SetValue(LeftButtonCornerRadiusProperty, value);
+        }
+
+        public static readonly BindableProperty LeftButtonCommandProperty =
+           BindableProperty.Create(
+               nameof(LeftButtonCommand),
+               typeof(ICommand),
+               typeof(CustomToolbar),
+               null);
+
+        public static readonly BindableProperty LeftButtonCommandParameterProperty =
+           BindableProperty.Create(
+               nameof(LeftButtonCommandParameter),
+               typeof(object),
+               typeof(CustomToolbar),
+               null);
+
+        public event EventHandler LeftButtonClickedEvent;
+        public event EventHandler LeftButtonCheckedChanged;
+
+        public ICommand LeftButtonCommand
+        {
+            get { return (ICommand)GetValue(LeftButtonCommandProperty); }
+            set { SetValue(LeftButtonCommandProperty, value); }
+        }
+        public object LeftButtonCommandParameter
+        {
+            get { return GetValue(LeftButtonCommandParameterProperty); }
+            set { SetValue(LeftButtonCommandParameterProperty, value); }
+        }
+
+        public ICommand LeftButtonCheckCommand
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    if (LeftButtonCommand == null)
+                        return;
+                    if (LeftButtonCommand.CanExecute(LeftButtonCommandParameter))
+                        LeftButtonCommand.Execute(LeftButtonCommandParameter);
+                });
+            }
         }
 
         #endregion
 
         #region Right button
-        public static readonly BindableProperty RightButtonIsVisibleProperty = BindableProperty.Create(nameof(RightButtonIsVisible),
-            typeof(bool),
-            typeof(CustomToolbar),
-            defaultValue: false,
-            defaultBindingMode: BindingMode.OneWay,
-            propertyChanged: RightButtonIsVisiblePropertyChanged);
+        public static readonly BindableProperty RightButtonIsVisibleProperty =
+            BindableProperty.Create(
+                nameof(RightButtonIsVisibleProp),
+                typeof(bool),
+                typeof(CustomToolbar),
+                defaultValue: true,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightButtonIsVisiblePropertyChanged);
 
         private static void RightButtonIsVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (CustomToolbar)bindable;
-            control.FrameRightButton.IsVisible = (bool)newValue;
+            control.RightButton.IsVisible = (bool)newValue;
         }
 
-        public bool RightButtonIsVisible
+        public bool RightButtonIsVisibleProp
         {
             get => (bool)GetValue(RightButtonIsVisibleProperty);
             set => SetValue(RightButtonIsVisibleProperty, value);
         }
 
-        public static readonly BindableProperty RightButtonImageSourceProperty =
-            BindableProperty.Create(
-                nameof(RightButtonImageSourceProp),
-                typeof(ImageSource),
-                typeof(CustomToolbar),
-                default(ImageSource),
-                propertyChanged: RightButtonImageSourcePropertyChanged);
-
-        private static void RightButtonImageSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var control = (CustomToolbar)bindable;
-            control.LeftButton.ImageSource = (ImageSource)newValue;
-        }
-
-        public ImageSource RightButtonImageSourceProp
-        {
-            get => (ImageSource)GetValue(LeftButtonIsVisibleProperty);
-            set => SetValue(LeftButtonIsVisibleProperty, value);
-        }
-
-        public static readonly BindableProperty RightButtonICommandProperty =
-            BindableProperty.Create(
-                nameof(RightButtonICommandProp),
-                typeof(ICommand),
-                typeof(CustomToolbar),
-                defaultValue: null);
-
-        public ICommand RightButtonICommandProp
-        {
-            get => (ICommand)GetValue(RightButtonICommandProperty);
-            set => SetValue(RightButtonICommandProperty, value);
-        }
-
-        public static readonly BindableProperty RightByttonCommandParameterProperty =
-            BindableProperty.Create(
-                nameof(RightButtonCommandParameter),
-                typeof(object),
-                typeof(CustomToolbar));
-
-        public object RightButtonCommandParameter
-        {
-            get { return GetValue(RightByttonCommandParameterProperty); }
-            set { SetValue(RightByttonCommandParameterProperty, value); }
-        }
-
-        public event EventHandler RightButtonClickedEvent;
-
-
         public static readonly BindableProperty RightButtonTitleTextProperty =
             BindableProperty.Create(
-                nameof(RightButtonTitleText),
+                nameof(RightButtonTitleTextProp),
                 typeof(string),
                 typeof(CustomToolbar),
                 defaultValue: string.Empty,
@@ -270,45 +312,138 @@ namespace BrainWaves.CustomControls
             control.RightButton.Text = newValue?.ToString();
         }
 
-        public string RightButtonTitleText
+        public string RightButtonTitleTextProp
         {
-            get => GetValue(TitleTextProperty)?.ToString();
-            set => SetValue(TitleTextProperty, value);
+            get => GetValue(RightButtonTitleTextProperty)?.ToString();
+            set => SetValue(RightButtonTitleTextProperty, value);
         }
 
-        #endregion
-        #endregion
+        public static readonly BindableProperty RightButtonTextColorProperty =
+            BindableProperty.Create(
+                nameof(RightButtonTextColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightButtonTextColorPropertyChanged);
 
-
-        public static readonly BindableProperty CommandProperty =
-           BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(CustomToolbar), null);
-        public static readonly BindableProperty CommandParameterProperty =
-           BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(CustomToolbar), null);
-        public event EventHandler CheckedChanged;
-
-        public ICommand Command
+        private static void RightButtonTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
-        }
-        public object CommandParameter
-        {
-            get { return GetValue(CommandParameterProperty); }
-            set { SetValue(CommandParameterProperty, value); }
+            var control = (CustomToolbar)bindable;
+            control.RightButton.TextColor = (Color)newValue;
         }
 
-        public ICommand CheckCommand
+        public Color RightButtonTextColorProp
+        {
+            get => (Color)GetValue(RightButtonTextColorProperty);
+            set => SetValue(RightButtonTextColorProperty, value);
+        }
+
+        public static readonly BindableProperty RightButtonBorderColorProperty =
+            BindableProperty.Create(
+                nameof(RightButtonBorderColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: DefaultBorderColor,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightButtonBorderColorPropertyChanged);
+
+        private static void RightButtonBorderColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.RightButton.BorderColor = (Color)newValue;
+        }
+
+        public Color RightButtonBorderColorProp
+        {
+            get => (Color)GetValue(RightButtonBorderColorProperty);
+            set => SetValue(RightButtonBorderColorProperty, value);
+        }
+
+        public static readonly BindableProperty RightButtonBorderWidthProperty =
+            BindableProperty.Create(
+                nameof(RightButtonBorderWidthProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultValue: DefaultBorderWidth,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightButtonBorderWidthPropertyChanged);
+
+        private static void RightButtonBorderWidthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.RightButton.BorderWidth = (double)newValue;
+        }
+
+        public double RightButtonBorderWidthProp
+        {
+            get => (double)GetValue(RightButtonBorderWidthProperty);
+            set => SetValue(RightButtonBorderWidthProperty, value);
+        }
+
+        public static readonly BindableProperty RightButtonCornerRadiusProperty =
+            BindableProperty.Create(
+                nameof(RightButtonCornerRadiusProp),
+                typeof(int),
+                typeof(CustomToolbar),
+                defaultValue: DefaultCornerRadius,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightButtonCornerRadiusPropertyChanged);
+
+        private static void RightButtonCornerRadiusPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.RightButton.CornerRadius = (int)newValue;
+        }
+
+        public int RightButtonCornerRadiusProp
+        {
+            get => (int)GetValue(RightButtonCornerRadiusProperty);
+            set => SetValue(RightButtonCornerRadiusProperty, value);
+        }
+
+        public static readonly BindableProperty RightButtonCommandProperty =
+           BindableProperty.Create(
+               nameof(RightButtonCommand),
+               typeof(ICommand),
+               typeof(CustomToolbar),
+               null);
+
+        public static readonly BindableProperty RightButtonCommandParameterProperty =
+           BindableProperty.Create(
+               nameof(RightButtonCommandParameter),
+               typeof(object),
+               typeof(CustomToolbar),
+               null);
+
+        public event EventHandler RightButtonClickedEvent;
+        public event EventHandler RightButtonCheckedChanged;
+
+        public ICommand RightButtonCommand
+        {
+            get { return (ICommand)GetValue(RightButtonCommandProperty); }
+            set { SetValue(RightButtonCommandProperty, value); }
+        }
+        public object RightButtonCommandParameter
+        {
+            get { return GetValue(RightButtonCommandParameterProperty); }
+            set { SetValue(RightButtonCommandParameterProperty, value); }
+        }
+
+        public ICommand RightButtonCheckCommand
         {
             get
             {
                 return new Command(() =>
                 {
-                    if (Command == null)
+                    if (RightButtonCommand == null)
                         return;
-                    if (Command.CanExecute(CommandParameter))
-                        Command.Execute(CommandParameter);
+                    if (RightButtonCommand.CanExecute(RightButtonCommandParameter))
+                        RightButtonCommand.Execute(RightButtonCommandParameter);
                 });
             }
         }
+
+        #endregion
     }
 }

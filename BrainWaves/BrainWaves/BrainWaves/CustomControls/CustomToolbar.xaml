@@ -2,7 +2,6 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Name="CustomToolbarParent"
-             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              x:Class="BrainWaves.CustomControls.CustomToolbar">
   <ContentView.Content>
       <StackLayout
@@ -10,70 +9,79 @@
           Orientation="Horizontal"
           HorizontalOptions="FillAndExpand"
           VerticalOptions="Start"
+          HeightRequest="{Binding ToolbarHeightProp, Source={x:Reference CustomToolbarParent}}"
           BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}">
 
-          <Frame
-              x:Name="FrameLeftButton"
-              BackgroundColor="Transparent"
+          <Button
+              x:Name="LeftButton"
               HorizontalOptions="Start"
-              IsVisible="{Binding LeftButtonIsVisible, Source={x:Reference CustomToolbarParent}}">
-            <OnPlatform x:TypeArguments="View">
-                <On Platform="iOS, Android, UWP">
-                    <ImageButton
-                        x:Name="LeftButtonImage"
-                        Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.back.png}" 
-                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonICommandProp}"
-                        Margin="20,5,0,5"
-                        Scale="0.8"
-                        BackgroundColor="Transparent"/>
-                </On>
-                <On Platform="macOS">
-                    <Button
-                        x:Name="LeftButton"
-                        Text="{Binding LeftButtonTitleText, Source={x:Reference CustomToolbarParent}}"
-                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonICommandProp}"
-                        Margin="20,5,0,5"
-                        Scale="0.8"
-                        BackgroundColor="Transparent"/>
-                </On>
-              </OnPlatform>
-          </Frame>
+              Text="{Binding LeftButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
+              TextColor="{Binding LeftButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
+              Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonCheckCommand}"
+              BorderWidth="{Binding LeftButtonBorderWidthProp, Source={x:Reference CustomToolbarParent}}"
+              BorderColor="{Binding LeftButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
+              CornerRadius="{Binding LeftButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
+              Margin="20,5,0,5"
+              Scale="0.8"
+              BackgroundColor="Transparent"
+              IsVisible="{Binding LeftButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="Scale"
+                                        Value="1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Scale"
+                                        Value="0.8" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+          </Button>
 
           <Label
               x:Name="ToolbarLabel"
-              Text="{Binding TitleText, Source={x:Reference CustomToolbarParent}}"
+              Text="{Binding Source={x:Reference CustomToolbarParent}, Path=TitleText}"
               Style="{StaticResource LabelStyleTitle}"
               TextColor="{Binding CustomTextColorProp, Source={x:Reference CustomToolbarParent}}" 
               VerticalOptions="Center"
               HorizontalOptions="Start"
               Margin="20,0,0,0"/>
 
-          <Frame
-              x:Name="FrameRightButton"
+          <Button
+              x:Name="RightButton"
+              Text="{Binding RightButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
+              TextColor="{Binding RightButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
+              Command="{Binding Source={x:Reference CustomToolbarParent}, Path=RightButtonCheckCommand}"
+              BorderWidth="{Binding RightButtonBorderWidthProp, Source={x:Reference CustomToolbarParent}}"
+              BorderColor="{Binding RightButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
+              CornerRadius="{Binding RightButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
+              Margin="0,5,20,5"
+              Scale="0.8"
               BackgroundColor="Transparent"
               HorizontalOptions="EndAndExpand"
-              IsVisible="{Binding RightButtonIsVisible, Source={x:Reference CustomToolbarParent}}">
-              <OnPlatform x:TypeArguments="View">
-                <On Platform="iOS, Android, UWP">
-                    <ImageButton
-                        x:Name="RightButtonImage"
-                        Source="{helpers:ImageResource Source=BrainWaves.Resources.Images.settings.png}" 
-                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=CheckCommand}"
-                        Margin="0,5,20,5"
-                        Scale="0.8"
-                        BackgroundColor="Transparent"/>
-                </On>
-                <On Platform="macOS">
-                    <Button
-                        x:Name="RightButton"
-                        Text="{Binding RightButtonTitleText, Source={x:Reference CustomToolbarParent}}"
-                        Command="{Binding Source={x:Reference CustomToolbarParent}, Path=CheckCommand}"
-                        Margin="0,5,20,5"
-                        Scale="0.8"
-                        BackgroundColor="Transparent"/>
-                </On>
-            </OnPlatform>
-          </Frame>
+              IsVisible="{Binding RightButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="Scale"
+                                        Value="1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Scale"
+                                        Value="0.8" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+              </Button>
       </StackLayout>
   </ContentView.Content>
 </ContentView>

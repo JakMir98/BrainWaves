@@ -182,8 +182,11 @@ namespace BrainWaves.ViewModels
 
         private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
         {
-            var receivedBytes = args.Characteristic.Value;
-            OutputText += Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length) + Environment.NewLine;
+            var t = Task.Run(() =>
+            {
+                var receivedBytes = args.Characteristic.Value;
+                OutputText += Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length) + Environment.NewLine;
+            });
         }
 
         private async Task GoToChartsPage()

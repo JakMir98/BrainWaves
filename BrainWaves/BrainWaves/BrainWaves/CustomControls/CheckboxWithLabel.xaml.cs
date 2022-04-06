@@ -32,12 +32,14 @@ namespace BrainWaves.CustomControls
             set => SetValue(CustomBackgroundColorProperty, value);
         }
 
-        public static readonly BindableProperty TitleTextProperty = BindableProperty.Create(nameof(TitleText),
-            typeof(string),
-            typeof(CheckboxWithLabel),
-            defaultValue: string.Empty,
-            defaultBindingMode: BindingMode.OneWay,
-            propertyChanged: TitleTextPropertyChanged);
+        public static readonly BindableProperty TitleTextProperty =
+            BindableProperty.Create(
+                nameof(TitleText),
+                typeof(string),
+                typeof(CheckboxWithLabel),
+                defaultValue: string.Empty,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: TitleTextPropertyChanged);
 
         private static void TitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
