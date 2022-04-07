@@ -50,6 +50,7 @@ int value = 0;
 int counter = 0;
 bool sendEndMessage = false;
 bool shouldStartMeasure = false;
+//std::string sendValue = "Jakub";
 
 class ServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
@@ -130,9 +131,9 @@ void loop() {
       {
         if(!sendEndMessage)
         {
-          writeCharacteristic.setValue(value);
+          std::string s = std::to_string(value++);
+          writeCharacteristic.setValue(s);
           writeCharacteristic.notify();
-          value++;
           if(value > 4095)
           {
             value = 0;

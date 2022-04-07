@@ -198,4 +198,16 @@
   <data name="Sample" xml:space="preserve">
     <value>Próbka</value>
   </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Łączenie</value>
+  </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Wyszukiwanie</value>
+  </data>
+  <data name="ExportingToExcellText" xml:space="preserve">
+    <value>Eksportowanie do excella</value>
+  </data>
+  <data name="SettingUpCharts" xml:space="preserve">
+    <value>Konfigurowanie wykresów</value>
+  </data>
 </root>

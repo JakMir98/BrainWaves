@@ -51,9 +51,14 @@
                 IsVisible="{Binding IsInfoVisible}"
                 TextColor="White"/>
 
-            <ActivityIndicator
-                IsVisible="{Binding IsBusy}"
-                IsRunning="{Binding IsBusy}" />
+            <customControls:ActivityIndicatorWithLabel
+                HorizontalOptionsProp="Center"
+                VerticalOptions="Center"
+                LeftLabelIsVisible="True"
+                LeftTitleText="{Binding BusyMessage}"
+                RightLabelIsVisible="False"
+                ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
+                ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
             <ListView
                 x:Name="DevicesList"

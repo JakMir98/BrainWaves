@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="ActivityIndicatorWithLabelParent"
+             x:Class="BrainWaves.CustomControls.ActivityIndicatorWithLabel">
+  <ContentView.Content>
+        <StackLayout
+                x:Name="StackParent"
+                Orientation="Horizontal"
+                VerticalOptions="{Binding VerticalOptions, Source={x:Reference ActivityIndicatorWithLabelParent}}" 
+                HorizontalOptions="{Binding HorizontalOptions, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}">
+            <Label 
+                x:Name="LeftLabel"
+                VerticalOptions="Center" 
+                HorizontalOptions="EndAndExpand"
+                Style="{StaticResource LabelStyleNormal}"
+                Text="{Binding LeftTitleText, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                IsVisible="{Binding LeftLabelIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"/>
+            
+            <ActivityIndicator 
+                x:Name="ActivityIndicator"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center"
+                IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                IsRunning="{Binding ActivityIndicatorIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                IsEnabled="{Binding ActivityIndicatorIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                Color="{Binding ActivityIndicatorColorProp, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                Scale="{Binding ActivityIndicatorScale, Source={x:Reference ActivityIndicatorWithLabelParent}}"/>
+            
+            <Label 
+                x:Name="RightLabel"
+                VerticalOptions="Center" 
+                HorizontalOptions="StartAndExpand"
+                Style="{StaticResource LabelStyleNormal}"
+                Text="{Binding RightTitleText, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                IsVisible="{Binding RightLabelIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

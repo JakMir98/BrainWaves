@@ -1,5 +1,6 @@
 ﻿using BrainWaves.Helpers;
 using BrainWaves.Popups;
+using BrainWaves.Services;
 using BrainWaves.Views;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
@@ -22,8 +23,8 @@ namespace BrainWaves.ViewModels
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
         List<byte> buffer = new List<byte>();
-        private List<string> samples = new List<string>();
-
+        //private List<float> floatSamples = new List<float>();
+        private SampleTranformService sampleTransformService;
         private bool areButtonsEnabled = false;
         private string outputText;
         private string entryText;
@@ -39,6 +40,7 @@ namespace BrainWaves.ViewModels
         {
             _connectedDevice = connectedDevice;
             _bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+            sampleTransformService = new SampleTranformService();
             //samples.Capacity = ;
             Title = Resources.Strings.Resource.BLEData;
             if(Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
@@ -196,7 +198,7 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    samples.Add(stringValue);
+                    App.fSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
                     OutputText += stringValue + ", ";
                 }
             });
@@ -205,19 +207,10 @@ namespace BrainWaves.ViewModels
 
         private async Task GoToChartsPage()
         {
+            OutputText += $"num = {App.fSamples.Count}";
             IsBusy = true;
-            List<float> floatSamples = new List<float>();
-            int counter = 0;
-            foreach(var sample in samples)
-            {
-                counter++;
-                if(float.TryParse(sample, out var value))
-                {
-                    floatSamples.Add(value);
-                }
-            }
-            OutputText += $"num = {counter}";
-            await OpenPage(new ChartsPage(floatSamples));
+            BusyMessage = "Opening page";
+            await OpenPage(new ChartsPage());
             IsBusy = false;
         }
     }

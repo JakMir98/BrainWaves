@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace BrainWaves.ViewModels
 {
@@ -19,13 +20,22 @@ namespace BrainWaves.ViewModels
 
         private Chart frequencyChart;
         private Chart timeChart;
-        private List<float> samples = new List<float>();
+        //private List<float> samples = new List<float>();
         private ExcelService excelService;
 
         public ICommand ExportToExcelCommand { private set; get; }
 
         private string text;
-        
+
+        public ChartsViewModel()
+        {
+            Title = Resources.Strings.Resource.Charts;
+            excelService = new ExcelService();
+
+            ExportToExcelCommand = new Command(async () => await ExportToExcel());
+            GoBackCommand = new Command(async () => await GoBack());
+        }
+
         public ChartsViewModel(List<float> _samples)
         {
             Title = Resources.Strings.Resource.Charts;
@@ -34,9 +44,12 @@ namespace BrainWaves.ViewModels
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
             
-            samples = _samples;
+            //samples = _samples;
+        }
 
-            SetupCharts();
+        public async Task SetupChartsAsync()
+        {
+            await SetupCharts();
         }
 
         public Chart FrequencyChart
@@ -57,49 +70,55 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref text, value);
         }
 
-        private void SetupCharts()
+        private Task SetupCharts()
         {
-            List<ChartEntry> frequencyRecords = new List<ChartEntry>();
-            
-            List<ChartEntry> timeRecords = new List<ChartEntry>();
-            foreach (var item in samples)
+            var t = Task.Run(() =>
             {
-                timeRecords.Add(new ChartEntry(item)
-                {
-                    Label = $".",
-                    ValueLabel = $"{item}V",
-                    Color = SkiaSharp.SKColor.Parse(TimeColor),
-                    TextColor = SKColors.White,
-                    ValueLabelColor = SKColors.White,
-                });
-            }
-            /*
-            FrequencyChart = new LineChart
-            {
-                Entries = frequencyRecords,
-                ValueLabelOrientation = Orientation.Horizontal,
-                LabelOrientation = Orientation.Horizontal,
-                BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.White
-            };
-            */
-            TimeChart = new PointChart
-            {
-                Entries = timeRecords,
-                ValueLabelOrientation = Orientation.Horizontal,
-                LabelOrientation = Orientation.Horizontal,
-                BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.White
-            };
+                IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.SettingUpCharts;
+                List<ChartEntry> frequencyRecords = new List<ChartEntry>();
 
-            Text = $"num of samples = {timeRecords.Count}";
-            
+                List<ChartEntry> timeRecords = new List<ChartEntry>();
+                foreach (var item in App.fSamples)
+                {
+                    timeRecords.Add(new ChartEntry(item)
+                    {
+                        Label = $".",
+                        ValueLabel = $"{item}V",
+                        Color = SkiaSharp.SKColor.Parse(TimeColor),
+                        TextColor = SKColors.White,
+                        ValueLabelColor = SKColors.White,
+                    });
+                }
+                /*
+                FrequencyChart = new LineChart
+                {
+                    Entries = frequencyRecords,
+                    ValueLabelOrientation = Orientation.Horizontal,
+                    LabelOrientation = Orientation.Horizontal,
+                    BackgroundColor = SKColors.Transparent,
+                    LabelColor = SKColors.White
+                };
+                */
+                TimeChart = new PointChart
+                {
+                    Entries = timeRecords,
+                    ValueLabelOrientation = Orientation.Horizontal,
+                    LabelOrientation = Orientation.Horizontal,
+                    BackgroundColor = SKColors.Transparent,
+                    LabelColor = SKColors.White
+                };
+
+                Text = $"num of samples = {App.fSamples.Count}\n max value = {App.fSamples.Max()}\n min value = {App.fSamples.Min()}";
+                IsBusy = false;
+            });
+            return t;
         }
 
         private async Task ExportToExcel()
         {
             IsBusy = true;
-            
+            BusyMessage = Resources.Strings.Resource.ExportingToExcellText;
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
             string filepath = excelService.GenerateExcel(fileName);
 
@@ -112,24 +131,15 @@ namespace BrainWaves.ViewModels
                 }
             };
 
-            /*
-            foreach (var item in GetChosenRecords())
+            for(int i = 0; i < App.fSamples.Count; i++)
             {
-                List<string> additems = new List<string>
+                List<string> values = new List<string>
                 {
-                    item.ID.ToString(),
-                    item.TimeStamp.ToString(),
-                    item.Temperature.ToString(),
-                    item.Humidity.ToString()
+                    i.ToString(), App.fSamples[i].ToString()
                 };
-                foreach (var soilInItem in item.SoilMoisture)
-                {
-                    additems.Add(soilInItem.ToString());
-                }
-
-                data.Values.Add(additems);
+                data.Values.Add(values);
             }
-            */
+
             excelService.InsertDataIntoSheet(filepath, Constants.ExcellSheetName, data);
 
             await Launcher.OpenAsync(new OpenFileRequest()

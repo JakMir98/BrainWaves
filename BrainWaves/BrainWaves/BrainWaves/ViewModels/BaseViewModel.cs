@@ -10,7 +10,9 @@ namespace BrainWaves.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        bool isBusy = false;
+        private bool isBusy = false;
+        private string busyMessage = string.Empty;
+        string title = string.Empty;
         public ICommand GoBackCommand { protected set; get; }
         
         public bool IsBusy
@@ -19,7 +21,12 @@ namespace BrainWaves.ViewModels
             set { SetProperty(ref isBusy, value); }
         }
 
-        string title = string.Empty;
+        public string BusyMessage
+        {
+            get { return busyMessage; }
+            set { SetProperty(ref busyMessage, value); }
+        }
+        
         public string Title
         {
             get { return title; }

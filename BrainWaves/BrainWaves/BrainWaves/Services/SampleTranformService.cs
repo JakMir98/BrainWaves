@@ -17,25 +17,29 @@ namespace BrainWaves.Services
         public const int VolatgeScalingFactor = 1_000_000; // convert to volt
         public const int EegAmplification = 2_000;
 
+        //var trasferedString = cos z string zrobic;
+        //var sampleValInVolt = ((((trasferedString * 3.3 * 2) / 4095) - 2.048) * 1_000_000) / 2000;
+        // razy 3 bo max napiecie,
+        // razy 2 bo dzielnik napiecia
+        // podzielic na 4095 bo Bit
+        // odjąć składowa stałą (zero wirtualne)
+        // * milion bo na wolty
+        // / 2000 bo empirycznie wyznaczone wzmocnienie
         public float ConvertToVoltage(byte[] receivedBytes)
         {
-            string stringValue = Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length);
+            string stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
 
-            if (float.TryParse(stringValue, out var voltage))
+            return ConvertToVoltage(stringValue);
+        }
+
+        public float ConvertToVoltage(string receivedString)
+        {
+            if (float.TryParse(receivedString, out var voltage))
             {
                 return ((((voltage * McuVoltage * VoltageDividerRescale) / BitResolution) - ConstantComponent) * VolatgeScalingFactor) / EegAmplification;
             }
 
             return 0.0f;
-
-            //var trasferedString = cos z string zrobic;
-            //var sampleValInVolt = ((((trasferedString * 3.3 * 2) / 4095) - 2.048) * 1_000_000) / 2000;
-            // razy 3 bo max napiecie,
-            // razy 2 bo dzielnik napiecia
-            // podzielic na 4095 bo Bit
-            // odjąć składowa stałą (zero wirtualne)
-            // * milion bo na wolty
-            // / 2000 bo empirycznie wyznaczone wzmocnienie
         }
 
         public void Filter(double[] samples, double sampleRate)
@@ -59,7 +63,7 @@ namespace BrainWaves.Services
             Complex[] fftRaw = FftSharp.Transform.FFT(signal);
         }
 
-        public void TransformBacl(Complex[] signal)
+        public void TransformBack(Complex[] signal)
         {
             FftSharp.Transform.IFFT(signal);
         }

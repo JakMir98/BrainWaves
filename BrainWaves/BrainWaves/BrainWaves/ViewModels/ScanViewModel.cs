@@ -124,6 +124,7 @@ namespace BrainWaves.ViewModels
             if(canScan)
             {
                 IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.Scanning;
                 IsScanning = true;
                 if (!await PermissionsGrantedAsync())
                 {
@@ -149,6 +150,7 @@ namespace BrainWaves.ViewModels
         public async Task ItemClicked(object sender, ItemTappedEventArgs e)
         {
             IsBusy = true;
+            BusyMessage = Resources.Strings.Resource.Connecting;
             await StopScanning();
 
             IDevice selectedItem = e.Item as IDevice;

@@ -24,6 +24,14 @@
                     RightButtonIsVisibleProp="False"/>
             <ScrollView>
                 <StackLayout>
+                    <customControls:ActivityIndicatorWithLabel
+                        HorizontalOptionsProp="Center"
+                        VerticalOptions="Center"
+                        LeftLabelIsVisible="True"
+                        LeftTitleText="{Binding BusyMessage}"
+                        RightLabelIsVisible="False"
+                        ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
+                        ActivityIndicatorIsVisible="{Binding IsBusy}" />
                     <Label
                         Text="Time domain"
                         VerticalOptions="Center"

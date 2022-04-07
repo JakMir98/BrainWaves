@@ -2,6 +2,7 @@
 using BrainWaves.Popups;
 using BrainWaves.Views;
 using Rg.Plugins.Popup.Services;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace BrainWaves
 {
     public partial class App : Application
     {
-
+        public static List<float> fSamples = new List<float>();
         public App()
         {
             string language = Preferences.Get(Constants.PrefsCurrentLanguage, new CultureInfo(Constants.EnglishLanguageCode, false).Name);
