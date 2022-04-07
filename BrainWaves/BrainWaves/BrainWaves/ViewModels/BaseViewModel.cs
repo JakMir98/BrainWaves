@@ -12,10 +12,7 @@ namespace BrainWaves.ViewModels
     {
         bool isBusy = false;
         public ICommand GoBackCommand { protected set; get; }
-        protected async Task GoBack()
-        {
-            await Application.Current.MainPage.Navigation.PopAsync();
-        }
+        
         public bool IsBusy
         {
             get { return isBusy; }
@@ -53,5 +50,15 @@ namespace BrainWaves.ViewModels
             changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        protected async Task OpenPage(Page page)
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(page);
+        }
+
+        protected async Task GoBack()
+        {
+            await Application.Current.MainPage.Navigation.PopAsync();
+        }
     }
 }

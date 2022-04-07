@@ -75,13 +75,13 @@ class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
       {
         if (value.length() > 0) 
         {
-        Serial.println("*********");
-        Serial.print("Received value: ");
-        for (int i = 0; i < value.length(); i++)
-          Serial.print(value[i]);
+          Serial.println("*********");
+          Serial.print("Received value: ");
+          for (int i = 0; i < value.length(); i++)
+            Serial.print(value[i]);
 
-        Serial.println();
-        Serial.println("*********");
+          Serial.println();
+          Serial.println("*********");
         }
       }
     }

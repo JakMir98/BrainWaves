@@ -192,4 +192,10 @@
   <data name="TimeToReadMindInMin" xml:space="preserve">
     <value>Czas pobierania danych w minutach</value>
   </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Sample" xml:space="preserve">
+    <value>Próbka</value>
+  </data>
 </root>

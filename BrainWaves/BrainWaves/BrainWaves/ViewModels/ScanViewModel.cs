@@ -44,7 +44,7 @@ namespace BrainWaves.ViewModels
                     CanScan = false;
                     InfoMessage = Resources.Strings.Resource.BleOff;
                 }
-                else if (ble.State == BluetoothState.Unavailable)
+                else if (ble.State == BluetoothState.Unavailable || ble.State == BluetoothState.Unknown)
                 {
                     IsInfoVisible = true;
                     CanScan = false;
@@ -95,13 +95,14 @@ namespace BrainWaves.ViewModels
                 bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
                 bluetoothAdapter.DeviceDiscovered += (sender, foundBleDevice) =>
                 {
-                    if (foundBleDevice.Device != null && !string.IsNullOrEmpty(foundBleDevice.Device.Name) && !gattDevices.Contains(foundBleDevice.Device))
-                        gattDevices.Add(foundBleDevice.Device);
+                    if (foundBleDevice.Device != null && !string.IsNullOrEmpty(foundBleDevice.Device.Name)
+                            && !gattDevices.Contains(foundBleDevice.Device))
+                        GattDevices.Add(foundBleDevice.Device);
                 };
             }
             catch (Exception ex)
             {
-                await PopupNavigation.Instance.PushAsync(new InfoPopup(Resources.Strings.Resource.ErrorTitle, ex.Message));
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle, ex.Message);
                 CanScan = false;
             }
         }
@@ -126,9 +127,9 @@ namespace BrainWaves.ViewModels
                 IsScanning = true;
                 if (!await PermissionsGrantedAsync())
                 {
-                    await PopupNavigation.Instance.PushAsync(new InfoPopup(
+                    await App.OpenInfoPopup(
                         Resources.Strings.Resource.PerrmisionRequiredTitle,
-                        Resources.Strings.Resource.ApplicationNeedPermissionText));
+                        Resources.Strings.Resource.ApplicationNeedPermissionText);
                     IsBusy = false;
                     return;
                 }
@@ -154,7 +155,7 @@ namespace BrainWaves.ViewModels
 
             if (selectedItem.State == DeviceState.Connected)
             {
-                await Application.Current.MainPage.Navigation.PushAsync(new BluetoothDataPage(selectedItem));
+                await OpenPage(new BluetoothDataPage(selectedItem));
             }
             else
             {
@@ -162,13 +163,13 @@ namespace BrainWaves.ViewModels
                 {
                     var connectParameters = new ConnectParameters(false, true);
                     await bluetoothAdapter.ConnectToDeviceAsync(selectedItem, connectParameters);
-                    await Application.Current.MainPage.Navigation.PushAsync(new BluetoothDataPage(selectedItem));
+                    await OpenPage(new BluetoothDataPage(selectedItem));
                 }
                 catch
                 {
-                    await PopupNavigation.Instance.PushAsync(new InfoPopup(
+                    await App.OpenInfoPopup(
                             Resources.Strings.Resource.ErrorTitle,
-                            Resources.Strings.Resource.ApplicationNeedPermissionText + $" {selectedItem.Name ?? "N/A"}"));
+                            Resources.Strings.Resource.ApplicationNeedPermissionText + $" {selectedItem.Name ?? "N/A"}");
                 }
             }
             IsBusy = false;
@@ -182,7 +183,7 @@ namespace BrainWaves.ViewModels
 
         private async Task GoToSettings()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new SettingsPage());
+            await OpenPage(new SettingsPage());
         }
     }
 }

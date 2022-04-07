@@ -1,12 +1,12 @@
 ﻿using BrainWaves.Helpers;
+using BrainWaves.Popups;
 using BrainWaves.Views;
 using Rg.Plugins.Popup.Services;
-using System;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrainWaves
 {
@@ -32,6 +32,11 @@ namespace BrainWaves
 
         protected override void OnResume()
         {
+        }
+
+        public static async Task OpenInfoPopup(string title, string message)
+        {
+            await PopupNavigation.Instance.PushAsync(new InfoPopup(title, message));
         }
 
         public static async void ClosePopup()

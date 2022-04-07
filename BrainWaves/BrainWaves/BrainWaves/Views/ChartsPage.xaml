@@ -24,8 +24,14 @@
                     RightButtonIsVisibleProp="False"/>
             <ScrollView>
                 <StackLayout>
-                    <Label 
+                    <Label
                         Text="Time domain"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        FontSize="Large"
+                        Style="{StaticResource LabelStyleNormal}"/>
+                    <Label
+                        Text="{Binding Text}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         FontSize="Large"

@@ -1,8 +1,13 @@
-﻿using Microcharts;
+﻿using BrainWaves.Helpers;
+using BrainWaves.Models;
+using BrainWaves.Services;
+using Microcharts;
 using SkiaSharp;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
@@ -15,11 +20,17 @@ namespace BrainWaves.ViewModels
         private Chart frequencyChart;
         private Chart timeChart;
         private List<float> samples = new List<float>();
+        private ExcelService excelService;
+
         public ICommand ExportToExcelCommand { private set; get; }
+
+        private string text;
         
         public ChartsViewModel(List<float> _samples)
         {
             Title = Resources.Strings.Resource.Charts;
+            excelService = new ExcelService();
+
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
             
@@ -40,6 +51,12 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref timeChart, value);
         }
 
+        public string Text
+        {
+            get => text;
+            set => SetProperty(ref text, value);
+        }
+
         private void SetupCharts()
         {
             List<ChartEntry> frequencyRecords = new List<ChartEntry>();
@@ -49,13 +66,14 @@ namespace BrainWaves.ViewModels
             {
                 timeRecords.Add(new ChartEntry(item)
                 {
+                    Label = $".",
                     ValueLabel = $"{item}V",
                     Color = SkiaSharp.SKColor.Parse(TimeColor),
                     TextColor = SKColors.White,
                     ValueLabelColor = SKColors.White,
                 });
             }
-
+            /*
             FrequencyChart = new LineChart
             {
                 Entries = frequencyRecords,
@@ -64,8 +82,8 @@ namespace BrainWaves.ViewModels
                 BackgroundColor = SKColors.Transparent,
                 LabelColor = SKColors.White
             };
-
-            TimeChart = new LineChart
+            */
+            TimeChart = new PointChart
             {
                 Entries = timeRecords,
                 ValueLabelOrientation = Orientation.Horizontal,
@@ -73,13 +91,16 @@ namespace BrainWaves.ViewModels
                 BackgroundColor = SKColors.Transparent,
                 LabelColor = SKColors.White
             };
+
+            Text = $"num of samples = {timeRecords.Count}";
+            
         }
 
         private async Task ExportToExcel()
         {
             IsBusy = true;
-            /*
-            var fileName = $"{Constants.RecordServerClassName}-{Guid.NewGuid()}.xlsx";
+            
+            var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
             string filepath = excelService.GenerateExcel(fileName);
 
             var data = new ExcelStructure
@@ -87,22 +108,11 @@ namespace BrainWaves.ViewModels
                 Headers = new List<string>()
                 {
                     Resources.Strings.Resource.ID,
-                    Resources.Strings.Resource.TimeStamp,
-                    Resources.Strings.Resource.Temperature,
-                    Resources.Strings.Resource.Humidity,
-                    Resources.Strings.Resource.SoilMoisture1,
-                    Resources.Strings.Resource.SoilMoisture2,
-                    Resources.Strings.Resource.SoilMoisture3,
-                    Resources.Strings.Resource.SoilMoisture4,
-                    Resources.Strings.Resource.SoilMoisture5,
-                    Resources.Strings.Resource.SoilMoisture6,
-                    Resources.Strings.Resource.SoilMoisture7,
-                    Resources.Strings.Resource.SoilMoisture8,
-                    Resources.Strings.Resource.SoilMoisture9,
-                    Resources.Strings.Resource.SoilMoisture10
+                    Resources.Strings.Resource.Sample
                 }
             };
 
+            /*
             foreach (var item in GetChosenRecords())
             {
                 List<string> additems = new List<string>
@@ -119,14 +129,14 @@ namespace BrainWaves.ViewModels
 
                 data.Values.Add(additems);
             }
-
-            excelService.InsertDataIntoSheet(filepath, Constants.RecordServerClassName, data);
+            */
+            excelService.InsertDataIntoSheet(filepath, Constants.ExcellSheetName, data);
 
             await Launcher.OpenAsync(new OpenFileRequest()
             {
                 File = new ReadOnlyFile(filepath)
             });
-            */
+            
             IsBusy = false;
         }
     }

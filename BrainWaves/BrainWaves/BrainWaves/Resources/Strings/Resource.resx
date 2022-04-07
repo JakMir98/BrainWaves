@@ -192,4 +192,10 @@
   <data name="TimeToReadMindInMin" xml:space="preserve">
     <value>Time to read data in minutes</value>
   </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Sample" xml:space="preserve">
+    <value>Sample</value>
+  </data>
 </root>

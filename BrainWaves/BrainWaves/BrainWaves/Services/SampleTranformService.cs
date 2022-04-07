@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
+using FftSharp;
 
 namespace BrainWaves.Services
 {
-    public static class SampleValueConverterService
+    public class SampleTranformService
     {
+        public SampleTranformService()
+        {
+        }
+
         public const float McuVoltage = 3.3f;
         public const int VoltageDividerRescale = 2;
         public const int BitResolution = 4095;
@@ -13,15 +17,15 @@ namespace BrainWaves.Services
         public const int VolatgeScalingFactor = 1_000_000; // convert to volt
         public const int EegAmplification = 2_000;
 
-        public static float ConvertToVoltage(byte[] receivedBytes)
+        public float ConvertToVoltage(byte[] receivedBytes)
         {
             string stringValue = Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length);
 
-            if(float.TryParse(stringValue, out var voltage))
+            if (float.TryParse(stringValue, out var voltage))
             {
                 return ((((voltage * McuVoltage * VoltageDividerRescale) / BitResolution) - ConstantComponent) * VolatgeScalingFactor) / EegAmplification;
             }
-            
+
             return 0.0f;
 
             //var trasferedString = cos z string zrobic;
@@ -34,5 +38,30 @@ namespace BrainWaves.Services
             // / 2000 bo empirycznie wyznaczone wzmocnienie
         }
 
+        public void Filter(double[] samples, double sampleRate)
+        {
+            double[] filtered = FftSharp.Filter.LowPass(samples, sampleRate, maxFrequency: 2000);
+            FftSharp.Filter.BandPass(samples, sampleRate, minFrequency: 20, maxFrequency: 2000);
+            FftSharp.Filter.BandStop(samples, sampleRate, minFrequency: 20, maxFrequency: 2000);
+            FftSharp.Filter.HighPass(samples, sampleRate, minFrequency: 20);
+
+
+        }
+
+        public void Window(double[] signal)
+        {
+            var window = new FftSharp.Windows.Hanning();
+            double[] windowed = window.Apply(signal);
+        }
+
+        public void Transform(double[] signal)
+        {
+            Complex[] fftRaw = FftSharp.Transform.FFT(signal);
+        }
+
+        public void TransformBacl(Complex[] signal)
+        {
+            FftSharp.Transform.IFFT(signal);
+        }
     }
 }

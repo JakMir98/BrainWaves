@@ -21,6 +21,7 @@ namespace BrainWaves.ViewModels
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
+        List<byte> buffer = new List<byte>();
         private List<string> samples = new List<string>();
 
         private bool areButtonsEnabled = false;
@@ -184,10 +185,11 @@ namespace BrainWaves.ViewModels
 
         private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
         {
+            buffer.AddRange(args.Characteristic.Value);
             var t = Task.Run(() =>
             {
                 var receivedBytes = args.Characteristic.Value;
-                var stringValue = Encoding.UTF8.GetString(receivedBytes, 0, receivedBytes.Length);
+                var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
                 if (string.Equals(stringValue, "End"))
                 {
                     OutputText += "End of samples";
@@ -198,20 +200,24 @@ namespace BrainWaves.ViewModels
                     OutputText += stringValue + ", ";
                 }
             });
+            t.Wait();
         }
 
         private async Task GoToChartsPage()
         {
             IsBusy = true;
             List<float> floatSamples = new List<float>();
+            int counter = 0;
             foreach(var sample in samples)
             {
+                counter++;
                 if(float.TryParse(sample, out var value))
                 {
                     floatSamples.Add(value);
                 }
             }
-            await Application.Current.MainPage.Navigation.PushAsync(new ChartsPage(floatSamples));
+            OutputText += $"num = {counter}";
+            await OpenPage(new ChartsPage(floatSamples));
             IsBusy = false;
         }
     }
