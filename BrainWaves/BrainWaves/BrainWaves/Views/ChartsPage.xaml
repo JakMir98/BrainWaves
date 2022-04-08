@@ -29,6 +29,7 @@
                         VerticalOptions="Center"
                         LeftLabelIsVisible="True"
                         LeftTitleText="{Binding BusyMessage}"
+                        LabelTextColorProp="{StaticResource PrimaryColor}"
                         RightLabelIsVisible="False"
                         ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
@@ -38,15 +39,18 @@
                         HorizontalOptions="Center"
                         FontSize="Large"
                         Style="{StaticResource LabelStyleNormal}"/>
+
                     <Label
                         Text="{Binding Text}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         FontSize="Large"
+                        IsVisible="{Binding IsTimeChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
                     <microchart:ChartView
                         x:Name="ChartTime"
                         Chart="{Binding TimeChart}"
+                        IsVisible="{Binding IsTimeChartVisible}"
                         HeightRequest="250"
                         Margin="0,0,0,40"/>
 
@@ -55,11 +59,13 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         FontSize="Large"
+                        IsVisible="{Binding IsFreqChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
                     <microchart:ChartView
                         x:Name="ChartFreq"
                         Chart="{Binding FrequencyChart}"
                         HeightRequest="250"
+                        IsVisible="{Binding IsFreqChartVisible}"
                         Margin="0,0,0,40"/>
 
                     <Button 

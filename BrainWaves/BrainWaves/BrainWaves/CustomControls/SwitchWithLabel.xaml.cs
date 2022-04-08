@@ -11,6 +11,7 @@ namespace BrainWaves.CustomControls
             InitializeComponent();
         }
 
+        #region Stack parent
         public static readonly BindableProperty CustomBackgroundColorProperty =
             BindableProperty.Create(
                 nameof(BackgroundColorProp),
@@ -30,44 +31,6 @@ namespace BrainWaves.CustomControls
         {
             get => (Color)GetValue(CustomBackgroundColorProperty);
             set => SetValue(CustomBackgroundColorProperty, value);
-        }
-
-        public static readonly BindableProperty TitleTextProperty = BindableProperty.Create(nameof(TitleText),
-            typeof(string),
-            typeof(SwitchWithLabel),
-            defaultValue: string.Empty,
-            defaultBindingMode: BindingMode.OneWay,
-            propertyChanged: TitleTextPropertyChanged);
-
-        private static void TitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var control = (SwitchWithLabel)bindable;
-            control.SwitchText.Text = newValue?.ToString();
-        }
-
-        public string TitleText
-        {
-            get => GetValue(TitleTextProperty)?.ToString();
-            set => SetValue(TitleTextProperty, value);
-        }
-
-        public static readonly BindableProperty IsCheckedProperty = BindableProperty.Create(nameof(IsChecked),
-            typeof(bool),
-            typeof(SwitchWithLabel),
-            defaultValue: false,
-            defaultBindingMode: BindingMode.TwoWay,
-            propertyChanged: IsCheckedPropertyChanged);
-
-        private static void IsCheckedPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var control = (SwitchWithLabel)bindable;
-            control.SwitchToggle.IsToggled = (bool)newValue;
-        }
-
-        public bool IsChecked
-        {
-            get => (bool)GetValue(IsCheckedProperty);
-            set => SetValue(IsCheckedProperty, value);
         }
 
         public static readonly BindableProperty HorizontalOptionProperty = BindableProperty.Create(nameof(HorizontalOptionProperty),
@@ -103,5 +66,69 @@ namespace BrainWaves.CustomControls
             get => (LayoutOptions)GetValue(VerticalOptionProperty);
             set => SetValue(VerticalOptionProperty, value);
         }
+        #endregion
+
+        #region Label
+        public static readonly BindableProperty TitleTextProperty = BindableProperty.Create(nameof(TitleText),
+            typeof(string),
+            typeof(SwitchWithLabel),
+            defaultValue: string.Empty,
+            defaultBindingMode: BindingMode.OneWay,
+            propertyChanged: TitleTextPropertyChanged);
+
+        private static void TitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.SwitchText.Text = newValue?.ToString();
+        }
+
+        public string TitleText
+        {
+            get => GetValue(TitleTextProperty)?.ToString();
+            set => SetValue(TitleTextProperty, value);
+        }
+
+        public static readonly BindableProperty LabelTextColorProperty =
+            BindableProperty.Create(
+                nameof(LabelTextColorProp),
+                typeof(Color),
+                typeof(SwitchWithLabel),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LabelTextColorPropertyChanged);
+
+        private static void LabelTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.SwitchText.TextColor = (Color)newValue;
+        }
+
+        public Color LabelTextColorProp
+        {
+            get => (Color)GetValue(LabelTextColorProperty);
+            set => SetValue(LabelTextColorProperty, value);
+        }
+        #endregion
+
+        #region Switch
+        public static readonly BindableProperty IsCheckedProperty = BindableProperty.Create(nameof(IsChecked),
+            typeof(bool),
+            typeof(SwitchWithLabel),
+            defaultValue: false,
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: IsCheckedPropertyChanged);
+
+        private static void IsCheckedPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.SwitchToggle.IsToggled = (bool)newValue;
+        }
+
+        public bool IsChecked
+        {
+            get => (bool)GetValue(IsCheckedProperty);
+            set => SetValue(IsCheckedProperty, value);
+        }
+        #endregion
     }
 }

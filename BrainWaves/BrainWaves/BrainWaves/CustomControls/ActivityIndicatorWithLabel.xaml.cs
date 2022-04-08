@@ -72,6 +72,28 @@ namespace BrainWaves.CustomControls
         }
         #endregion
 
+        #region Labels
+        public static readonly BindableProperty LabelTextColorProperty =
+            BindableProperty.Create(
+                nameof(LabelTextColorProp),
+                typeof(Color),
+                typeof(ActivityIndicatorWithLabel),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LabelTextColorPropertyChanged);
+
+        private static void LabelTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (ActivityIndicatorWithLabel)bindable;
+            control.LeftLabel.TextColor = (Color)newValue;
+            control.RightLabel.TextColor = (Color)newValue;
+        }
+
+        public Color LabelTextColorProp
+        {
+            get => (Color)GetValue(LabelTextColorProperty);
+            set => SetValue(LabelTextColorProperty, value);
+        }
         #region Left label
         public static readonly BindableProperty LeftTitleTextProperty =
             BindableProperty.Create(
@@ -223,6 +245,7 @@ namespace BrainWaves.CustomControls
             get => (double)GetValue(ActivityIndicatorScaleProperty);
             set => SetValue(ActivityIndicatorScaleProperty, value);
         }
+        #endregion
         #endregion
     }
 }

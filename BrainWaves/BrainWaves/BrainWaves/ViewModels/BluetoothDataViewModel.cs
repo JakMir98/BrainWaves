@@ -8,6 +8,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -23,7 +24,7 @@ namespace BrainWaves.ViewModels
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
         List<byte> buffer = new List<byte>();
-        //private List<float> floatSamples = new List<float>();
+        private ObservableCollection<float> floatSamples = new ObservableCollection<float>();
         private SampleTranformService sampleTransformService;
         private bool areButtonsEnabled = false;
         private string outputText;
@@ -35,6 +36,7 @@ namespace BrainWaves.ViewModels
         public ICommand StartReceivingCommand { private set; get; }
         public ICommand StopReceivingCommand { private set; get; }
         public ICommand GoToChartsCommand { private set; get; }
+        public ICommand CalculateCommand { private set; get; }
 
         public BluetoothDataViewModel(IDevice connectedDevice)
         {
@@ -58,6 +60,8 @@ namespace BrainWaves.ViewModels
             StopReceivingCommand = new Command(StopReceiving);
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
             GoBackCommand = new Command(async () => await GoBack());
+
+            CalculateCommand = new Command(Calculate);
         }
 
         public string OutputText
@@ -77,6 +81,12 @@ namespace BrainWaves.ViewModels
         {
             get => entryText;
             set => SetProperty(ref entryText, value);
+        }
+
+        public ObservableCollection<float> FloatSamples
+        {
+            get => floatSamples;
+            set => SetProperty(ref floatSamples, value);
         }
 
         private async Task GetCharacteristic()
@@ -198,7 +208,7 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    App.fSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
+                    FloatSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
                     OutputText += stringValue + ", ";
                 }
             });
@@ -207,11 +217,19 @@ namespace BrainWaves.ViewModels
 
         private async Task GoToChartsPage()
         {
-            OutputText += $"num = {App.fSamples.Count}";
+            OutputText += $"num = {FloatSamples.Count}";
             IsBusy = true;
             BusyMessage = "Opening page";
-            await OpenPage(new ChartsPage());
+            await OpenPage(new ChartsPage(new List<float>(FloatSamples)));
             IsBusy = false;
+        }
+
+        private void Calculate()
+        {
+            for(int i = 0; i < floatSamples.Count; i++)
+            {
+                //FloatSamples[i] = sampleTransformService.
+            }
         }
     }
 }

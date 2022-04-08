@@ -48,8 +48,6 @@ namespace BrainWaves.Services
             FftSharp.Filter.BandPass(samples, sampleRate, minFrequency: 20, maxFrequency: 2000);
             FftSharp.Filter.BandStop(samples, sampleRate, minFrequency: 20, maxFrequency: 2000);
             FftSharp.Filter.HighPass(samples, sampleRate, minFrequency: 20);
-
-
         }
 
         public void Window(double[] signal)

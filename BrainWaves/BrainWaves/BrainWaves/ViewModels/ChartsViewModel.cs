@@ -20,8 +20,10 @@ namespace BrainWaves.ViewModels
 
         private Chart frequencyChart;
         private Chart timeChart;
-        //private List<float> samples = new List<float>();
+        private List<float> samples = new List<float>();
         private ExcelService excelService;
+        private bool isFreqChartVisible = false;
+        private bool isTimeChartVisible = false;
 
         public ICommand ExportToExcelCommand { private set; get; }
 
@@ -44,7 +46,7 @@ namespace BrainWaves.ViewModels
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
             
-            //samples = _samples;
+            samples = _samples;
         }
 
         public async Task SetupChartsAsync()
@@ -70,16 +72,30 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref text, value);
         }
 
-        private Task SetupCharts()
+        public bool IsFreqChartVisible
         {
-            var t = Task.Run(() =>
+            get => isFreqChartVisible;
+            set => SetProperty(ref isFreqChartVisible, value);
+        }
+
+        public bool IsTimeChartVisible
+        {
+            get => isTimeChartVisible;
+            set => SetProperty(ref isTimeChartVisible, value);
+        }
+
+        private async Task SetupCharts()
+        {
+            var t = Task.Run(async () =>
             {
                 IsBusy = true;
                 BusyMessage = Resources.Strings.Resource.SettingUpCharts;
                 List<ChartEntry> frequencyRecords = new List<ChartEntry>();
 
                 List<ChartEntry> timeRecords = new List<ChartEntry>();
-                foreach (var item in App.fSamples)
+
+                //foreach (var item in App.fSamples)
+                foreach (var item in samples)
                 {
                     timeRecords.Add(new ChartEntry(item)
                     {
@@ -90,7 +106,7 @@ namespace BrainWaves.ViewModels
                         ValueLabelColor = SKColors.White,
                     });
                 }
-                /*
+               
                 FrequencyChart = new LineChart
                 {
                     Entries = frequencyRecords,
@@ -99,7 +115,7 @@ namespace BrainWaves.ViewModels
                     BackgroundColor = SKColors.Transparent,
                     LabelColor = SKColors.White
                 };
-                */
+               
                 TimeChart = new PointChart
                 {
                     Entries = timeRecords,
@@ -108,11 +124,16 @@ namespace BrainWaves.ViewModels
                     BackgroundColor = SKColors.Transparent,
                     LabelColor = SKColors.White
                 };
-
-                Text = $"num of samples = {App.fSamples.Count}\n max value = {App.fSamples.Max()}\n min value = {App.fSamples.Min()}";
+                  /**/
+                IsFreqChartVisible = true;
+                IsTimeChartVisible = true;
+                if(App.fSamples.Count > 0)
+                {
+                    Text = $"num of samples = {App.fSamples.Count}\n max value = {App.fSamples.Max()}\n min value = {App.fSamples.Min()}";
+                }
                 IsBusy = false;
+                
             });
-            return t;
         }
 
         private async Task ExportToExcel()

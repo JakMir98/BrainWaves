@@ -56,6 +56,7 @@
                 VerticalOptions="Center"
                 LeftLabelIsVisible="True"
                 LeftTitleText="{Binding BusyMessage}"
+                LabelTextColorProp="{StaticResource PrimaryColor}"
                 RightLabelIsVisible="False"
                 ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
                 ActivityIndicatorIsVisible="{Binding IsBusy}" />
@@ -63,9 +64,7 @@
             <ListView
                 x:Name="DevicesList"
                 ItemsSource="{Binding GattDevices}"
-                ItemTapped="DevicesList_ItemTapped"
-                IsPullToRefreshEnabled="True"
-                RefreshCommand="{Binding ScanDevicesCommand}">
+                ItemTapped="DevicesList_ItemTapped">
             </ListView>
         </StackLayout>
         

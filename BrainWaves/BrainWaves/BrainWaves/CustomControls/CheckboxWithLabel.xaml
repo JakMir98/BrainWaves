@@ -14,11 +14,13 @@
                 x:Name="SwitchText"
                 VerticalOptions="Center" 
                 Style="{StaticResource LabelStyleNormal}"
-                Text="{Binding TitleText, Source={x:Reference CustomCheckboxParent}}"/>
+                Text="{Binding TitleText, Source={x:Reference CustomCheckboxParent}}"
+                TextColor="{Binding LabelTextColorProp, Source={x:Reference CustomCheckboxParent}}"/>
             <CheckBox 
                 x:Name="CheckboxToggle"
                 VerticalOptions="Center" 
-                IsChecked="{Binding IsChecked, Source={x:Reference CustomCheckboxParent}}"/>
+                IsChecked="{Binding IsChecked, Source={x:Reference CustomCheckboxParent}}"
+                Color="{Binding CheckboxColorProp, Source={x:Reference CustomCheckboxParent}}"/>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

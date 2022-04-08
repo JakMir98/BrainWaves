@@ -29,6 +29,7 @@
                 VerticalOptions="Center"
                 LeftLabelIsVisible="True"
                 LeftTitleText="{Binding BusyMessage}"
+                LabelTextColorProp="{StaticResource PrimaryColor}"
                 RightLabelIsVisible="False"
                 ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
                 ActivityIndicatorIsVisible="{Binding IsBusy}" />
@@ -39,7 +40,8 @@
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
-                <RowDefinition Height="6*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -82,7 +84,15 @@
 
             <Button
                 Grid.Row="2"
-                Grid.ColumnSpan="2"
+                Grid.Column="0"
+                Style="{StaticResource ButtonStyleNormal}"
+                Margin="10"
+                Text="Disconnect"
+                Command="{Binding DisconnectCommand}"/>
+
+            <Button
+                Grid.Row="2"
+                Grid.ColumnSpan="1"
                 Style="{StaticResource ButtonStyleNormal}"
                 Margin="10"
                 Text="Disconnect"
@@ -113,6 +123,11 @@
                        VerticalOptions="CenterAndExpand" />
                 </StackLayout>
             </ScrollView>
+
+            <ListView Grid.Row="5" Grid.ColumnSpan="2"
+                x:Name="SamplesList"
+                ItemsSource="{Binding FloatSamples}">
+            </ListView>
         </Grid>
     </StackLayout>
 </ContentPage>

@@ -17,6 +17,7 @@
                 HorizontalOptions="EndAndExpand"
                 Style="{StaticResource LabelStyleNormal}"
                 Text="{Binding LeftTitleText, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                TextColor="{Binding LabelTextColorProp, Source={x:Reference ActivityIndicatorWithLabelParent}}"
                 IsVisible="{Binding LeftLabelIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"/>
             
             <ActivityIndicator 
@@ -35,6 +36,7 @@
                 HorizontalOptions="StartAndExpand"
                 Style="{StaticResource LabelStyleNormal}"
                 Text="{Binding RightTitleText, Source={x:Reference ActivityIndicatorWithLabelParent}}"
+                TextColor="{Binding LabelTextColorProp, Source={x:Reference ActivityIndicatorWithLabelParent}}"
                 IsVisible="{Binding RightLabelIsVisible, Source={x:Reference ActivityIndicatorWithLabelParent}}"/>
         </StackLayout>
     </ContentView.Content>
