@@ -151,6 +151,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Disconnecting....
+        /// </summary>
+        internal static string DisconnectingMessage {
+            get {
+                return ResourceManager.GetString("DisconnectingMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Empty.
         /// </summary>
         internal static string EmptyText {
@@ -178,11 +187,11 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Exporting to excell.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Exporting to excell....
         /// </summary>
-        internal static string ExportingToExcellText {
+        internal static string ExportingToExcellMessage {
             get {
-                return ResourceManager.GetString("ExportingToExcellText", resourceCulture);
+                return ResourceManager.GetString("ExportingToExcellMessage", resourceCulture);
             }
         }
         
@@ -201,6 +210,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string FindDevice {
             get {
                 return ResourceManager.GetString("FindDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Characteristic dowload....
+        /// </summary>
+        internal static string GettingCharacteristicMessage {
+            get {
+                return ResourceManager.GetString("GettingCharacteristicMessage", resourceCulture);
             }
         }
         
@@ -277,11 +295,20 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Scanning.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Scanning....
         /// </summary>
-        internal static string Scanning {
+        internal static string ScanningMessage {
             get {
-                return ResourceManager.GetString("Scanning", resourceCulture);
+                return ResourceManager.GetString("ScanningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Sending....
+        /// </summary>
+        internal static string SendingMessage {
+            get {
+                return ResourceManager.GetString("SendingMessage", resourceCulture);
             }
         }
         
@@ -304,11 +331,11 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Setting up charts.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Setting up charts....
         /// </summary>
-        internal static string SettingUpCharts {
+        internal static string SettingUpChartsMessage {
             get {
-                return ResourceManager.GetString("SettingUpCharts", resourceCulture);
+                return ResourceManager.GetString("SettingUpChartsMessage", resourceCulture);
             }
         }
         

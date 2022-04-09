@@ -22,7 +22,11 @@
             LeftButtonTextColorProp="White"
             TitleText="{Binding Title}"
             CustomTextColorProp="White"
-            RightButtonIsVisibleProp="False"/>
+            RightButtonIsVisibleProp="True"
+            RightButtonTitleTextProp="{Static resource:Resource.Settings}"
+            RightButtonCommand="{Binding GoToSettingsCommand}"
+            RightButtonCommandParameter="{Binding GoToSettingsCommand}"
+            RightButtonTextColorProp="White"/>
 
         <customControls:ActivityIndicatorWithLabel
                 HorizontalOptionsProp="Center"
@@ -92,11 +96,11 @@
 
             <Button
                 Grid.Row="2"
-                Grid.ColumnSpan="1"
+                Grid.Column="1"
                 Style="{StaticResource ButtonStyleNormal}"
                 Margin="10"
-                Text="Disconnect"
-                Command="{Binding DisconnectCommand}"/>
+                Text="Calcualte"
+                Command="{Binding CalculateCommand}"/>
 
             <Entry
                Grid.Row="3"

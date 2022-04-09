@@ -23,7 +23,6 @@ namespace BrainWaves.ViewModels
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
-        List<byte> buffer = new List<byte>();
         private ObservableCollection<float> floatSamples = new ObservableCollection<float>();
         private SampleTranformService sampleTransformService;
         private bool areButtonsEnabled = false;
@@ -37,6 +36,7 @@ namespace BrainWaves.ViewModels
         public ICommand StopReceivingCommand { private set; get; }
         public ICommand GoToChartsCommand { private set; get; }
         public ICommand CalculateCommand { private set; get; }
+        public ICommand GoToSettingsCommand { private set; get; }
 
         public BluetoothDataViewModel(IDevice connectedDevice)
         {
@@ -60,7 +60,7 @@ namespace BrainWaves.ViewModels
             StopReceivingCommand = new Command(StopReceiving);
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
             GoBackCommand = new Command(async () => await GoBack());
-
+            GoToSettingsCommand = new Command(async () => await GoToSettings());
             CalculateCommand = new Command(Calculate);
         }
 
@@ -69,7 +69,6 @@ namespace BrainWaves.ViewModels
             get => outputText;
             set => SetProperty(ref outputText, value);
         }
-
 
         public bool AreButtonsEnabled
         {
@@ -93,6 +92,8 @@ namespace BrainWaves.ViewModels
         {
             try
             {
+                IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.GettingCharacteristicMessage;
                 var service = await _connectedDevice.GetServiceAsync(Guid.Parse
                     (Preferences.Get(Constants.PrefsSavedServiceUUID, Constants.UartGattServiceId.ToString())));
 
@@ -113,12 +114,18 @@ namespace BrainWaves.ViewModels
             {
                 OutputText += $"Error initializing UART GATT service. {ex.Message}" + Environment.NewLine;
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private async Task GetCharacteristicWithoutUUID()
         {
             try
             {
+                IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.GettingCharacteristicMessage;
                 var services = await _connectedDevice.GetServicesAsync();
                 foreach (var service in services)
                 {
@@ -148,20 +155,30 @@ namespace BrainWaves.ViewModels
             {
                 OutputText += $"Error initializing UART GATT service. {ex.Message}" + Environment.NewLine;
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private async void Send()
         {
             try
             {
+                IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.SendingMessage;
                 if (sendCharacteristic != null)
                 {
-                    var bytes = await sendCharacteristic.WriteAsync(Encoding.ASCII.GetBytes($"{entryText}\r\n"));
+                    var bytes = await sendCharacteristic.WriteAsync(Encoding.UTF8.GetBytes($"{entryText}\r\n"));
                 }
             }
             catch (Exception ex)
             {
                 OutputText += $"Error sending comand to UART. {ex.Message}" + Environment.NewLine;
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -169,6 +186,8 @@ namespace BrainWaves.ViewModels
         {
             try
             {
+                IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.DisconnectingMessage;
                 await _bluetoothAdapter.DisconnectDeviceAsync(_connectedDevice);
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
@@ -177,6 +196,10 @@ namespace BrainWaves.ViewModels
                 await PopupNavigation.Instance.PushAsync(new InfoPopup(
                             Resources.Strings.Resource.ErrorTitle,
                             "Error disconnecting to BLE device"));
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -197,7 +220,7 @@ namespace BrainWaves.ViewModels
 
         private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
         {
-            buffer.AddRange(args.Characteristic.Value);
+            BusyMessage = "Reading";
             var t = Task.Run(() =>
             {
                 var receivedBytes = args.Characteristic.Value;
@@ -209,7 +232,7 @@ namespace BrainWaves.ViewModels
                 else
                 {
                     FloatSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
-                    OutputText += stringValue + ", ";
+                    //OutputText += stringValue + ", ";
                 }
             });
             t.Wait();
@@ -224,11 +247,31 @@ namespace BrainWaves.ViewModels
             IsBusy = false;
         }
 
-        private void Calculate()
+        private async Task GoToSettings()
         {
-            for(int i = 0; i < floatSamples.Count; i++)
+            await OpenPage(new SettingsPage());
+        }
+
+        private async void Calculate()
+        {
+            try
             {
-                //FloatSamples[i] = sampleTransformService.
+                IsBusy = true;
+                BusyMessage = Resources.Strings.Resource.SendingMessage;
+                if (sendCharacteristic != null)
+                {
+                    int hz = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
+                    int time = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
+                    var bytes = await sendCharacteristic.WriteAsync(Encoding.UTF8.GetBytes($"start;{hz};{time}"));
+                }
+            }
+            catch (Exception ex)
+            {
+                OutputText += $"Error sending comand to UART. {ex.Message}" + Environment.NewLine;
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

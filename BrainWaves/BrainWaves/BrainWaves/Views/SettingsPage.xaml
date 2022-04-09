@@ -85,6 +85,7 @@
                             VerticalOptions="Center"
                             HorizontalOptions="Center"
                             LabelTextColorProp="NavajoWhite"
+                            CheckboxColorProp="Red"
                             TitleText="{Static resource:Resource.AutomaticServiceChoosing}" 
                             IsChecked="{Binding IsAutomaticServiceChoosingActive}"/>
 

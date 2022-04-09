@@ -1,13 +1,9 @@
-﻿using BrainWaves.Popups;
-using BrainWaves.Views;
+﻿using BrainWaves.Views;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
-using Rg.Plugins.Popup.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -124,7 +120,7 @@ namespace BrainWaves.ViewModels
             if(canScan)
             {
                 IsBusy = true;
-                BusyMessage = Resources.Strings.Resource.Scanning;
+                BusyMessage = Resources.Strings.Resource.ScanningMessage;
                 IsScanning = true;
                 if (!await PermissionsGrantedAsync())
                 {

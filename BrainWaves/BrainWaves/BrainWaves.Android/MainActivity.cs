@@ -15,6 +15,7 @@ namespace BrainWaves.Droid
             Rg.Plugins.Popup.Popup.Init(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            OxyPlot.Xamarin.Forms.Platform.Android.PlotViewRenderer.Init();
             LoadApplication(new App());
         }
 

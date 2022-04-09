@@ -46,7 +46,43 @@ BLEDescriptor writeDescriptor(BLEUUID((uint16_t)0x2903));
 
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
-uint32_t value = 0;
+int value = 0;
+int counter = 0;
+bool sendEndMessage = false;
+bool shouldStartMeasure = false;
+//std::string sendValue = "Jakub";
+
+bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
+{
+    char c = ';';
+    bool firstFound = false;
+    bool secondFound = false;
+    
+    std::size_t firstDelimeter = inputStr.find(c);
+    if (firstDelimeter != std::string::npos)
+    {
+        firstFound = true;
+    }
+        
+    std::size_t secondDelimeter = inputStr.find(c,firstDelimeter+1);
+    if (secondDelimeter!=std::string::npos)
+    {
+        secondFound = true;
+    }
+    std::string message = inputStr.substr(0, firstDelimeter);
+
+    if(firstFound && secondFound && message.compare("start") == 0)
+    {
+        std::string firstNum = inputStr.substr(firstDelimeter+1,secondDelimeter-firstDelimeter-1);
+        *hzOut = atoi(firstNum.c_str());
+
+        std::string secondNum = inputStr.substr(secondDelimeter+1,inputStr.length()-secondDelimeter);
+        *timeOut = atoi(secondNum.c_str());
+        return true;
+    }
+
+    return false;
+}
 
 class ServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
@@ -62,19 +98,25 @@ class ServerCallbacks: public BLEServerCallbacks {
 
 class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
-      std::string value = pCharacteristic->getValue();
-      int v = atoi(value.c_str());
-
-      if(value.compare("start") == 0)
-
-      if (value.length() > 0) {
-        Serial.println("*********");
-        Serial.print("New value: ");
-        for (int i = 0; i < value.length(); i++)
-          Serial.print(value[i]);
-
-        Serial.println();
-        Serial.println("*********");
+      std::string value = pCharacteristic->getValue();  
+      int hz = 0;
+      int timeValue = 0;
+      if (get_numbers(value, &hz, &timeValue))
+      {
+        shouldStartMeasure = true;
+        Serial.println("Received start: " + String(hz) +"hz "+ String(timeValue) + " min");
+      }
+      else
+      {
+        if (value.length() > 0) 
+        {
+          Serial.println("*********");
+          Serial.print("Received value: ");
+          for (int i = 0; i < value.length(); i++)
+            Serial.print(value[i]);
+          Serial.println();
+          Serial.println("*********");
+        }
       }
     }
 };
@@ -116,13 +158,32 @@ void setup() {
 
 void loop() {
     // notify changed value
-    if (deviceConnected) {
-        //char buf[BUFF_LENGTH];
-        //snprintf(buf, BUFF_LENGTH, "Hello there %d", value);
-        writeCharacteristic.setValue(value);
-        writeCharacteristic.notify();
-        value++;
-        delay(1000); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
+    if (deviceConnected) 
+    {
+      if(shouldStartMeasure)
+      {
+        if(!sendEndMessage)
+        {
+          char outCharArr[10];
+          itoa(value++, outCharArr, 10);
+          std::string s = std::string(outCharArr);
+          writeCharacteristic.setValue(s);
+          writeCharacteristic.notify();
+          if(value > 4095)
+          {
+            value = 0;
+            sendEndMessage = true;
+            shouldStartMeasure = false;
+          }
+        }
+        else
+        {
+          writeCharacteristic.setValue("End");
+          writeCharacteristic.notify();
+          sendEndMessage = false;
+        }
+      }
+      delay(5); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
     }
     // disconnecting
     if (!deviceConnected && oldDeviceConnected) {

@@ -13,6 +13,8 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,10 +60,25 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.16.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DocumentFormat.OpenXml.2.16.0\lib\netstandard2.0\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="SkiaSharp, Version=2.80.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.2.80.3\lib\xamarinmac2.0\SkiaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.Forms, Version=2.80.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.Forms.2.80.3\lib\xamarinmac2.0\SkiaSharp.Views.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.Mac, Version=2.80.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SkiaSharp.Views.2.80.3\lib\xamarinmac2.0\SkiaSharp.Views.Mac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Packaging, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.Packaging.4.7.0\lib\netstandard2.0\System.IO.Packaging.dll</HintPath>
+    <Reference Include="System.IO.Packaging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IO.Packaging.6.0.0\lib\netstandard2.0\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Essentials, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Xamarin.Essentials.1.7.2\lib\xamarinmac20\Xamarin.Essentials.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Mac" />
     <Reference Include="OpenTK" />
@@ -81,26 +98,14 @@
     <Reference Include="Xamarin.Forms.Xaml">
       <HintPath>..\..\packages\Xamarin.Forms.5.0.0.2401\lib\Xamarin.Mac\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.Essentials">
-      <HintPath>..\..\packages\Xamarin.Essentials.1.7.1\lib\xamarinmac20\Xamarin.Essentials.dll</HintPath>
-    </Reference>
     <Reference Include="Rg.Plugins.Popup">
       <HintPath>..\..\packages\Rg.Plugins.Popup.2.1.0\lib\xamarinmac20\Rg.Plugins.Popup.dll</HintPath>
-    </Reference>
-    <Reference Include="SkiaSharp">
-      <HintPath>..\..\packages\SkiaSharp.2.80.2\lib\xamarinmac2.0\SkiaSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="SkiaSharp.Views.Mac">
-      <HintPath>..\..\packages\SkiaSharp.Views.2.80.2\lib\xamarinmac2.0\SkiaSharp.Views.Mac.dll</HintPath>
     </Reference>
     <Reference Include="Microcharts">
       <HintPath>..\..\packages\Microcharts.Forms.0.9.5.9\lib\netstandard2.0\Microcharts.dll</HintPath>
     </Reference>
     <Reference Include="Microcharts.macOS">
       <HintPath>..\..\packages\Microcharts.0.9.5.9\lib\xamarinmac2.0\Microcharts.macOS.dll</HintPath>
-    </Reference>
-    <Reference Include="SkiaSharp.Views.Forms">
-      <HintPath>..\..\packages\SkiaSharp.Views.Forms.2.80.2\lib\xamarinmac2.0\SkiaSharp.Views.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Microcharts.Forms">
       <HintPath>..\..\packages\Microcharts.Forms.0.9.5.9\lib\netstandard2.0\Microcharts.Forms.dll</HintPath>
@@ -119,9 +124,6 @@
     </Reference>
     <Reference Include="System.Buffers">
       <HintPath>..\..\packages\System.Buffers.4.5.1\lib\netstandard2.0\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory">
       <HintPath>..\..\packages\System.Memory.4.5.4\lib\netstandard2.0\System.Memory.dll</HintPath>
@@ -148,6 +150,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
     <None Include="packages.config" />
@@ -173,5 +176,11 @@
   <Import Project="..\packages\Xamarin.Forms.5.0.0.2401\build\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.5.0.0.2401\build\Xamarin.Forms.targets')" />
   <Import Project="..\packages\SkiaSharp.2.80.2\build\xamarinmac2.0\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.2.80.2\build\xamarinmac2.0\SkiaSharp.targets')" />
   <Import Project="..\..\packages\Xamarin.Forms.5.0.0.2401\build\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.5.0.0.2401\build\Xamarin.Forms.targets')" />
-  <Import Project="..\..\packages\SkiaSharp.2.80.2\build\xamarinmac2.0\SkiaSharp.targets" Condition="Exists('..\..\packages\SkiaSharp.2.80.2\build\xamarinmac2.0\SkiaSharp.targets')" />
+  <Import Project="..\..\packages\SkiaSharp.2.80.3\build\xamarinmac2.0\SkiaSharp.targets" Condition="Exists('..\..\packages\SkiaSharp.2.80.3\build\xamarinmac2.0\SkiaSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ten projekt zawiera odwołania do pakietów NuGet, których nie ma na tym komputerze. Użyj przywracania pakietów NuGet, aby je pobrać. Aby uzyskać więcej informacji, zobacz http://go.microsoft.com/fwlink/?LinkID=322105. Brakujący plik: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\SkiaSharp.2.80.3\build\xamarinmac2.0\SkiaSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SkiaSharp.2.80.3\build\xamarinmac2.0\SkiaSharp.targets'))" />
+  </Target>
 </Project>

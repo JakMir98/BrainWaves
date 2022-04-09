@@ -10,8 +10,11 @@ namespace BrainWaves.Helpers
         public static Guid UartGattCharacteristicSendReceiveId = Guid.Parse("beb5483e-36e1-4688-b7f5-ea07361b26a8");
         public static Guid GattCharacteristicSendId = Guid.Parse("beb5483e-36e1-4688-b7f5-ea07361b26a8");
         public static Guid GattCharacteristicReceiveId = Guid.Parse("cba1d466-344c-4be3-ab3f-189f80dd7518");
-        //public static Guid UartGattCharacteristicSendId = Guid.Parse("0000FFF2-0000-1000-8000-00805f9b34fb");
-        //public static Guid SpecialNotificationDescriptorId = Guid.Parse("00002902-0000-1000-8000-00805f9b34fb");
+
+        public const int MinSamplingFrequency = 80; //Hz
+        public const int MaxSamplingFrequency = 500; //Hz
+        public const int MinTimeToReadInMinutes = 1;
+        public const int MaxTimeToReadInMinutes = 60; // max = 1khz * 3600 = 36MHZ/h
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";

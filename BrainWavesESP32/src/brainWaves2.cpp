@@ -24,7 +24,11 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
-
+#include <iostream>
+#include <locale>
+#include <string>
+#include <codecvt>
+#include <fstream>
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
@@ -87,6 +91,38 @@ class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
       }
     }
 };
+
+bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
+{
+    char c = ';';
+    bool firstFound = false;
+    bool secondFound = false;
+    
+    std::size_t firstDelimeter = inputStr.find(c);
+    if (firstDelimeter != std::string::npos)
+    {
+        firstFound = true;
+    }
+        
+    std::size_t secondDelimeter = inputStr.find(c,firstDelimeter+1);
+    if (secondDelimeter!=std::string::npos)
+    {
+        secondFound = true;
+    }
+    std::string message = inputStr.substr(0, firstDelimeter);
+
+    if(firstFound && secondFound && message.compare("start") == 0)
+    {
+        std::string firstNum = inputStr.substr(firstDelimeter+1,secondDelimeter-firstDelimeter-1);
+        int fnumber = atoi(firstNum.c_str());
+
+        std::string secondNum = inputStr.substr(secondDelimeter+1,inputStr.length()-secondDelimeter);
+        int snumber = atoi(secondNum.c_str());
+        return true;
+    }
+
+    return false;
+}
 
 void setup() {
   Serial.begin(115200);

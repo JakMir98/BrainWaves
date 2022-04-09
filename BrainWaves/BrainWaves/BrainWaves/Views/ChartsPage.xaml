@@ -5,6 +5,7 @@
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
+             xmlns:oxy="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
@@ -47,12 +48,36 @@
                         FontSize="Large"
                         IsVisible="{Binding IsTimeChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
-                    <microchart:ChartView
-                        x:Name="ChartTime"
-                        Chart="{Binding TimeChart}"
-                        IsVisible="{Binding IsTimeChartVisible}"
-                        HeightRequest="250"
-                        Margin="0,0,0,40"/>
+
+                    <OnPlatform x:TypeArguments="View">
+                        <On Platform="iOS, Android, UWP">
+                            <oxy:PlotView 
+                                BackgroundColor="White"
+                                HeightRequest="200" 
+                                Model="{Binding TimePlotModel}" 
+                                VerticalOptions="FillAndExpand" 
+                                HorizontalOptions="FillAndExpand" 
+                                IsVisible="true"/>
+                        </On>
+                        <On Platform="macOS">
+                            <microchart:ChartView
+                                x:Name="ChartTime"
+                                Chart="{Binding TimeChart}"
+                                IsVisible="{Binding IsTimeChartVisible}"
+                                HeightRequest="250"
+                                Margin="0,0,0,40"/>
+                        </On>
+                    </OnPlatform>
+
+                    <Button 
+                        Command="{Binding CreateCommand}"
+                        Text="Create"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="0,20,0,60"
+                        WidthRequest="250"
+                        Style="{StaticResource ButtonStyleNormal}"/>
+
 
                     <Label 
                         Text="Frequency domain"
@@ -61,12 +86,26 @@
                         FontSize="Large"
                         IsVisible="{Binding IsFreqChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
-                    <microchart:ChartView
-                        x:Name="ChartFreq"
-                        Chart="{Binding FrequencyChart}"
-                        HeightRequest="250"
-                        IsVisible="{Binding IsFreqChartVisible}"
-                        Margin="0,0,0,40"/>
+                    <OnPlatform x:TypeArguments="View">
+                        <On Platform="iOS, Android, UWP">
+                            <oxy:PlotView 
+                                BackgroundColor="White"
+                                HeightRequest="200" 
+                                Model="{Binding FreqPlotModel}" 
+                                VerticalOptions="FillAndExpand" 
+                                HorizontalOptions="FillAndExpand" 
+                                IsVisible="true"/>
+                        </On>
+                        <On Platform="macOS">
+                            <microchart:ChartView
+                                x:Name="ChartFreq"
+                                Chart="{Binding FrequencyChart}"
+                                HeightRequest="250"
+                                IsVisible="{Binding IsFreqChartVisible}"
+                                Margin="0,0,0,40"/>
+                        </On>
+                    </OnPlatform>
+                    
 
                     <Button 
                         Command="{Binding ExportToExcelCommand}"

@@ -12,7 +12,7 @@ namespace BrainWaves.Tests.ViewModelTests
 {
     public class ScanViewModelTests
     {
-        ScanViewModel scanViewModel;
+        private ScanViewModel scanViewModel;
         [SetUp]
         public void Setup()
         {

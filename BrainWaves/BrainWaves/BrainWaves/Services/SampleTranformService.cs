@@ -25,6 +25,7 @@ namespace BrainWaves.Services
         // odjąć składowa stałą (zero wirtualne)
         // * milion bo na wolty
         // / 2000 bo empirycznie wyznaczone wzmocnienie
+        //y_vals[i - 1] = ((y_vals[i - 1] / 4095 * 3.3 * 2) - 2.048)/2 * 1000
         public float ConvertToVoltage(byte[] receivedBytes)
         {
             string stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
