@@ -9,11 +9,10 @@
 
         <Color x:Key="PrimaryColor">#004004</Color>
         <Color x:Key="PrimaryPurple">#614244</Color>
-        <Color x:Key="BackgroundColorDark">#222222</Color>
         <Color x:Key="ButtonDisabledColor">#808080</Color>
 
-        <Color x:Key="BackgroundColorDarkTheme">#000000</Color>
-        <Color x:Key="BackgroundColorLight">#68A0B1</Color>
+        <Color x:Key="BackgroundColorDarkTheme">#222222</Color>
+        <Color x:Key="BackgroundColorLight">#FFFFFF</Color>
 
         <Color x:Key="TextColorDarkTheme">#FFFFFF</Color>
         <Color x:Key="TextColorLight">#000000</Color>
@@ -78,12 +77,19 @@
             <Setter Property="TextColor">
                 <Setter.Value>
                     <OnPlatform x:TypeArguments="Color">
-                        <On Platform="iOS,Android,macOS" Value="#FFFFFF"></On>
-                        <On Platform="UWP" Value="#000000"></On>
+                        <On Platform="Android,macOS" Value="#FFFFFF"></On>
+                        <On Platform="UWP,iOS" Value="#000000"></On>
                     </OnPlatform>
                 </Setter.Value>
             </Setter>
-            <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
+            <Setter Property="PlaceholderColor">
+                <Setter.Value>
+                    <OnPlatform x:TypeArguments="Color">
+                        <On Platform="Android,macOS" Value="#FFFFFF"></On>
+                        <On Platform="UWP,iOS" Value="#000000"></On>
+                    </OnPlatform>
+                </Setter.Value>
+            </Setter>
             <Setter Property="WidthRequest" Value="300"/>
             <Setter Property="HorizontalTextAlignment" Value="Start"/>
         </Style>

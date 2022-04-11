@@ -39,9 +39,19 @@
 		<string>bluetooth-central</string>
 		<string>bluetooth-peripheral</string>
 	</array>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>We need Bluetooth for application to gather data from sensors</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need Bluetooth for application to gather data from sensors</string>
+	<key>NSBluetoothAlwaysAndWhenIsUseUsageDescription</key>
+	<string>We need Bluetooth for application to gather data from sensors</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We need Location for application to gather data from sensors</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need Location for application to gather data from sensors</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need Location for application to gather data from sensors</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need Location for application to gather data from sensors</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>We need Bluetooth for application to gather data from sensors</string>
 </dict>
 </plist>

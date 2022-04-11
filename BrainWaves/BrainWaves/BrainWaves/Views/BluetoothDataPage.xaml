@@ -12,7 +12,11 @@
 
     <StackLayout
         Orientation="Vertical">
-
+        <StackLayout.Margin>
+            <OnPlatform x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,20,0,0" />
+            </OnPlatform>
+        </StackLayout.Margin>
         <customControls:CustomToolbar
             BackgroundColorProp="{StaticResource PrimaryColor}"
             LeftButtonIsVisibleProp="True"

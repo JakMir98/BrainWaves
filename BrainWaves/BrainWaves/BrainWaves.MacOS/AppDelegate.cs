@@ -27,6 +27,7 @@ namespace BrainWaves.MacOS
         {
             Rg.Plugins.Popup.Popup.Init();
             Forms.Init();
+            //OxyPlot.Xamarin.Forms.Platform.MacOS.PlotViewRenderer.Init();
             LoadApplication(new App());
             base.DidFinishLaunching(notification);
         }

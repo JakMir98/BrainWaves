@@ -15,6 +15,7 @@
           <Button
               x:Name="LeftButton"
               HorizontalOptions="Start"
+              MinimumWidthRequest="50"
               Text="{Binding LeftButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
               TextColor="{Binding LeftButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
               FontSize="{Binding LeftButtonTextSizeProp, Source={x:Reference CustomToolbarParent}}"
@@ -55,6 +56,7 @@
 
           <Button
               x:Name="RightButton"
+              MinimumWidthRequest="50"
               Text="{Binding RightButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
               TextColor="{Binding RightButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
               FontSize="{Binding RightButtonTextSizeProp, Source={x:Reference CustomToolbarParent}}"
@@ -63,7 +65,6 @@
               BorderColor="{Binding RightButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
               CornerRadius="{Binding RightButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
               Margin="0,5,20,5"
-              Scale="0.8"
               BackgroundColor="Transparent"
               HorizontalOptions="EndAndExpand"
               IsVisible="{Binding RightButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">

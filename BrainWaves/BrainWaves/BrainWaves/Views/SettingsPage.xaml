@@ -14,6 +14,11 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
+            <StackLayout.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="iOS" Value="0,20,0,0" />
+                </OnPlatform>
+            </StackLayout.Margin>
             <customControls:CustomToolbar
                     BackgroundColorProp="{StaticResource PrimaryColor}"
                     LeftButtonIsVisibleProp="True"
@@ -22,6 +27,7 @@
                     LeftButtonCommandParameter="{Binding GoBackCommand}"
                     LeftButtonTextColorProp="White"
                     TitleText="{Binding Title}"
+                    LabelSizeProp="25.0"
                     CustomTextColorProp="White"
                     RightButtonIsVisibleProp="False"/>
             <ScrollView Orientation="Vertical">
@@ -30,13 +36,13 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Margin="20"
-                        LabelTextColorProp="NavajoWhite"
+                        LabelTextColorProp="Red"
                         TitleText="{Static resource:Resource.Theme}"
                         IsChecked="{Binding IsDarkThemeOn}" />
 
                     <Picker
                         Title="{Binding SelectedLanguage}"
-                        TitleColor="NavajoWhite"
+                        TitleColor="{StaticResource TextColorLight}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         WidthRequest="250"
                         VerticalOptions="Center"
@@ -51,32 +57,34 @@
                         HorizontalOptions="Center"
                         Text="{Static resource:Resource.TimeToReadMindInMin}"
                         Style="{StaticResource LabelStyleNormal}"
-                        TextColor="NavajoWhite"/>
+                        TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
                     <Entry 
                         Placeholder="{Static resource:Resource.TimeToReadMindInMin}"
                         Text="{Binding TimeToReadMindInMinutes, Mode=TwoWay}"
-                        PlaceholderColor="NavajoWhite"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         BackgroundColor="{Binding EntryTimeToReadMindColor}"
-                        Style="{StaticResource SimpleEntry}"/>
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
 
                     <Label
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Text="{Static resource:Resource.SamplingFreq}"
                         Style="{StaticResource LabelStyleNormal}"
-                        TextColor="NavajoWhite"/>
+                        TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
                     <Entry 
                         Placeholder="{Static resource:Resource.SamplingFreq}"
                         Text="{Binding SamplingFrequency, Mode=TwoWay}"
-                        PlaceholderColor="NavajoWhite"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         BackgroundColor="{Binding EntrySamplingFreqColor}"
-                        Style="{StaticResource SimpleEntry}"/>
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
 
                     <StackLayout
                         Orientation="Vertical"
@@ -84,7 +92,7 @@
                         <customControls:CheckboxWithLabel
                             VerticalOptions="Center"
                             HorizontalOptions="Center"
-                            LabelTextColorProp="NavajoWhite"
+                            LabelTextColorProp="Red"
                             CheckboxColorProp="Red"
                             TitleText="{Static resource:Resource.AutomaticServiceChoosing}" 
                             IsChecked="{Binding IsAutomaticServiceChoosingActive}"/>
@@ -92,7 +100,8 @@
                         <Label
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Text="{Static resource:Resource.ServiceUUIDLabel}"
-                            Style="{StaticResource LabelStyleNormal}"/>
+                            Style="{StaticResource LabelStyleNormal}"
+                            TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
@@ -102,7 +111,8 @@
                         <Label
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Text="{Static resource:Resource.CharacteristicSendUUIDLabel}"
-                            Style="{StaticResource LabelStyleNormal}"/>
+                            Style="{StaticResource LabelStyleNormal}"
+                            TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}"
@@ -112,7 +122,8 @@
                         <Label
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Text="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
-                            Style="{StaticResource LabelStyleNormal}"/>
+                            Style="{StaticResource LabelStyleNormal}"
+                            TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"

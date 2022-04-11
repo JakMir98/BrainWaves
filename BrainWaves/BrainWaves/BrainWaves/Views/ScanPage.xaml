@@ -15,12 +15,18 @@
     </ContentPage.BindingContext>
 
     <Grid>
-        <StackLayout Orientation="Vertical" BackgroundColor="{AppThemeBinding Dark=Black, Light=CadetBlue}">
+        <StackLayout Orientation="Vertical">
+            <StackLayout.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="iOS" Value="0,20,0,0" />
+                </OnPlatform>
+            </StackLayout.Margin>
             <customControls:CustomToolbar
                 BackgroundColorProp="{StaticResource PrimaryColor}"
                 LeftButtonIsVisibleProp="False"
                 TitleText="{Binding Title}"
                 CustomTextColorProp="White"
+                LabelSizeProp="25.0"
                 RightButtonIsVisibleProp="True"
                 RightButtonTitleTextProp="{Static resource:Resource.Settings}"
                 RightButtonCommand="{Binding GoToSettingsCommand}"
@@ -64,7 +70,8 @@
             <ListView
                 x:Name="DevicesList"
                 ItemsSource="{Binding GattDevices}"
-                ItemTapped="DevicesList_ItemTapped">
+                ItemTapped="DevicesList_ItemTapped"
+                BackgroundColor="Transparent">
             </ListView>
         </StackLayout>
         

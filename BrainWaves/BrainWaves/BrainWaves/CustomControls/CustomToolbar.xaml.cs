@@ -297,6 +297,7 @@ namespace BrainWaves.CustomControls
                 nameof(LeftButtonTextSizeProp),
                 typeof(double),
                 typeof(CustomToolbar),
+                defaultValue: DefaultLabelTextSize,
                 defaultBindingMode: BindingMode.OneWay,
                 propertyChanged: LeftButtonTextSizePropertyChanged);
 
@@ -485,6 +486,7 @@ namespace BrainWaves.CustomControls
                 typeof(double),
                 typeof(CustomToolbar),
                 defaultBindingMode: BindingMode.OneWay,
+                defaultValue: DefaultLabelTextSize,
                 propertyChanged: RightButtonTextSizePropertyChanged);
 
         private static void RightButtonTextSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)

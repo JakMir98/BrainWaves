@@ -57,6 +57,9 @@
     <AOTMode>None</AOTMode>
   </PropertyGroup>
   <ItemGroup>
+      <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
+      <PackageReference Include="OxyPlot.Xamarin.Forms" Version="1.0.0" />
+      <PackageReference Include="OxyPlot.Xamarin.Mac" Version="2.0.0-preview0001" />
     <Reference Include="DocumentFormat.OpenXml, Version=2.16.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DocumentFormat.OpenXml.2.16.0\lib\netstandard2.0\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
