@@ -125,9 +125,9 @@
                         VerticalOptions="Center"
                         LeftLabelIsVisible="True"
                         LeftTitleText="{Binding BusyMessage}"
-                        LabelTextColorProp="{StaticResource PrimaryColor}"
+                        LabelTextColorProp="ForestGreen"
                         RightLabelIsVisible="False"
-                        ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
+                        ActivityIndicatorColorProp="ForestGreen"
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
                 </StackLayout>

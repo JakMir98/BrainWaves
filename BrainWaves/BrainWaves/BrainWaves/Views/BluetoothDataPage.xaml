@@ -21,6 +21,7 @@
             LeftButtonCommandParameter="{Binding GoBackCommand}"
             LeftButtonTextColorProp="White"
             TitleText="{Binding Title}"
+            LabelSizeProp="10"
             CustomTextColorProp="White"
             RightButtonIsVisibleProp="True"
             RightButtonTitleTextProp="{Static resource:Resource.Settings}"
@@ -33,9 +34,9 @@
                 VerticalOptions="Center"
                 LeftLabelIsVisible="True"
                 LeftTitleText="{Binding BusyMessage}"
-                LabelTextColorProp="{StaticResource PrimaryColor}"
+                LabelTextColorProp="ForestGreen"
                 RightLabelIsVisible="False"
-                ActivityIndicatorColorProp="{StaticResource PrimaryColor}"
+                ActivityIndicatorColorProp="ForestGreen"
                 ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
         <Grid Margin="20">
@@ -44,8 +45,8 @@
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
-                <RowDefinition Height="3*" />
-                <RowDefinition Height="3*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="5*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

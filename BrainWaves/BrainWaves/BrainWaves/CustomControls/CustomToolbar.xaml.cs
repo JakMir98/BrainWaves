@@ -11,6 +11,7 @@ namespace BrainWaves.CustomControls
         private static Color DefaultBorderColor = Color.Silver;
         private static double DefaultBorderWidth = 0.5;
         private static int DefaultCornerRadius = 10;
+        private static double DefaultLabelTextSize = 20.0;
 
         public CustomToolbar()
         {
@@ -102,6 +103,27 @@ namespace BrainWaves.CustomControls
         {
             get => (Color)GetValue(CustomTextColorProperty);
             set => SetValue(CustomTextColorProperty, value);
+        }
+
+        public static readonly BindableProperty LabelSizeProperty =
+            BindableProperty.Create(
+                nameof(LabelSizeProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultBindingMode: BindingMode.OneWay,
+                defaultValue: DefaultLabelTextSize,
+                propertyChanged: LabelSizePropertyChanged);
+
+        private static void LabelSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ToolbarLabel.FontSize = (double)newValue;
+        }
+
+        public double LabelSizeProp
+        {
+            get => (double)GetValue(LabelSizeProperty);
+            set => SetValue(LabelSizeProperty, value);
         }
         #endregion
 
@@ -270,6 +292,25 @@ namespace BrainWaves.CustomControls
             }
         }
 
+        public static readonly BindableProperty LeftButtonTextSizeProperty =
+            BindableProperty.Create(
+                nameof(LeftButtonTextSizeProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LeftButtonTextSizePropertyChanged);
+
+        private static void LeftButtonTextSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.LeftButton.FontSize = (double)newValue;
+        }
+
+        public double LeftButtonTextSizeProp
+        {
+            get => (double)GetValue(LeftButtonTextSizeProperty);
+            set => SetValue(LeftButtonTextSizeProperty, value);
+        }
         #endregion
 
         #region Right button
@@ -438,6 +479,25 @@ namespace BrainWaves.CustomControls
             }
         }
 
+        public static readonly BindableProperty RightButtonTextSizeProperty =
+            BindableProperty.Create(
+                nameof(RightButtonTextSizeProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightButtonTextSizePropertyChanged);
+
+        private static void RightButtonTextSizePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.RightButton.FontSize = (double)newValue;
+        }
+
+        public double RightButtonTextSizeProp
+        {
+            get => (double)GetValue(RightButtonTextSizeProperty);
+            set => SetValue(RightButtonTextSizeProperty, value);
+        }
         #endregion
     }
 }
