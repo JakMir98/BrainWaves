@@ -10,11 +10,17 @@ namespace BrainWaves.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        #region Variables
         private bool isBusy = false;
         private string busyMessage = string.Empty;
         string title = string.Empty;
+        #endregion
+
+        #region ICommands
         public ICommand GoBackCommand { protected set; get; }
-        
+        #endregion
+
+        #region INotify Getters and Setters
         public bool IsBusy
         {
             get { return isBusy; }
@@ -32,19 +38,7 @@ namespace BrainWaves.ViewModels
             get { return title; }
             set { SetProperty(ref title, value); }
         }
-
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
-        }
+        #endregion
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,6 +52,20 @@ namespace BrainWaves.ViewModels
         }
         #endregion
 
+        #region Functions
+        protected bool SetProperty<T>(ref T backingStore, T value,
+            [CallerMemberName] string propertyName = "",
+            Action onChanged = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value))
+                return false;
+
+            backingStore = value;
+            onChanged?.Invoke();
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
         protected async Task OpenPage(Page page)
         {
             await Application.Current.MainPage.Navigation.PushAsync(page);
@@ -67,5 +75,6 @@ namespace BrainWaves.ViewModels
         {
             await Application.Current.MainPage.Navigation.PopAsync();
         }
+        #endregion
     }
 }

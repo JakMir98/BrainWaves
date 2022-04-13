@@ -19,24 +19,35 @@ namespace BrainWaves.ViewModels
 {
     public class ChartsViewModel : BaseViewModel
     {
+        #region Constants
+        private const int MinSampleNum = 288_000;
+        private const int MaxSampleNum = 1_800_000;
         private const string FrequencyColor = "#FF1493";
         private const string TimeColor = "#00BFFF";
+        #endregion
 
+        #region Variables
         private Chart frequencyChart;
         private Chart timeChart;
         private List<float> samples = new List<float>();
         private ExcelService excelService;
         private bool isFreqChartVisible = false;
         private bool isTimeChartVisible = false;
-
-        private PlotModel timePlotModel;
-        private PlotModel freqPlotModel;
-
-        public ICommand ExportToExcelCommand { private set; get; }
-        public ICommand CreateCommand { private set; get; }
+        private bool isExportButtonEnabled = true;
+        private bool isCreateButtonEnabled = true;
 
         private string text;
 
+        private PlotModel timePlotModel;
+        private PlotModel freqPlotModel;
+        #endregion
+
+        #region ICommands
+        public ICommand ExportToExcelCommand { private set; get; }
+        public ICommand CreateCommand { private set; get; }
+        #endregion
+
+        #region Constructors
         public ChartsViewModel()
         {
             Title = Resources.Strings.Resource.Charts;
@@ -44,12 +55,20 @@ namespace BrainWaves.ViewModels
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
-            CreateCommand = new Command(Create);
-            for(int i = 0; i < 4096; i++)
+            CreateCommand = new Command(async () => await SetupCharts());
+
+            Random random = new Random();
+            double range = 3.3;
+            for (int i = 0; i < 5000; i++)
             {
-                samples.Add((float)i);
+                double sample = random.NextDouble();
+                double scaled = (sample * range);
+                float f = (float)scaled;
+                samples.Add((float)f);
             }
-            Create();
+            IsTimeChartVisible = true;
+            Text = $"count = {samples.Count} value[0]={samples[0]}";
+            //Create();
         }
 
         public ChartsViewModel(List<float> _samples)
@@ -63,12 +82,9 @@ namespace BrainWaves.ViewModels
             samples = _samples;
             Create();
         }
+        #endregion
 
-        public async Task SetupChartsAsync()
-        {
-            //await SetupCharts();
-        }
-
+        #region INotify Getters and Setters
         public Chart FrequencyChart
         {
             get => frequencyChart;
@@ -111,11 +127,31 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref freqPlotModel, value);
         }
 
-        private Task SetupCharts()
+        public bool IsExportButtonEnabled
         {
-            var t = Task.Run(() =>
+            get => isExportButtonEnabled;
+            set => SetProperty(ref isExportButtonEnabled, value);
+        }
+
+        public bool IsCreateButtonEnabled
+        {
+            get => isCreateButtonEnabled;
+            set => SetProperty(ref isCreateButtonEnabled, value);
+        }
+        #endregion
+
+        #region Functions
+        public async Task SetupChartsAsync()
+        {
+            //await SetupCharts();
+        }
+
+        private async Task SetupCharts()
+        {
+            await Task.Run(() =>
             {
                 IsBusy = true;
+                IsCreateButtonEnabled = false;
                 BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
                 List<ChartEntry> frequencyRecords = new List<ChartEntry>();
 
@@ -154,49 +190,55 @@ namespace BrainWaves.ViewModels
                   /**/
                 IsFreqChartVisible = true;
                 IsTimeChartVisible = true;
-                if(App.fSamples.Count > 0)
-                {
-                    Text = $"num of samples = {App.fSamples.Count}\n max value = {App.fSamples.Max()}\n min value = {App.fSamples.Min()}";
-                }
+                IsCreateButtonEnabled = true;
                 IsBusy = false;
-                
             });
-            return t;
         }
 
         private async Task ExportToExcel()
         {
-            IsBusy = true;
-            BusyMessage = Resources.Strings.Resource.ExportingToExcellMessage;
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
             string filepath = excelService.GenerateExcel(fileName);
 
-            var data = new ExcelStructure
+            await Task.Run(() =>
             {
-                Headers = new List<string>()
+                IsBusy = true;
+                IsExportButtonEnabled = false;
+                BusyMessage = Resources.Strings.Resource.ExportingToExcellMessage;
+                
+                var data = new ExcelStructure
                 {
-                    Resources.Strings.Resource.ID,
-                    Resources.Strings.Resource.Sample
-                }
-            };
-
-            for(int i = 0; i < App.fSamples.Count; i++)
-            {
-                List<string> values = new List<string>
-                {
-                    i.ToString(), App.fSamples[i].ToString()
+                    Headers = new List<string>()
+                    {
+                        Resources.Strings.Resource.ID,
+                        Resources.Strings.Resource.Sample
+                    }
                 };
-                data.Values.Add(values);
-            }
 
-            excelService.InsertDataIntoSheet(filepath, Constants.ExcellSheetName, data);
+                for (int i = 0; i < samples.Count; i++)
+                {
+                    List<string> values = new List<string>
+                    {
+                        i.ToString(), samples[i].ToString()
+                    };
+                    data.Values.Add(values);
+
+                    if(i % 100 == 0)
+                    {
+                        BusyMessage = $"progres {i}/{samples.Count}";
+                    }
+                }
+
+                excelService.InsertDataIntoSheet(filepath, Constants.ExcellSheetName, data);
+
+                IsExportButtonEnabled = true;
+                IsBusy = false;
+            });
 
             await Launcher.OpenAsync(new OpenFileRequest()
             {
                 File = new ReadOnlyFile(filepath)
             });
-            
-            IsBusy = false;
         }
 
         public void Create()
@@ -211,7 +253,7 @@ namespace BrainWaves.ViewModels
             TimePlotModel.Axes.Add(new LinearAxis
             {
                 Position = AxisPosition.Left,
-                Minimum = -3.5,
+                Minimum = 0,
                 Maximum = 3.5,
                 MajorStep = 0.5,
                 MinorStep = 0.05,
@@ -361,5 +403,6 @@ namespace BrainWaves.ViewModels
             }
             return sinWave;
         }
+        #endregion
     }
 }

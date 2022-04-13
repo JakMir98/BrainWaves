@@ -54,6 +54,22 @@
                         IsVisible="{Binding IsTimeChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
 
+                     <oxy:PlotView 
+                                BackgroundColor="White"
+                                HeightRequest="200" 
+                                Model="{Binding TimePlotModel}" 
+                                VerticalOptions="FillAndExpand" 
+                                HorizontalOptions="FillAndExpand" 
+                                IsVisible="false"/>
+
+                    <microchart:ChartView
+                                x:Name="ChartTime"
+                                Chart="{Binding TimeChart}"
+                                IsVisible="false"
+                                HeightRequest="250"
+                                Margin="0,0,0,40"/>
+
+                     <!--
                     <OnPlatform x:TypeArguments="View">
                         <On Platform="iOS, Android, UWP">
                             <oxy:PlotView 
@@ -73,7 +89,7 @@
                                 Margin="0,0,0,40"/>
                         </On>
                     </OnPlatform>
-
+                    -->
                     <Button 
                         Command="{Binding CreateCommand}"
                         Text="Create"
@@ -81,9 +97,10 @@
                         HorizontalOptions="Center"
                         Margin="0,20,0,60"
                         WidthRequest="250"
+                        IsEnabled="{Binding IsCreateButtonEnabled}"
                         Style="{StaticResource ButtonStyleNormal}"/>
 
-
+                    <!--
                     <Label 
                         Text="Frequency domain"
                         VerticalOptions="Center"
@@ -110,7 +127,7 @@
                                 Margin="0,0,0,40"/>
                         </On>
                     </OnPlatform>
-                    
+                    -->
 
                     <Button 
                         Command="{Binding ExportToExcelCommand}"
@@ -119,6 +136,7 @@
                         HorizontalOptions="Center"
                         Margin="0,20,0,60"
                         WidthRequest="250"
+                        IsEnabled="{Binding IsExportButtonEnabled}"
                         Style="{StaticResource ButtonStyleNormal}"/>
                 </StackLayout>
             </ScrollView>

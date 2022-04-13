@@ -13,17 +13,22 @@ namespace BrainWaves.ViewModels
 {
     public class ScanViewModel : BaseViewModel
     {
+        #region Variables
         private IAdapter bluetoothAdapter;
         private ObservableCollection<IDevice> gattDevices = new ObservableCollection<IDevice>();
         private bool isScanning = false;
         private bool canScan = true;
         private string infoMessage;
         private bool isInfoVisible;
+        #endregion
 
+        #region ICommands
         public ICommand ScanDevicesCommand { private set; get; }
         public ICommand StopScanningCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
+        #endregion
 
+        #region Constructors
         public ScanViewModel()
         {
             Title = Resources.Strings.Resource.FindDevice;
@@ -51,9 +56,10 @@ namespace BrainWaves.ViewModels
                     IsInfoVisible = false;
                 }
             }
-            
         }
+        #endregion
 
+        #region INotify Getters and Setters
         public ObservableCollection<IDevice> GattDevices
         {
             get => gattDevices;
@@ -83,7 +89,9 @@ namespace BrainWaves.ViewModels
             get => isInfoVisible;
             set => SetProperty(ref isInfoVisible, value);
         }
+        #endregion
 
+        #region Functions
         public async Task SetupAdapterAsync()
         {
             try
@@ -183,5 +191,6 @@ namespace BrainWaves.ViewModels
         {
             await OpenPage(new SettingsPage());
         }
+        #endregion
     }
 }

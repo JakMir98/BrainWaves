@@ -10,6 +10,7 @@ namespace BrainWaves.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
+        #region Variables
         private bool isDarkThemeOn = false;
         private List<string> availableLanguages;
         private string selectedLanguage;
@@ -22,7 +23,9 @@ namespace BrainWaves.ViewModels
         private int samplingFrequency;
         private Color entryTimeToReadMindColor;
         private Color entrySamplingFreqColor;
+        #endregion
 
+        #region Constructors
         public SettingsViewModel()
         {
             Title = Resources.Strings.Resource.Settings;
@@ -56,7 +59,9 @@ namespace BrainWaves.ViewModels
 
             GoBackCommand = new Command(async () => await GoBack());
         }
+        #endregion
 
+        #region INotify Getters and Setters
         public bool IsDarkThemeOn
         {
             get => isDarkThemeOn;
@@ -192,7 +197,9 @@ namespace BrainWaves.ViewModels
                 SetProperty(ref entrySamplingFreqColor, value);
             }
         }
+        #endregion
 
+        #region Functions
         private void HandleThemeChange(bool value)
         {
             if (value)
@@ -231,5 +238,6 @@ namespace BrainWaves.ViewModels
                 Application.Current.MainPage = new NavigationPage(new ScanPage());
             }
         }
+        #endregion
     }
 }

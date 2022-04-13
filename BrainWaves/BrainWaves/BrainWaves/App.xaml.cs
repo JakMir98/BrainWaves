@@ -20,7 +20,7 @@ namespace BrainWaves
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(language, false);
             InitializeComponent();
 
-            MainPage = new NavigationPage(new ScanPage());
+            MainPage = new NavigationPage(new ChartsPage());
         }
 
         protected override void OnStart()

@@ -19,6 +19,7 @@ namespace BrainWaves.ViewModels
 {
     public class BluetoothDataViewModel : BaseViewModel
     {
+        #region Variables
         private readonly IDevice _connectedDevice;
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
@@ -28,7 +29,9 @@ namespace BrainWaves.ViewModels
         private bool areButtonsEnabled = false;
         private string outputText;
         private string entryText;
+        #endregion
 
+        #region ICommands
         public ICommand InitalizeConnectionCommand { private set; get; }
         public ICommand SendCommand { private set; get; }
         public ICommand DisconnectCommand { private set; get; }
@@ -37,7 +40,9 @@ namespace BrainWaves.ViewModels
         public ICommand GoToChartsCommand { private set; get; }
         public ICommand CalculateCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
+        #endregion
 
+        #region Constructors
         public BluetoothDataViewModel(IDevice connectedDevice)
         {
             _connectedDevice = connectedDevice;
@@ -63,7 +68,9 @@ namespace BrainWaves.ViewModels
             GoToSettingsCommand = new Command(async () => await GoToSettings());
             CalculateCommand = new Command(Calculate);
         }
+        #endregion
 
+        #region INotify Getters and Setters
         public string OutputText
         {
             get => outputText;
@@ -87,7 +94,9 @@ namespace BrainWaves.ViewModels
             get => floatSamples;
             set => SetProperty(ref floatSamples, value);
         }
+        #endregion
 
+        #region Functions
         private async Task GetCharacteristic()
         {
             try
@@ -274,5 +283,6 @@ namespace BrainWaves.ViewModels
                 IsBusy = false;
             }
         }
+        #endregion
     }
 }
