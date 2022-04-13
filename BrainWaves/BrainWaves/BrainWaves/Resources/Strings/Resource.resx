@@ -219,4 +219,7 @@
   <data name="SendingMessage" xml:space="preserve">
     <value>Sending...</value>
   </data>
+  <data name="ExcellProcessing" xml:space="preserve">
+    <value>Samples processing...</value>
+  </data>
 </root>

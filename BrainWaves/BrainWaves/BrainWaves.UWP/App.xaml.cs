@@ -66,7 +66,6 @@ namespace BrainWaves.UWP
                     typeof(OxyPlot.Xamarin.Forms.Platform.UWP.PlotViewRenderer).GetTypeInfo().Assembly
                 };
                 Xamarin.Forms.Forms.Init(e, Rg.Plugins.Popup.Popup.GetExtraAssemblies());
-                OxyPlot.Xamarin.Forms.Platform.UWP.PlotViewRenderer.Init();
                 ApplicationView.PreferredLaunchViewSize = new Size(800, 1000); // change size of window
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 

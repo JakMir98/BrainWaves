@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BrainWaves.Helpers
 {
@@ -14,7 +12,9 @@ namespace BrainWaves.Helpers
         public const int MinSamplingFrequency = 80; //Hz
         public const int MaxSamplingFrequency = 500; //Hz
         public const int MinTimeToReadInMinutes = 1;
-        public const int MaxTimeToReadInMinutes = 60; // max = 1khz * 3600 = 36MHZ/h
+        public const int MaxTimeToReadInMinutes = 60; // max = 1khz * 3600 = 3.6MHZ/h
+
+        public const int MaxEntriesForSheet = 1_000_000; 
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";
@@ -31,5 +31,16 @@ namespace BrainWaves.Helpers
         public const string PrefsSavedTimeToReadMindInMinutes = "savedTimeToReadMind";
 
         public const string ExcellSheetName = "Samples";
+        public const string ExcellSheetName1 = "Samples 0-1M";
+        public const string ExcellSheetName2 = "Samples 1M-2M";
+        public const string ExcellSheetName3 = "Samples 2M-3M";
+        public const string ExcellSheetName4 = "Samples 3M-4M";
+        public const string ExcellSheetName5 = "Samples 4M-5M";
+        public const string ExcellSheetName6 = "Samples 5M-6M";
+        public const string ExcellSheetName7 = "Samples 6M-7M";
+        public const string ExcellSheetName8 = "Samples 7M-8M";
+        public const string ExcellSheetName9 = "Samples 8M-9M";
+        public const string ExcellSheetName10 = "Samples 9M-10M";
+
     }
 }

@@ -5,7 +5,6 @@
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
-             xmlns:oxy="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
@@ -54,14 +53,6 @@
                         IsVisible="{Binding IsTimeChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
 
-                     <oxy:PlotView 
-                                BackgroundColor="White"
-                                HeightRequest="200" 
-                                Model="{Binding TimePlotModel}" 
-                                VerticalOptions="FillAndExpand" 
-                                HorizontalOptions="FillAndExpand" 
-                                IsVisible="false"/>
-
                     <microchart:ChartView
                                 x:Name="ChartTime"
                                 Chart="{Binding TimeChart}"
@@ -69,6 +60,7 @@
                                 HeightRequest="250"
                                 Margin="0,0,0,40"/>
 
+                    <Slider />
                      <!--
                     <OnPlatform x:TypeArguments="View">
                         <On Platform="iOS, Android, UWP">

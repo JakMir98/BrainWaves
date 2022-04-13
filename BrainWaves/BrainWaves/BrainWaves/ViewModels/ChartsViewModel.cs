@@ -10,9 +10,6 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Linq;
-using OxyPlot;
-using OxyPlot.Axes;
-using OxyPlot.Series;
 using FftSharp;
 
 namespace BrainWaves.ViewModels
@@ -37,9 +34,6 @@ namespace BrainWaves.ViewModels
         private bool isCreateButtonEnabled = true;
 
         private string text;
-
-        private PlotModel timePlotModel;
-        private PlotModel freqPlotModel;
         #endregion
 
         #region ICommands
@@ -59,7 +53,7 @@ namespace BrainWaves.ViewModels
 
             Random random = new Random();
             double range = 3.3;
-            for (int i = 0; i < 5000; i++)
+            for (int i = 0; i < MaxSampleNum; i++)
             {
                 double sample = random.NextDouble();
                 double scaled = (sample * range);
@@ -80,7 +74,6 @@ namespace BrainWaves.ViewModels
             GoBackCommand = new Command(async () => await GoBack());
             
             samples = _samples;
-            Create();
         }
         #endregion
 
@@ -113,18 +106,6 @@ namespace BrainWaves.ViewModels
         {
             get => isTimeChartVisible;
             set => SetProperty(ref isTimeChartVisible, value);
-        }
-
-        public PlotModel TimePlotModel
-        {
-            get => timePlotModel;
-            set => SetProperty(ref timePlotModel, value);
-        }
-
-        public PlotModel FreqPlotModel
-        {
-            get => freqPlotModel;
-            set => SetProperty(ref freqPlotModel, value);
         }
 
         public bool IsExportButtonEnabled
@@ -198,14 +179,12 @@ namespace BrainWaves.ViewModels
         private async Task ExportToExcel()
         {
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
-            string filepath = excelService.GenerateExcel(fileName);
-
+            string filepath = excelService.PathToExcellFile(fileName);
             await Task.Run(() =>
             {
                 IsBusy = true;
                 IsExportButtonEnabled = false;
-                BusyMessage = Resources.Strings.Resource.ExportingToExcellMessage;
-                
+
                 var data = new ExcelStructure
                 {
                     Headers = new List<string>()
@@ -215,25 +194,19 @@ namespace BrainWaves.ViewModels
                     }
                 };
 
-                for (int i = 0; i < samples.Count; i++)
+                if (samples.Count > Constants.MaxEntriesForSheet)
                 {
-                    List<string> values = new List<string>
-                    {
-                        i.ToString(), samples[i].ToString()
-                    };
-                    data.Values.Add(values);
-
-                    if(i % 100 == 0)
-                    {
-                        BusyMessage = $"progres {i}/{samples.Count}";
-                    }
+                    PopulateBigList(data, filepath);
                 }
-
-                excelService.InsertDataIntoSheet(filepath, Constants.ExcellSheetName, data);
+                else
+                {
+                    PopulateSmallList(data, filepath, Constants.ExcellSheetName1);
+                }
 
                 IsExportButtonEnabled = true;
                 IsBusy = false;
             });
+
 
             await Launcher.OpenAsync(new OpenFileRequest()
             {
@@ -241,82 +214,38 @@ namespace BrainWaves.ViewModels
             });
         }
 
-        public void Create()
+        private void PopulateList(ExcelStructure data)
         {
-            // https://en.wikipedia.org/wiki/Normal_distribution
-            TimePlotModel = new PlotModel
+            for (int i = 0; i < samples.Count; i++)
             {
-                Title = "Time plot",
-                Subtitle = "Sines"
-            };
+                List<string> values = new List<string>
+                {
+                    i.ToString(), samples[i].ToString()
+                };
+                data.Values.Add(values);
 
-            TimePlotModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Minimum = 0,
-                Maximum = 3.5,
-                MajorStep = 0.5,
-                MinorStep = 0.05,
-                TickStyle = TickStyle.Inside
-            });
-            TimePlotModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Minimum = 0,
-                Maximum = 600,
-                MajorStep = 50,
-                MinorStep = 10,
-                TickStyle = TickStyle.Inside
-            });
-            TimePlotModel.Series.Add(CreateSine());
-            TimePlotModel.Series.Add(CreatSineFiltered());
-            TimePlotModel.Series.Add(CreatSineWindowed());
-
-
-            FreqPlotModel = new PlotModel
-            {
-                Title = "FFT",
-                Subtitle = "Fourier transform"
-            };
-
-            FreqPlotModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                Minimum = -10,
-                Maximum = 300,
-                MajorStep = 50,
-                MinorStep = 25,
-                TickStyle = TickStyle.Inside
-            });
-            FreqPlotModel.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                Minimum = 0,
-                Maximum = 24000,
-                MajorStep = 1000,
-                MinorStep = 500,
-                TickStyle = TickStyle.Inside
-            });
-            FreqPlotModel.Series.Add(CreatFFTSignal());
-        }
-
-        private LineSeries CreateNormalDistributionSeries(double x0, double x1, double mean, double variance, int n = 1000)
-        {
-            var ls = new LineSeries
-            {
-                Title = string.Format("μ={0}, σ²={1}", mean, variance)
-            };
-
-            for (int i = 0; i < n; i++)
-            {
-                double x = x0 + ((x1 - x0) * i / (n - 1));
-                double f = 1.0 / Math.Sqrt(2 * Math.PI * variance) * Math.Exp(-(x - mean) * (x - mean) / 2 / variance);
-                ls.Points.Add(new DataPoint(x, f));
+                if (i % 10000 == 0)
+                {
+                    BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{samples.Count}";
+                }
             }
-
-            return ls;
+            BusyMessage = Resources.Strings.Resource.ExportingToExcellMessage;
         }
 
+        private void PopulateSmallList(ExcelStructure data, string filepath, string excellSheetName)
+        {
+            excelService.GenerateExcel(filepath);
+            PopulateList(data);
+            excelService.InsertDataIntoSheet(filepath, excellSheetName, data);
+        }
+
+        private void PopulateBigList(ExcelStructure data, string filepath)
+        {
+            PopulateList(data);
+            excelService.CreateAndInsertDataToManySheets(filepath, data);
+        }
+
+        /*
         private LineSeries CreateSine()
         {
             var ls = new LineSeries
@@ -393,7 +322,7 @@ namespace BrainWaves.ViewModels
 
             return ls;
         }
-
+        */
         private double[] GenerateSinWave(int sampleFreq, int numOfSamples, float amplitude)
         {
             double[] sinWave = new double[numOfSamples];
