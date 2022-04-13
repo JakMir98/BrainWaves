@@ -19,11 +19,5 @@ namespace BrainWaves.Views
             InitializeComponent();
             BindingContext = new ChartsViewModel(_samples);
         }
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            await (BindingContext as ChartsViewModel).SetupChartsAsync();
-        }
     }
 }

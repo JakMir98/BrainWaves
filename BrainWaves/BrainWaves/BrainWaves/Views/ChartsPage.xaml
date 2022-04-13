@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
-             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
              Title="{Binding Title}"
@@ -29,6 +27,66 @@
                     RightButtonIsVisibleProp="False"/>
             <ScrollView>
                 <StackLayout>
+
+                    <Label
+                        Text="{Static resource:Resource.NumberOfSamplesToShow}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"
+                        Margin="20,20,20,0"/>
+
+                    <Entry 
+                        Placeholder="{Static resource:Resource.NumberOfSamplesToShow}"
+                        Text="{Binding NumberOfShownSamplesFromTheMiddle, Mode=TwoWay}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource SimpleEntry}"
+                        ReturnCommand="{Binding DragCompletedCommand}"
+                        Keyboard="Numeric"
+                        Margin="20,0,20,20"/>
+
+                    <Label
+                        Text="{Static resource:Resource.ChartMiddlePoint}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Slider
+                        Minimum="{Binding MinSliderValue}"
+                        Maximum="{Binding MaxSliderValue}"
+                        Value="{Binding SliderValue}"
+                        DragCompletedCommand="{Binding DragCompletedCommand}"
+                        Margin="20,0,20,0"/>
+
+                    <Entry 
+                        Placeholder="{Static resource:Resource.ChartMiddlePoint}"
+                        Text="{Binding SliderValue, Mode=TwoWay, StringFormat='{0:0}'}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        ReturnCommand="{Binding DragCompletedCommand}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
+
+                    <customControls:CheckboxWithLabel
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        LabelTextColorProp="Red"
+                        CheckboxColorProp="Red"
+                        TitleText="{Static resource:Resource.ShowTimeDomain}" 
+                        IsChecked="{Binding IsTimeChartVisible}"/>
+
+                    <customControls:CheckboxWithLabel
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        LabelTextColorProp="Red"
+                        CheckboxColorProp="Red"
+                        TitleText="{Static resource:Resource.ShowFreqDomain}" 
+                        IsChecked="{Binding IsFreqChartVisible}"/>
+
                     <customControls:ActivityIndicatorWithLabel
                         HorizontalOptionsProp="Center"
                         VerticalOptions="Center"
@@ -38,15 +96,9 @@
                         RightLabelIsVisible="False"
                         ActivityIndicatorColorProp="ForestGreen"
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
-                    <Label
-                        Text="Time domain"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        FontSize="Large"
-                        Style="{StaticResource LabelStyleNormal}"/>
 
                     <Label
-                        Text="{Binding Text}"
+                        Text="{Static resource:Resource.TimeDomain}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         FontSize="Large"
@@ -54,72 +106,24 @@
                         Style="{StaticResource LabelStyleNormal}"/>
 
                     <microchart:ChartView
-                                x:Name="ChartTime"
-                                Chart="{Binding TimeChart}"
-                                IsVisible="false"
-                                HeightRequest="250"
-                                Margin="0,0,0,40"/>
+                        Chart="{Binding TimeChart}"
+                        IsVisible="{Binding IsTimeChartVisible}"
+                        HeightRequest="250"
+                        Margin="0,0,0,40"/>
 
-                    <Slider />
-                     <!--
-                    <OnPlatform x:TypeArguments="View">
-                        <On Platform="iOS, Android, UWP">
-                            <oxy:PlotView 
-                                BackgroundColor="White"
-                                HeightRequest="200" 
-                                Model="{Binding TimePlotModel}" 
-                                VerticalOptions="FillAndExpand" 
-                                HorizontalOptions="FillAndExpand" 
-                                IsVisible="true"/>
-                        </On>
-                        <On Platform="macOS">
-                            <microchart:ChartView
-                                x:Name="ChartTime"
-                                Chart="{Binding TimeChart}"
-                                IsVisible="{Binding IsTimeChartVisible}"
-                                HeightRequest="250"
-                                Margin="0,0,0,40"/>
-                        </On>
-                    </OnPlatform>
-                    -->
-                    <Button 
-                        Command="{Binding CreateCommand}"
-                        Text="Create"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        Margin="0,20,0,60"
-                        WidthRequest="250"
-                        IsEnabled="{Binding IsCreateButtonEnabled}"
-                        Style="{StaticResource ButtonStyleNormal}"/>
-
-                    <!--
                     <Label 
-                        Text="Frequency domain"
+                        Text="{Static resource:Resource.FreqDomain}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         FontSize="Large"
                         IsVisible="{Binding IsFreqChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
-                    <OnPlatform x:TypeArguments="View">
-                        <On Platform="iOS, Android, UWP">
-                            <oxy:PlotView 
-                                BackgroundColor="White"
-                                HeightRequest="200" 
-                                Model="{Binding FreqPlotModel}" 
-                                VerticalOptions="FillAndExpand" 
-                                HorizontalOptions="FillAndExpand" 
-                                IsVisible="true"/>
-                        </On>
-                        <On Platform="macOS">
-                            <microchart:ChartView
-                                x:Name="ChartFreq"
-                                Chart="{Binding FrequencyChart}"
-                                HeightRequest="250"
-                                IsVisible="{Binding IsFreqChartVisible}"
-                                Margin="0,0,0,40"/>
-                        </On>
-                    </OnPlatform>
-                    -->
+
+                    <microchart:ChartView
+                        Chart="{Binding FrequencyChart}"
+                        HeightRequest="250"
+                        IsVisible="{Binding IsFreqChartVisible}"
+                        Margin="0,0,0,40"/>
 
                     <Button 
                         Command="{Binding ExportToExcelCommand}"

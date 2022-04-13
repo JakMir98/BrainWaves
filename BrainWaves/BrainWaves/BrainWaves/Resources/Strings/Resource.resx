@@ -222,4 +222,25 @@
   <data name="ExcellProcessing" xml:space="preserve">
     <value>Samples processing...</value>
   </data>
+  <data name="ChartMiddlePoint" xml:space="preserve">
+    <value>Chart middle point</value>
+  </data>
+  <data name="EnterNumber" xml:space="preserve">
+    <value>Enter number</value>
+  </data>
+  <data name="NumberOfSamplesToShow" xml:space="preserve">
+    <value>Number of samples to show on chart from the middle point</value>
+  </data>
+  <data name="FreqDomain" xml:space="preserve">
+    <value>Frequency domain</value>
+  </data>
+  <data name="TimeDomain" xml:space="preserve">
+    <value>Time domain</value>
+  </data>
+  <data name="ShowFreqDomain" xml:space="preserve">
+    <value>Show frequency domain</value>
+  </data>
+  <data name="ShowTimeDomain" xml:space="preserve">
+    <value>Show time domain</value>
+  </data>
 </root>

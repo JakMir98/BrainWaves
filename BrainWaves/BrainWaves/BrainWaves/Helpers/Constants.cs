@@ -29,6 +29,7 @@ namespace BrainWaves.Helpers
         public const string PrefsSavedReceiveCharacteristicUUID = "savedReceiveCharUUID";
         public const string PrefsSavedSamplingFrequency = "savedSamplingFreq";
         public const string PrefsSavedTimeToReadMindInMinutes = "savedTimeToReadMind";
+        public const string PrefsSamplesToShowFromMiddle = "samplesToShow";
 
         public const string ExcellSheetName = "Samples";
         public const string ExcellSheetName1 = "Samples 0-1M";

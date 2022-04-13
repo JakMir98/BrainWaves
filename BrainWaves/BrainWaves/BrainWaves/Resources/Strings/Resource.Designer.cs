@@ -256,5 +256,47 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("ExcellProcessing", resourceCulture);
             }
         }
+        
+        internal static string ChartMiddlePoint {
+            get {
+                return ResourceManager.GetString("ChartMiddlePoint", resourceCulture);
+            }
+        }
+        
+        internal static string EnterNumber {
+            get {
+                return ResourceManager.GetString("EnterNumber", resourceCulture);
+            }
+        }
+        
+        internal static string NumberOfSamplesToShow {
+            get {
+                return ResourceManager.GetString("NumberOfSamplesToShow", resourceCulture);
+            }
+        }
+        
+        internal static string FreqDomain {
+            get {
+                return ResourceManager.GetString("FreqDomain", resourceCulture);
+            }
+        }
+        
+        internal static string TimeDomain {
+            get {
+                return ResourceManager.GetString("TimeDomain", resourceCulture);
+            }
+        }
+        
+        internal static string ShowFreqDomain {
+            get {
+                return ResourceManager.GetString("ShowFreqDomain", resourceCulture);
+            }
+        }
+        
+        internal static string ShowTimeDomain {
+            get {
+                return ResourceManager.GetString("ShowTimeDomain", resourceCulture);
+            }
+        }
     }
 }

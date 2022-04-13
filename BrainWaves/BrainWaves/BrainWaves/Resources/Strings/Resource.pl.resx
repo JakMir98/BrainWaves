@@ -222,4 +222,25 @@
   <data name="ExcellProcessing" xml:space="preserve">
     <value>Przetwarzanie próbek...</value>
   </data>
+  <data name="ChartMiddlePoint" xml:space="preserve">
+    <value>Środkowy punkt wykresu</value>
+  </data>
+  <data name="EnterNumber" xml:space="preserve">
+    <value>Wprowadź liczbę</value>
+  </data>
+  <data name="NumberOfSamplesToShow" xml:space="preserve">
+    <value>Ilość pokazywanych próbek na wykresie od środka</value>
+  </data>
+  <data name="FreqDomain" xml:space="preserve">
+    <value>Dziedzina częstotliwości</value>
+  </data>
+  <data name="TimeDomain" xml:space="preserve">
+    <value>Dziedzina czasu</value>
+  </data>
+  <data name="ShowFreqDomain" xml:space="preserve">
+    <value>Pokaż dziedzinę częstotliwości</value>
+  </data>
+  <data name="ShowTimeDomain" xml:space="preserve">
+    <value>Pokaż dziedzinę czasu</value>
+  </data>
 </root>

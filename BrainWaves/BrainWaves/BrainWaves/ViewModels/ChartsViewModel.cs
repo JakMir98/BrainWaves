@@ -21,6 +21,8 @@ namespace BrainWaves.ViewModels
         private const int MaxSampleNum = 1_800_000;
         private const string FrequencyColor = "#FF1493";
         private const string TimeColor = "#00BFFF";
+        private const int DefaultLoadedSamples = 20;
+        private const int MaxLoadedSamples = 500;
         #endregion
 
         #region Variables
@@ -29,16 +31,18 @@ namespace BrainWaves.ViewModels
         private List<float> samples = new List<float>();
         private ExcelService excelService;
         private bool isFreqChartVisible = false;
-        private bool isTimeChartVisible = false;
+        private bool isTimeChartVisible = true;
         private bool isExportButtonEnabled = true;
-        private bool isCreateButtonEnabled = true;
-
+        private double minSliderValue;
+        private double maxSliderValue;
+        private double sliderValue;
         private string text;
+        private int numberOfShownSamplesFromTheMiddle;
         #endregion
 
         #region ICommands
         public ICommand ExportToExcelCommand { private set; get; }
-        public ICommand CreateCommand { private set; get; }
+        public ICommand DragCompletedCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -49,31 +53,45 @@ namespace BrainWaves.ViewModels
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
-            CreateCommand = new Command(async () => await SetupCharts());
+            DragCompletedCommand = new Command(UpdateCharts);
+
+            // Create samples to test Export to excell
 
             Random random = new Random();
             double range = 3.3;
-            for (int i = 0; i < MaxSampleNum; i++)
+            for (int i = 0; i < MinSampleNum; i++)
             {
                 double sample = random.NextDouble();
                 double scaled = (sample * range);
                 float f = (float)scaled;
                 samples.Add((float)f);
             }
-            IsTimeChartVisible = true;
             Text = $"count = {samples.Count} value[0]={samples[0]}";
-            //Create();
+
+            //after samples
+            MinSliderValue = 0;
+            MaxSliderValue = samples.Count;
+            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, DefaultLoadedSamples);
+
+            SetupTimeDomainChart();
+            SetupFreqDomainChart();
         }
 
         public ChartsViewModel(List<float> _samples)
         {
+            samples = _samples;
+
             Title = Resources.Strings.Resource.Charts;
             excelService = new ExcelService();
 
+            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, DefaultLoadedSamples);
+
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
-            
-            samples = _samples;
+            DragCompletedCommand = new Command(UpdateCharts);
+
+            SetupTimeDomainChart();
+            SetupFreqDomainChart();
         }
         #endregion
 
@@ -114,68 +132,184 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref isExportButtonEnabled, value);
         }
 
-        public bool IsCreateButtonEnabled
+        public double MinSliderValue
         {
-            get => isCreateButtonEnabled;
-            set => SetProperty(ref isCreateButtonEnabled, value);
+            get => minSliderValue;
+            set => SetProperty(ref minSliderValue, value);
+        }
+
+        public double MaxSliderValue
+        {
+            get => maxSliderValue;
+            set => SetProperty(ref maxSliderValue, value);
+        }
+
+        public double SliderValue
+        {
+            get => sliderValue;
+            set => SetProperty(ref sliderValue, value);
+        }
+        
+        public int NumberOfShownSamplesFromTheMiddle
+        {
+            get => numberOfShownSamplesFromTheMiddle;
+            set
+            {
+                int tempValue;
+                if(value > MaxLoadedSamples)
+                {
+                    tempValue = MaxLoadedSamples;
+                }
+                else
+                {
+                    tempValue = value;
+                }
+                SetProperty(ref numberOfShownSamplesFromTheMiddle, tempValue);
+                Preferences.Set(Constants.PrefsSamplesToShowFromMiddle, tempValue);
+            }
         }
         #endregion
 
         #region Functions
-        public async Task SetupChartsAsync()
+        private void SetupTimeDomainChart()
         {
-            //await SetupCharts();
-        }
-
-        private async Task SetupCharts()
-        {
-            await Task.Run(() =>
+            IsBusy = true;
+            BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+            List<ChartEntry> timeRecords = new List<ChartEntry>();
+            
+            int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > samples.Count ? samples.Count : 2 * numberOfShownSamplesFromTheMiddle;
+            for (int i = 0; i < countToLoad; i++)
             {
-                IsBusy = true;
-                IsCreateButtonEnabled = false;
-                BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
-                List<ChartEntry> frequencyRecords = new List<ChartEntry>();
+                timeRecords.Add(new ChartEntry(samples[i])
+                {
+                    Label = $"{i}.",
+                    ValueLabel = $"{samples[i]}V",
+                    Color = SkiaSharp.SKColor.Parse(TimeColor),
+                    TextColor = SKColors.White,
+                    ValueLabelColor = SKColors.White,
+                });
+            }
 
-                List<ChartEntry> timeRecords = new List<ChartEntry>();
+            TimeChart = new PointChart
+            {
+                Entries = timeRecords,
+                ValueLabelOrientation = Orientation.Vertical,
+                LabelOrientation = Orientation.Vertical,
+                BackgroundColor = SKColors.Transparent,
+                LabelColor = SKColors.White
+            };
 
-                //foreach (var item in App.fSamples)
-                foreach (var item in samples)
-                {
-                    timeRecords.Add(new ChartEntry(item)
-                    {
-                        Label = $".",
-                        ValueLabel = $"{item}V",
-                        Color = SkiaSharp.SKColor.Parse(TimeColor),
-                        TextColor = SKColors.White,
-                        ValueLabelColor = SKColors.White,
-                    });
-                }
-               
-                FrequencyChart = new LineChart
-                {
-                    Entries = frequencyRecords,
-                    ValueLabelOrientation = Orientation.Horizontal,
-                    LabelOrientation = Orientation.Horizontal,
-                    BackgroundColor = SKColors.Transparent,
-                    LabelColor = SKColors.White
-                };
-               
-                TimeChart = new PointChart
-                {
-                    Entries = timeRecords,
-                    ValueLabelOrientation = Orientation.Horizontal,
-                    LabelOrientation = Orientation.Horizontal,
-                    BackgroundColor = SKColors.Transparent,
-                    LabelColor = SKColors.White
-                };
-                  /**/
-                IsFreqChartVisible = true;
-                IsTimeChartVisible = true;
-                IsCreateButtonEnabled = true;
-                IsBusy = false;
-            });
+            IsBusy = false;
         }
 
+        public void UpdateTimeDomainChart()
+        {
+            IsBusy = true;
+            BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+            List<ChartEntry> timeRecords = new List<ChartEntry>();
+
+            double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
+            double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < samples.Count ? sliderValue + numberOfShownSamplesFromTheMiddle : samples.Count;
+            for (int i = (int)minValue; i < maxValue; i++)
+            {
+                timeRecords.Add(new ChartEntry(samples[i])
+                {
+                    Label = $"{i}.",
+                    ValueLabel = $"{samples[i]}V",
+                    Color = SkiaSharp.SKColor.Parse(TimeColor),
+                    TextColor = SKColors.White,
+                    ValueLabelColor = SKColors.White,
+                });
+            }
+
+            TimeChart = new PointChart
+            {
+                Entries = timeRecords,
+                ValueLabelOrientation = Orientation.Vertical,
+                LabelOrientation = Orientation.Vertical,
+                BackgroundColor = SKColors.Transparent,
+                LabelColor = SKColors.White
+            };
+            IsTimeChartVisible = true;
+            IsBusy = false;
+        }
+
+        private void SetupFreqDomainChart()
+        {
+            IsBusy = true;
+            BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+            List<ChartEntry> freqRecords = new List<ChartEntry>();
+
+            int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > samples.Count ? samples.Count : 2 * numberOfShownSamplesFromTheMiddle;
+            for (int i = 0; i < countToLoad; i++) // todo change to fft
+            {
+                freqRecords.Add(new ChartEntry(samples[i])
+                {
+                    Label = $"{i} Hz",
+                    ValueLabel = $"{samples[i]}V",
+                    Color = SkiaSharp.SKColor.Parse(FrequencyColor),
+                    TextColor = SKColors.White,
+                    ValueLabelColor = SKColors.White,
+                });
+            }
+
+            FrequencyChart = new PointChart
+            {
+                Entries = freqRecords,
+                ValueLabelOrientation = Orientation.Vertical,
+                LabelOrientation = Orientation.Vertical,
+                BackgroundColor = SKColors.Transparent,
+                LabelColor = SKColors.White
+            };
+
+            IsBusy = false;
+        }
+
+        public void UpdateFreqDomainChart()
+        {
+            IsBusy = true;
+            BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+            List<ChartEntry> freqRecords = new List<ChartEntry>();
+
+            double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
+            double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < samples.Count ? sliderValue + numberOfShownSamplesFromTheMiddle : samples.Count;
+            for (int i = (int)minValue; i < maxValue; i++)
+            {
+                freqRecords.Add(new ChartEntry(samples[i]) // todo change to fft
+                {
+                    Label = $"{i} Hz",
+                    ValueLabel = $"{samples[i]}V",
+                    Color = SkiaSharp.SKColor.Parse(FrequencyColor),
+                    TextColor = SKColors.White,
+                    ValueLabelColor = SKColors.White,
+                });
+            }
+
+            FrequencyChart = new PointChart
+            {
+                Entries = freqRecords,
+                ValueLabelOrientation = Orientation.Vertical,
+                LabelOrientation = Orientation.Vertical,
+                BackgroundColor = SKColors.Transparent,
+                LabelColor = SKColors.White
+            };
+            IsBusy = false;
+        }
+
+        private void UpdateCharts()
+        {
+            if (isTimeChartVisible)
+            {
+                UpdateTimeDomainChart();
+            }
+
+            if (isFreqChartVisible)
+            {
+                UpdateFreqDomainChart();
+            }            
+        }
+
+        #region Excell handle
         private async Task ExportToExcel()
         {
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
@@ -244,94 +378,8 @@ namespace BrainWaves.ViewModels
             PopulateList(data);
             excelService.CreateAndInsertDataToManySheets(filepath, data);
         }
-
-        /*
-        private LineSeries CreateSine()
-        {
-            var ls = new LineSeries
-            {
-                Title = string.Format("Sine")
-            };
-            double[] signal = GenerateSinWave(250,1024, 2);//FftSharp.SampleData.SampleAudio1();
-
-            int counter = 0;
-            foreach (var item in signal)
-            {
-                ls.Points.Add(new DataPoint(counter++, item));
-            }
-
-            return ls;
-        }
-
-        private LineSeries CreatSineFiltered()
-        {
-            var ls = new LineSeries
-            {
-                Title = string.Format("Sine filtered")
-            };
-            int sampleRate = 48_000;
-            double[] signal = FftSharp.SampleData.SampleAudio1();
-            double[] filtered = FftSharp.Filter.LowPass(signal, sampleRate, maxFrequency: 2000);
-
-            int counter = 0;
-            foreach(var item in filtered)
-            {
-                ls.Points.Add(new DataPoint(counter++, item));
-            }
-
-            return ls;
-        }
-
-        private LineSeries CreatSineWindowed()
-        {
-            var ls = new LineSeries()
-            {
-                Title = "Sine windowed"
-            };
-            double[] signal = FftSharp.SampleData.SampleAudio1();
-            var window = new FftSharp.Windows.Hanning();
-            double[] windowed = window.Apply(signal);
-            int counter = 0;
-            foreach (var item in windowed)
-            {
-                ls.Points.Add(new DataPoint(counter++, item));
-            }
-
-            return ls;
-        }
-
-        private LineSeries CreatFFTSignal()
-        {
-            var ls = new LineSeries()
-            {
-                Title = "FFT"
-            };
-            
-
-            int sampleRate = 48_000;
-            double[] signal = GenerateSinWave(250, 1024, 2);//FftSharp.SampleData.SampleAudio1();
-            var window = new FftSharp.Windows.Hanning();
-            window.ApplyInPlace(signal);
-            Complex[] fftRaw = FftSharp.Transform.FFT(signal);
-            double[] freq = FftSharp.Transform.FFTfreq(sampleRate, fftRaw.Length);
-            int counter = 0;
-            foreach (var item in fftRaw)
-            {
-                ls.Points.Add(new DataPoint(freq[counter++], item.Magnitude));
-            }
-
-            return ls;
-        }
-        */
-        private double[] GenerateSinWave(int sampleFreq, int numOfSamples, float amplitude)
-        {
-            double[] sinWave = new double[numOfSamples];
-            for (int i = 0; i < numOfSamples; i++)
-            {
-                sinWave[i] = amplitude * Math.Sin(i);
-            }
-            return sinWave;
-        }
+        #endregion
+        
         #endregion
     }
 }
