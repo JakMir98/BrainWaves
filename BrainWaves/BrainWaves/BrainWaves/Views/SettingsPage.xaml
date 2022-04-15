@@ -52,6 +52,15 @@
                         SelectedItem="{Binding SelectedLanguage}">
                     </Picker>
 
+                    <customControls:CheckboxWithLabel
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="20"
+                        LabelTextColorProp="Red"
+                        CheckboxColorProp="Red"
+                        TitleText="{Static resource:Resource.ShouldCalculateFFT}"
+                        IsChecked="{Binding ShouldCalculateFftOnLoad}" />
+
                     <Label
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
@@ -106,6 +115,7 @@
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
                             TextColor="NavajoWhite"
+                            VerticalTextAlignment="Center"
                             Text="{Binding ServiceUUID}"
                             Style="{StaticResource SimpleEntry}"/>
                 
@@ -118,6 +128,7 @@
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}"
                             TextColor="NavajoWhite"
+                            VerticalTextAlignment="Center"
                             Text="{Binding SendCharacteristicUUID}"
                             Style="{StaticResource SimpleEntry}"/>
                 
@@ -130,6 +141,7 @@
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
                             TextColor="NavajoWhite"
+                            VerticalTextAlignment="Center"
                             Text="{Binding ReceiveCharacteristicUUID}"
                             Style="{StaticResource SimpleEntry}"/>
                     </StackLayout>

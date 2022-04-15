@@ -252,4 +252,31 @@
   <data name="Freqz" xml:space="preserve">
     <value>Frequencies</value>
   </data>
+  <data name="GattServiceNotFoundError" xml:space="preserve">
+    <value>UART GATT service not found.</value>
+  </data>
+  <data name="BleSetupError" xml:space="preserve">
+    <value>Configuring BLE adapter resulted in error</value>
+  </data>
+  <data name="GattInitError" xml:space="preserve">
+    <value>GATT Service init failed</value>
+  </data>
+  <data name="BleCommandSendingError" xml:space="preserve">
+    <value>Error sending comand to BLE device</value>
+  </data>
+  <data name="BleDisconnectError" xml:space="preserve">
+    <value>Error while disconecting ble device</value>
+  </data>
+  <data name="SettingUpFreqChartsMessage" xml:space="preserve">
+    <value>Setting up frequency charts</value>
+  </data>
+  <data name="CalculateFFT" xml:space="preserve">
+    <value>Calculating fft...</value>
+  </data>
+  <data name="ShouldCalculateFFT" xml:space="preserve">
+    <value>Should calculate FFT on charts load</value>
+  </data>
+  <data name="CalculateFFTButtonText" xml:space="preserve">
+    <value>Calculate FFT</value>
+  </data>
 </root>

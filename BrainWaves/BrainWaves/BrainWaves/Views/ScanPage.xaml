@@ -71,7 +71,7 @@
                 x:Name="DevicesList"
                 ItemsSource="{Binding GattDevices}"
                 ItemTapped="DevicesList_ItemTapped"
-                BackgroundColor="Transparent">
+                BackgroundColor="Gray">
             </ListView>
         </StackLayout>
         

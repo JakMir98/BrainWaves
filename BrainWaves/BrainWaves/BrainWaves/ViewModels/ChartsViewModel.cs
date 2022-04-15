@@ -43,11 +43,13 @@ namespace BrainWaves.ViewModels
         private FrequencySamplesContainer freqSamples;
         private Orientation chartsOrientation;
         private bool shouldExportTimeSamples = true;
+        private bool areFreqSamplesReady = false;
         #endregion
 
         #region ICommands
         public ICommand ExportToExcelCommand { private set; get; }
         public ICommand DragCompletedCommand { private set; get; }
+        public ICommand CalculateFFTCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -55,29 +57,30 @@ namespace BrainWaves.ViewModels
         {
             Title = Resources.Strings.Resource.Charts;
             excelService = new ExcelService();
+            var shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
+            if (shouldCalculateFftOnLoad)
+            {
+                areFreqSamplesReady = false;
+            }
+            else
+            {
+                areFreqSamplesReady = true;
+            }
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
             DragCompletedCommand = new Command(UpdateCharts);
+            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
 
-            // Create samples to test Export to excell
+            /* Create samples to test Export to excell */
             int samplingFreq = 500;
-            int length = 256;
-            double[] sinWave = GenerateSinWave(samplingFreq, length, 1, 50);
-            double[] sinWavePadded = FftSharp.Pad.ZeroPad(sinWave);
-            timeSamples = new List<double>(sinWavePadded);
-            freqSamples = new FrequencySamplesContainer(Transform.Absolute(Transform.FFT(sinWavePadded)),
-                            Transform.FFTfreq(samplingFreq, length));
-            /*
-            Random random = new Random();
-            double range = 3.3;
-            for (int i = 0; i < MinSampleNum; i++)
-            {
-                double sample = random.NextDouble();
-                double scaled = (sample * range);
-                float f = (float)scaled;
-                samples.Add((float)f);
-            }
+            int length = 1048576; //2^20
+            double[] sinWave = HelperFunctions.GenerateSinWave(samplingFreq, length, 1, 50);
+            timeSamples = new List<double>(sinWave);
+            freqSamples = HelperFunctions.GenerateFreqSamples(sinWave, samplingFreq);
+
+            /* Generate random values
+            //timeSamples = new List<double>(HelperFunctions.GenerateRandomValues(MinSampleNum));
             */
             Text = $"count = {timeSamples.Count}\n";
          
@@ -94,19 +97,34 @@ namespace BrainWaves.ViewModels
         public ChartsViewModel(List<double> _samples)
         {
             timeSamples = _samples;
-
+            /*
+            double[] timeSamplesArr = _samples.ToArray();
+            var samplingFreq = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
+            freqSamples = HelperFunctions.GenerateFreqSamples(timeSamplesArr, samplingFreq);
+            */
             Title = Resources.Strings.Resource.Charts;
             excelService = new ExcelService();
-
-            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, DefaultLoadedSamples);
+            var shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
+            if (shouldCalculateFftOnLoad)
+            {
+                areFreqSamplesReady = false;
+            }
+            else
+            {
+                areFreqSamplesReady = true;
+            }
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
             DragCompletedCommand = new Command(UpdateCharts);
+            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
 
+            MinSliderValue = 0;
+            MaxSliderValue = timeSamples.Count;
+            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, DefaultLoadedSamples);
             CheckChartLabelOrientation();
             SetupTimeDomainChart();
-            SetupFreqDomainChart();
+            //SetupFreqDomainChart();
         }
         #endregion
 
@@ -190,6 +208,13 @@ namespace BrainWaves.ViewModels
             get => shouldExportTimeSamples;
             set => SetProperty(ref shouldExportTimeSamples, value);
         }
+
+        
+        public bool AreFreqSamplesReady
+        {
+            get => areFreqSamplesReady;
+            set => SetProperty(ref areFreqSamplesReady, value);
+        }
         #endregion
 
         #region Functions
@@ -255,6 +280,7 @@ namespace BrainWaves.ViewModels
         {
             IsBusy = true;
             BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+
             List<ChartEntry> timeRecords = new List<ChartEntry>();
 
             double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
@@ -280,17 +306,24 @@ namespace BrainWaves.ViewModels
                 LabelColor = SKColors.White
             };
             IsTimeChartVisible = true;
-            IsBusy = false;
+            if (areFreqSamplesReady) //because frequency is calcualted later
+            {
+                IsBusy = false;
+            }
+            else
+            {
+                BusyMessage = Resources.Strings.Resource.CalculateFFT;
+            }
         }
 
         private void SetupFreqDomainChart()
         {
             IsBusy = true;
-            BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+            BusyMessage = Resources.Strings.Resource.SettingUpFreqChartsMessage;
             List<ChartEntry> freqRecords = new List<ChartEntry>();
 
             int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > freqSamples.Samples.Count() ? freqSamples.Samples.Count() : 2 * numberOfShownSamplesFromTheMiddle;
-            for (int i = 0; i < countToLoad; i++) // todo change to fft
+            for (int i = 0; i < countToLoad; i++)
             {
                 freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, NumOfDecimalPlaces))
                 {
@@ -317,7 +350,7 @@ namespace BrainWaves.ViewModels
         public void UpdateFreqDomainChart()
         {
             IsBusy = true;
-            BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
+            BusyMessage = Resources.Strings.Resource.SettingUpFreqChartsMessage;
             List<ChartEntry> freqRecords = new List<ChartEntry>();
 
             double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
@@ -357,6 +390,38 @@ namespace BrainWaves.ViewModels
                 UpdateFreqDomainChart();
             }            
         }
+
+        public async Task DelayedFreqChartLoad()
+        {
+            var shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
+            if(shouldCalculateFftOnLoad)
+            {
+                await FreqChartLoad();
+            }
+        }
+
+        private async Task FreqChartLoad()
+        {
+            IsBusy = true;
+            await CalculateFFT();
+
+            SetupFreqDomainChart();
+            AreFreqSamplesReady = true;
+            IsBusy = false;
+        }
+
+        private async Task CalculateFFT()
+        {
+            await Task.Run(() =>
+            {
+                BusyMessage = Resources.Strings.Resource.CalculateFFT;
+                double[] timeSamplesArr = timeSamples.ToArray();
+                var samplingFreq = Preferences.Get(Constants.PrefsSavedSamplingFrequency,
+                    Constants.MinSamplingFrequency);
+                freqSamples = HelperFunctions.GenerateFreqSamples(timeSamplesArr, samplingFreq);
+            });
+        }
+
         #endregion
 
         #region Excell handle
@@ -455,28 +520,6 @@ namespace BrainWaves.ViewModels
             excelService.CreateAndInsertDataToManySheets(filepath, data);
         }
         #endregion
-
-        private double[] GenerateSinWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
-        {
-            float T = (float)1 / samplingFrequency;            // % Sampling period
-            float[] t = new float[length];
-            for (int i = 0; i < length - 1; i++)
-            {
-                t[i] = i * T;
-            }
-
-            double[] sinWave = new double[length];
-            for (int i = 0; i < length; i++)
-            {
-                sinWave[i] = amplitude * Math.Sin(2 * Math.PI * signalFrequency * t[i]);
-            }
-            return sinWave;
-        }
-
-        private bool IsPowerOfTwo(ulong x)
-        {
-            return (x != 0) && ((x & (x - 1)) == 0);
-        }
         #endregion
     }
 }

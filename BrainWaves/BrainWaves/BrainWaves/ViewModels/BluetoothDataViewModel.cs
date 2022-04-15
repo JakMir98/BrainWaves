@@ -24,7 +24,7 @@ namespace BrainWaves.ViewModels
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
-        private ObservableCollection<double> floatSamples = new ObservableCollection<double>();
+        private ObservableCollection<double> eegClickSamples = new ObservableCollection<double>();
         private SampleTranformService sampleTransformService;
         private bool areButtonsEnabled = false;
         private string outputText;
@@ -43,6 +43,33 @@ namespace BrainWaves.ViewModels
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Just for testing purpose
+        /// </summary>
+        public BluetoothDataViewModel()
+        {
+            _bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+            sampleTransformService = new SampleTranformService();
+            Title = Resources.Strings.Resource.BLEData;
+            if (Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
+            {
+                InitalizeConnectionCommand = new Command(async () => await GetCharacteristicWithoutUUID());
+            }
+            else
+            {
+                InitalizeConnectionCommand = new Command(async () => await GetCharacteristic());
+            }
+
+            SendCommand = new Command(Send);
+            DisconnectCommand = new Command(async () => await Disconnect());
+            StartReceivingCommand = new Command(StartReceiving);
+            StopReceivingCommand = new Command(StopReceiving);
+            GoToChartsCommand = new Command(async () => await GoToChartsPage());
+            GoBackCommand = new Command(async () => await GoBack());
+            GoToSettingsCommand = new Command(async () => await GoToSettings());
+            CalculateCommand = new Command(Calculate);
+        }
+
         public BluetoothDataViewModel(IDevice connectedDevice)
         {
             _connectedDevice = connectedDevice;
@@ -89,10 +116,10 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref entryText, value);
         }
 
-        public ObservableCollection<double> FloatSamples
+        public ObservableCollection<double> EegClickSamples
         {
-            get => floatSamples;
-            set => SetProperty(ref floatSamples, value);
+            get => eegClickSamples;
+            set => SetProperty(ref eegClickSamples, value);
         }
         #endregion
 
@@ -116,12 +143,14 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    OutputText += "UART GATT service not found." + Environment.NewLine;
+                    await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                        Resources.Strings.Resource.GattServiceNotFoundError);
                 }
             }
             catch (Exception ex)
             {
-                OutputText += $"Error initializing UART GATT service. {ex.Message}" + Environment.NewLine;
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                        Resources.Strings.Resource.GattInitError +$" {ex.Message}" );
             }
             finally
             {
@@ -156,13 +185,15 @@ namespace BrainWaves.ViewModels
                     }
                     else
                     {
-                        OutputText += "UART GATT service not found." + Environment.NewLine;
+                        await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                            Resources.Strings.Resource.GattServiceNotFoundError);
                     }
                 }
             }
             catch (Exception ex)
             {
-                OutputText += $"Error initializing UART GATT service. {ex.Message}" + Environment.NewLine;
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                        Resources.Strings.Resource.GattInitError + $" {ex.Message}");
             }
             finally
             {
@@ -183,7 +214,9 @@ namespace BrainWaves.ViewModels
             }
             catch (Exception ex)
             {
-                OutputText += $"Error sending comand to UART. {ex.Message}" + Environment.NewLine;
+                
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                    Resources.Strings.Resource.BleCommandSendingError + $" {ex.Message}");
             }
             finally
             {
@@ -201,10 +234,9 @@ namespace BrainWaves.ViewModels
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch
-            { // TODO 
-                await PopupNavigation.Instance.PushAsync(new InfoPopup(
-                            Resources.Strings.Resource.ErrorTitle,
-                            "Error disconnecting to BLE device"));
+            {
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                    Resources.Strings.Resource.BleDisconnectError);
             }
             finally
             {
@@ -240,8 +272,7 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    FloatSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
-                    //OutputText += stringValue + ", ";
+                    EegClickSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
                 }
             });
             t.Wait();
@@ -249,10 +280,9 @@ namespace BrainWaves.ViewModels
 
         private async Task GoToChartsPage()
         {
-            OutputText += $"num = {FloatSamples.Count}";
             IsBusy = true;
             BusyMessage = "Opening page";
-            await OpenPage(new ChartsPage(new List<double>(FloatSamples)));
+            await OpenPage(new ChartsPage(new List<double>(EegClickSamples)));
             IsBusy = false;
         }
 
@@ -263,6 +293,18 @@ namespace BrainWaves.ViewModels
 
         private async void Calculate()
         {
+            await Task.Run(() =>
+            {
+                IsBusy = true;
+                BusyMessage = "Generating long sinwave";
+                int samplingFreq = 500;
+                int length = 1048576; //2^20
+                double[] sinWave = HelperFunctions.GenerateSinWave(samplingFreq, length, 1, 50);
+                EegClickSamples = new ObservableCollection<double>(sinWave);
+                IsBusy = false;
+            });
+
+            /*
             try
             {
                 IsBusy = true;
@@ -282,6 +324,7 @@ namespace BrainWaves.ViewModels
             {
                 IsBusy = false;
             }
+            */
         }
         #endregion
     }

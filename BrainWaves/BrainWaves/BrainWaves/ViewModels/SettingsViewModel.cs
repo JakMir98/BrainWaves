@@ -23,6 +23,7 @@ namespace BrainWaves.ViewModels
         private int samplingFrequency;
         private Color entryTimeToReadMindColor;
         private Color entrySamplingFreqColor;
+        private bool shouldCalculateFftOnLoad;
         #endregion
 
         #region Constructors
@@ -44,6 +45,8 @@ namespace BrainWaves.ViewModels
             receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Resources.Strings.Resource.EmptyText);
             timeToReadMindInMinutes = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
             samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
+            shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
+
 
             OSAppTheme currentTheme = Application.Current.RequestedTheme;
             if (currentTheme == OSAppTheme.Light)
@@ -183,18 +186,22 @@ namespace BrainWaves.ViewModels
         public Color EntryTimeToReadMindColor
         {
             get => entryTimeToReadMindColor;
-            set
-            {
-                SetProperty(ref entryTimeToReadMindColor, value);
-            }
+            set => SetProperty(ref entryTimeToReadMindColor, value);
         }
 
         public Color EntrySamplingFreqColor
         {
             get => entrySamplingFreqColor;
+            set => SetProperty(ref entrySamplingFreqColor, value);
+        }
+
+        public bool ShouldCalculateFftOnLoad
+        {
+            get => shouldCalculateFftOnLoad;
             set
             {
-                SetProperty(ref entrySamplingFreqColor, value);
+                SetProperty(ref shouldCalculateFftOnLoad, value);
+                Preferences.Set(Constants.PrefsShouldCalculateFFT, value);
             }
         }
         #endregion

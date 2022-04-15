@@ -24,7 +24,10 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
-
+/* for adc esp32 
+#include "driver/adc.h"
+#include "esp_adc_cal.h"
+*/
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
@@ -197,4 +200,6 @@ void loop() {
         // do stuff here on connecting
         oldDeviceConnected = deviceConnected;
     }
+    // todo delay based on hz
+    //delay(1/hz);
 }

@@ -84,8 +84,18 @@
                         HorizontalOptions="Center"
                         LabelTextColorProp="Red"
                         CheckboxColorProp="Red"
+                        IsControlEnabled="{Binding AreFreqSamplesReady}"
                         TitleText="{Static resource:Resource.ShowFreqDomain}" 
                         IsChecked="{Binding IsFreqChartVisible}"/>
+
+                    <Button 
+                        Command="{Binding CalculateFFTCommand}"
+                        Text="{Static resource:Resource.CalculateFFTButtonText}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="0,20,0,20"
+                        WidthRequest="250"
+                        Style="{StaticResource ButtonStyleNormal}"/>
 
                     <customControls:ActivityIndicatorWithLabel
                         HorizontalOptionsProp="Center"
@@ -96,6 +106,8 @@
                         RightLabelIsVisible="False"
                         ActivityIndicatorColorProp="ForestGreen"
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
+
+                    <!-- Maybe delete this label-->
 
                     <Label
                         Text="{Binding Text}"

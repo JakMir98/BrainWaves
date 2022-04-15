@@ -13,14 +13,14 @@ namespace BrainWaves
 {
     public partial class App : Application
     {
-        public static List<float> fSamples = new List<float>();
+        public static List<double> Samples = new List<double>();
         public App()
         {
             string language = Preferences.Get(Constants.PrefsCurrentLanguage, new CultureInfo(Constants.EnglishLanguageCode, false).Name);
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(language, false);
             InitializeComponent();
 
-            MainPage = new NavigationPage(new ChartsPage());
+            MainPage = new NavigationPage(new BluetoothDataPage());
         }
 
         protected override void OnStart()

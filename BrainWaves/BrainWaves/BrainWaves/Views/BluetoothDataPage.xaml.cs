@@ -8,6 +8,15 @@ namespace BrainWaves.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BluetoothDataPage : ContentPage
     {
+        /// <summary>
+        /// Just for testing purpose
+        /// </summary>
+        public BluetoothDataPage()
+        {
+            InitializeComponent();
+            BindingContext = new BluetoothDataViewModel();
+        }
+
         public BluetoothDataPage(IDevice connectedDevice)
         {
             InitializeComponent();

@@ -316,5 +316,59 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("Freqz", resourceCulture);
             }
         }
+        
+        internal static string GattServiceNotFoundError {
+            get {
+                return ResourceManager.GetString("GattServiceNotFoundError", resourceCulture);
+            }
+        }
+        
+        internal static string BleSetupError {
+            get {
+                return ResourceManager.GetString("BleSetupError", resourceCulture);
+            }
+        }
+        
+        internal static string GattInitError {
+            get {
+                return ResourceManager.GetString("GattInitError", resourceCulture);
+            }
+        }
+        
+        internal static string BleCommandSendingError {
+            get {
+                return ResourceManager.GetString("BleCommandSendingError", resourceCulture);
+            }
+        }
+        
+        internal static string BleDisconnectError {
+            get {
+                return ResourceManager.GetString("BleDisconnectError", resourceCulture);
+            }
+        }
+        
+        internal static string SettingUpFreqChartsMessage {
+            get {
+                return ResourceManager.GetString("SettingUpFreqChartsMessage", resourceCulture);
+            }
+        }
+        
+        internal static string CalculateFFT {
+            get {
+                return ResourceManager.GetString("CalculateFFT", resourceCulture);
+            }
+        }
+        
+        internal static string ShouldCalculateFFT {
+            get {
+                return ResourceManager.GetString("ShouldCalculateFFT", resourceCulture);
+            }
+        }
+        
+        internal static string CalculateFFTButtonText {
+            get {
+                return ResourceManager.GetString("CalculateFFTButtonText", resourceCulture);
+            }
+        }
     }
 }

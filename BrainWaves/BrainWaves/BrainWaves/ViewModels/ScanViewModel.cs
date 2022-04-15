@@ -106,7 +106,8 @@ namespace BrainWaves.ViewModels
             }
             catch (Exception ex)
             {
-                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle, ex.Message);
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                    Resources.Strings.Resource.BleSetupError + $" {ex.Message}");
                 CanScan = false;
             }
         }

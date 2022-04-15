@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BrainWaves.Services
 {
-    public class BluetoothService
+    public class BluetoothService //todo check if can be converted to standalone service 
     {
         private IAdapter bluetoothAdapter;
         private ObservableCollection<IDevice> gattDevices = new ObservableCollection<IDevice>();

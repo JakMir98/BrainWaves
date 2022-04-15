@@ -152,6 +152,26 @@ namespace BrainWaves.CustomControls
             get => (Color)GetValue(CheckboxColorProperty);
             set => SetValue(CheckboxColorProperty, value);
         }
+
+        public static readonly BindableProperty IsControlEnabledProperty =
+            BindableProperty.Create(
+                nameof(IsControlEnabled),
+                typeof(bool),
+                typeof(CheckboxWithLabel),
+                defaultValue: true,
+                propertyChanged: IsControlEnabledPropertyPropertyChanged);
+
+        private static void IsControlEnabledPropertyPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CheckboxWithLabel)bindable;
+            control.CheckboxToggle.IsEnabled = (bool)newValue;
+        }
+
+        public bool IsControlEnabled
+        {
+            get => (bool)GetValue(IsControlEnabledProperty);
+            set => SetValue(IsControlEnabledProperty, value);
+        }
         #endregion
     }
 }
