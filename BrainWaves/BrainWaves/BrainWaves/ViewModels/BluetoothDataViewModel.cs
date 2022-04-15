@@ -1,11 +1,9 @@
 ﻿using BrainWaves.Helpers;
-using BrainWaves.Popups;
 using BrainWaves.Services;
 using BrainWaves.Views;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
-using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -65,7 +63,7 @@ namespace BrainWaves.ViewModels
             StartReceivingCommand = new Command(StartReceiving);
             StopReceivingCommand = new Command(StopReceiving);
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
-            GoBackCommand = new Command(async () => await GoBack());
+            GoBackCommand = new Command(async () => await Disconnect());
             GoToSettingsCommand = new Command(async () => await GoToSettings());
             CalculateCommand = new Command(Calculate);
         }
@@ -281,7 +279,7 @@ namespace BrainWaves.ViewModels
         private async Task GoToChartsPage()
         {
             IsBusy = true;
-            BusyMessage = "Opening page";
+            BusyMessage = Resources.Strings.Resource.OpenPageText;
             await OpenPage(new ChartsPage(new List<double>(EegClickSamples)));
             IsBusy = false;
         }

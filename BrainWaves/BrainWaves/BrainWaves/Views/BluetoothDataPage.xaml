@@ -1,12 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
-             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
-             Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
 
@@ -110,6 +107,7 @@
             <Entry
                Grid.Row="3"
                Grid.Column="0"
+               BackgroundColor="Transparent"
                Style="{StaticResource SimpleEntry}"
                Text="{Binding EntryText}"
                TextColor="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}"/>
@@ -133,10 +131,6 @@
                 </StackLayout>
             </ScrollView>
 
-            <ListView Grid.Row="5" Grid.ColumnSpan="2"
-                x:Name="SamplesList"
-                ItemsSource="{Binding FloatSamples}">
-            </ListView>
         </Grid>
     </StackLayout>
 </ContentPage>

@@ -20,11 +20,6 @@ namespace BrainWaves.ViewModels
         #region Constants
         private const int MinSampleNum = 288_000;
         private const int MaxSampleNum = 1_800_000;
-        private const string FrequencyColor = "#FF1493";
-        private const string TimeColor = "#00BFFF";
-        private const int DefaultLoadedSamples = 20;
-        private const int MaxLoadedSamples = 500;
-        private const int NumOfDecimalPlaces = 2;
         #endregion
 
         #region Variables
@@ -88,7 +83,7 @@ namespace BrainWaves.ViewModels
             //after samples
             MinSliderValue = 0;
             MaxSliderValue = timeSamples.Count;
-            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, DefaultLoadedSamples);
+            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
             CheckChartLabelOrientation();
             SetupTimeDomainChart();
             SetupFreqDomainChart();
@@ -121,7 +116,7 @@ namespace BrainWaves.ViewModels
 
             MinSliderValue = 0;
             MaxSliderValue = timeSamples.Count;
-            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, DefaultLoadedSamples);
+            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
             CheckChartLabelOrientation();
             SetupTimeDomainChart();
             //SetupFreqDomainChart();
@@ -189,9 +184,9 @@ namespace BrainWaves.ViewModels
             set
             {
                 int tempValue;
-                if(value > MaxLoadedSamples)
+                if(value > Constants.MaxLoadedSamples)
                 {
-                    tempValue = MaxLoadedSamples;
+                    tempValue = Constants.MaxLoadedSamples;
                 }
                 else
                 {
@@ -223,7 +218,7 @@ namespace BrainWaves.ViewModels
         {
             if (Device.Idiom == TargetIdiom.Phone)
             {
-                if (numberOfShownSamplesFromTheMiddle > DefaultLoadedSamples - 15)
+                if (numberOfShownSamplesFromTheMiddle > Constants.DefaultLoadedSamples - 15)
                 {
                     chartsOrientation = Orientation.Vertical;
                 }
@@ -234,7 +229,7 @@ namespace BrainWaves.ViewModels
             }
             else
             {
-                if (numberOfShownSamplesFromTheMiddle > DefaultLoadedSamples - 10)
+                if (numberOfShownSamplesFromTheMiddle > Constants.DefaultLoadedSamples - 10)
                 {
                     chartsOrientation = Orientation.Vertical;
                 }
@@ -254,13 +249,13 @@ namespace BrainWaves.ViewModels
             int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > timeSamples.Count ? timeSamples.Count : 2 * numberOfShownSamplesFromTheMiddle;
             for (int i = 0; i < countToLoad; i++)
             {
-                timeRecords.Add(new ChartEntry((float)Math.Round(timeSamples[i], NumOfDecimalPlaces))
+                timeRecords.Add(new ChartEntry((float)Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces))
                 {
                     Label = $"{i}.",
-                    ValueLabel = $"{Math.Round(timeSamples[i], NumOfDecimalPlaces)}V",
-                    Color = SkiaSharp.SKColor.Parse(TimeColor),
-                    TextColor = SKColors.White,
-                    ValueLabelColor = SKColors.White,
+                    ValueLabel = $"{Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces)}V",
+                    Color = SkiaSharp.SKColor.Parse(Constants.TimeChartColor),
+                    TextColor = SKColors.Gray,
+                    ValueLabelColor = SKColors.Gray,
                 });
             }
 
@@ -270,7 +265,7 @@ namespace BrainWaves.ViewModels
                 ValueLabelOrientation = chartsOrientation,
                 LabelOrientation = chartsOrientation,
                 BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.White
+                LabelColor = SKColors.Gray
             };
 
             IsBusy = false;
@@ -287,13 +282,13 @@ namespace BrainWaves.ViewModels
             double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < timeSamples.Count ? sliderValue + numberOfShownSamplesFromTheMiddle : timeSamples.Count;
             for (int i = (int)minValue; i < maxValue; i++)
             {
-                timeRecords.Add(new ChartEntry((float)Math.Round(timeSamples[i], NumOfDecimalPlaces))
+                timeRecords.Add(new ChartEntry((float)Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces))
                 {
                     Label = $"{i}.",
-                    ValueLabel = $"{Math.Round(timeSamples[i], NumOfDecimalPlaces)}V",
-                    Color = SkiaSharp.SKColor.Parse(TimeColor),
-                    TextColor = SKColors.White,
-                    ValueLabelColor = SKColors.White,
+                    ValueLabel = $"{Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces)}V",
+                    Color = SkiaSharp.SKColor.Parse(Constants.TimeChartColor),
+                    TextColor = SKColors.Gray,
+                    ValueLabelColor = SKColors.Gray,
                 });
             }
 
@@ -303,7 +298,7 @@ namespace BrainWaves.ViewModels
                 ValueLabelOrientation = chartsOrientation,
                 LabelOrientation = chartsOrientation,
                 BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.White
+                LabelColor = SKColors.Gray
             };
             IsTimeChartVisible = true;
             if (areFreqSamplesReady) //because frequency is calcualted later
@@ -325,13 +320,13 @@ namespace BrainWaves.ViewModels
             int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > freqSamples.Samples.Count() ? freqSamples.Samples.Count() : 2 * numberOfShownSamplesFromTheMiddle;
             for (int i = 0; i < countToLoad; i++)
             {
-                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, NumOfDecimalPlaces))
+                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces))
                 {
-                    Label = $"{Math.Round(freqSamples.Samples[i].Freq, NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, NumOfDecimalPlaces)}V",
-                    Color = SkiaSharp.SKColor.Parse(FrequencyColor),
-                    TextColor = SKColors.White,
-                    ValueLabelColor = SKColors.White,
+                    Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
+                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}V",
+                    Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
+                    TextColor = SKColors.Gray,
+                    ValueLabelColor = SKColors.Gray,
                 });
             }
 
@@ -341,7 +336,7 @@ namespace BrainWaves.ViewModels
                 ValueLabelOrientation = chartsOrientation,
                 LabelOrientation = chartsOrientation,
                 BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.White
+                LabelColor = SKColors.Gray
             };
 
             IsBusy = false;
@@ -357,13 +352,13 @@ namespace BrainWaves.ViewModels
             double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < freqSamples.Samples.Count() ? sliderValue + numberOfShownSamplesFromTheMiddle : freqSamples.Samples.Count();
             for (int i = (int)minValue; i < maxValue; i++)
             {
-                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, NumOfDecimalPlaces)) // todo change to fft
+                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)) // todo change to fft
                 {
-                    Label = $"{Math.Round(freqSamples.Samples[i].Freq, NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, NumOfDecimalPlaces)}V",
-                    Color = SkiaSharp.SKColor.Parse(FrequencyColor),
-                    TextColor = SKColors.White,
-                    ValueLabelColor = SKColors.White,
+                    Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
+                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}V",
+                    Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
+                    TextColor = SKColors.Gray,
+                    ValueLabelColor = SKColors.Gray,
                 });
             }
 
@@ -373,7 +368,7 @@ namespace BrainWaves.ViewModels
                 ValueLabelOrientation = chartsOrientation,
                 LabelOrientation = chartsOrientation,
                 BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.White
+                LabelColor = SKColors.Gray
             };
             IsBusy = false;
         }
@@ -403,9 +398,11 @@ namespace BrainWaves.ViewModels
         private async Task FreqChartLoad()
         {
             IsBusy = true;
+            IsExportButtonEnabled = false;
             await CalculateFFT();
 
             SetupFreqDomainChart();
+            IsExportButtonEnabled = true;
             AreFreqSamplesReady = true;
             IsBusy = false;
         }
@@ -415,10 +412,9 @@ namespace BrainWaves.ViewModels
             await Task.Run(() =>
             {
                 BusyMessage = Resources.Strings.Resource.CalculateFFT;
-                double[] timeSamplesArr = timeSamples.ToArray();
                 var samplingFreq = Preferences.Get(Constants.PrefsSavedSamplingFrequency,
                     Constants.MinSamplingFrequency);
-                freqSamples = HelperFunctions.GenerateFreqSamples(timeSamplesArr, samplingFreq);
+                freqSamples = HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), samplingFreq);
             });
         }
 

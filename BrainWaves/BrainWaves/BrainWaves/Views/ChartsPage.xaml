@@ -5,7 +5,6 @@
              xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
-             Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.ChartsPage">
     <ContentPage.Content>
@@ -40,6 +39,8 @@
                         Text="{Binding NumberOfShownSamplesFromTheMiddle, Mode=TwoWay}"
                         PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        HorizontalTextAlignment="Center"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Style="{StaticResource SimpleEntry}"
@@ -58,6 +59,7 @@
                         Maximum="{Binding MaxSliderValue}"
                         Value="{Binding SliderValue}"
                         DragCompletedCommand="{Binding DragCompletedCommand}"
+                        BackgroundColor="Transparent"
                         Margin="20,0,20,0"/>
 
                     <Entry 
@@ -65,6 +67,8 @@
                         Text="{Binding SliderValue, Mode=TwoWay, StringFormat='{0:0}'}"
                         PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        HorizontalTextAlignment="Center"
                         ReturnCommand="{Binding DragCompletedCommand}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
@@ -91,6 +95,7 @@
                     <Button 
                         Command="{Binding CalculateFFTCommand}"
                         Text="{Static resource:Resource.CalculateFFTButtonText}"
+                        IsEnabled="{Binding IsExportButtonEnabled}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Margin="0,20,0,20"

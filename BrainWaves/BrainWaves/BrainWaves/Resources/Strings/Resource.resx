@@ -279,4 +279,7 @@
   <data name="CalculateFFTButtonText" xml:space="preserve">
     <value>Calculate FFT</value>
   </data>
+  <data name="OpenPageText" xml:space="preserve">
+    <value>Page loading</value>
+  </data>
 </root>

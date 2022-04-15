@@ -370,5 +370,11 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("CalculateFFTButtonText", resourceCulture);
             }
         }
+        
+        internal static string OpenPageText {
+            get {
+                return ResourceManager.GetString("OpenPageText", resourceCulture);
+            }
+        }
     }
 }

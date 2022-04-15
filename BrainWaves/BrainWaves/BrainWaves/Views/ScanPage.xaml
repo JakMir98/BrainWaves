@@ -6,7 +6,6 @@
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              NavigationPage.HasNavigationBar="False"
-             Title="{Binding Title}"
              x:Name="ScanPageRef"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.ScanPage">

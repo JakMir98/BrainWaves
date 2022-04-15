@@ -6,7 +6,6 @@
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              NavigationPage.HasNavigationBar="False"
-             Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"    
              x:Class="BrainWaves.Views.SettingsPage">
     <ContentPage.BindingContext>
@@ -42,8 +41,9 @@
 
                     <Picker
                         Title="{Binding SelectedLanguage}"
-                        TitleColor="NavajoWhite"
+                        TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
                         WidthRequest="250"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
@@ -114,7 +114,8 @@
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.ServiceUUIDLabel}"
-                            TextColor="NavajoWhite"
+                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                            BackgroundColor="Transparent"
                             VerticalTextAlignment="Center"
                             Text="{Binding ServiceUUID}"
                             Style="{StaticResource SimpleEntry}"/>
@@ -127,7 +128,8 @@
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.CharacteristicSendUUIDLabel}"
-                            TextColor="NavajoWhite"
+                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                            BackgroundColor="Transparent"
                             VerticalTextAlignment="Center"
                             Text="{Binding SendCharacteristicUUID}"
                             Style="{StaticResource SimpleEntry}"/>
@@ -140,7 +142,8 @@
                         <Entry
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Placeholder="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
-                            TextColor="NavajoWhite"
+                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                            BackgroundColor="Transparent"
                             VerticalTextAlignment="Center"
                             Text="{Binding ReceiveCharacteristicUUID}"
                             Style="{StaticResource SimpleEntry}"/>
