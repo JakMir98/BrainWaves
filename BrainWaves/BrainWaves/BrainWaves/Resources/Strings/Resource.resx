@@ -243,4 +243,13 @@
   <data name="ShowTimeDomain" xml:space="preserve">
     <value>Show time domain</value>
   </data>
+  <data name="ExportTimeSamples" xml:space="preserve">
+    <value>Export time samples</value>
+  </data>
+  <data name="ExportFreqSamples" xml:space="preserve">
+    <value>Export frequency samples</value>
+  </data>
+  <data name="Freqz" xml:space="preserve">
+    <value>Frequencies</value>
+  </data>
 </root>

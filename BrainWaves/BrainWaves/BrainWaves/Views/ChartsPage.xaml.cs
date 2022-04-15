@@ -14,7 +14,7 @@ namespace BrainWaves.Views
             BindingContext = new ChartsViewModel();
         }
 
-        public ChartsPage(List<float> _samples)
+        public ChartsPage(List<double> _samples)
         {
             InitializeComponent();
             BindingContext = new ChartsViewModel(_samples);

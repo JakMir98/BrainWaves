@@ -243,4 +243,13 @@
   <data name="ShowTimeDomain" xml:space="preserve">
     <value>Pokaż dziedzinę czasu</value>
   </data>
+  <data name="ExportTimeSamples" xml:space="preserve">
+    <value>Eksportuj próbki w domenie czasu</value>
+  </data>
+  <data name="ExportFreqSamples" xml:space="preserve">
+    <value>Eksportuj próbki w domenie częstotliwości</value>
+  </data>
+  <data name="Freqz" xml:space="preserve">
+    <value>Częstotliwości</value>
+  </data>
 </root>

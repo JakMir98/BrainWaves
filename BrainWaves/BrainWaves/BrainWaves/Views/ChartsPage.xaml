@@ -98,6 +98,12 @@
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
                     <Label
+                        Text="{Binding Text}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Label
                         Text="{Static resource:Resource.TimeDomain}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
@@ -124,6 +130,17 @@
                         HeightRequest="250"
                         IsVisible="{Binding IsFreqChartVisible}"
                         Margin="0,0,0,40"/>
+
+                    <customControls:SwitchWithLabel
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="20"
+                        LeftLabelTextColorProp="Red"
+                        LeftTitleText="{Static resource:Resource.ExportFreqSamples}"
+                        IsChecked="{Binding ShouldExportTimeSamples}"
+                        RightLabelIsVisible="True"
+                        RightLabelTextColorProp="Red"
+                        RightTitleText="{Static resource:Resource.ExportTimeSamples}"/>
 
                     <Button 
                         Command="{Binding ExportToExcelCommand}"

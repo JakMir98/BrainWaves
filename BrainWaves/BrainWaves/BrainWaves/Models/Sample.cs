@@ -6,6 +6,6 @@ namespace BrainWaves.Models
 {
     public class Sample
     {
-        private int _id;
+        public double Value { get; set; }
     }
 }

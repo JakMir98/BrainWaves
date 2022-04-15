@@ -298,5 +298,23 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("ShowTimeDomain", resourceCulture);
             }
         }
+        
+        internal static string ExportTimeSamples {
+            get {
+                return ResourceManager.GetString("ExportTimeSamples", resourceCulture);
+            }
+        }
+        
+        internal static string ExportFreqSamples {
+            get {
+                return ResourceManager.GetString("ExportFreqSamples", resourceCulture);
+            }
+        }
+        
+        internal static string Freqz {
+            get {
+                return ResourceManager.GetString("Freqz", resourceCulture);
+            }
+        }
     }
 }

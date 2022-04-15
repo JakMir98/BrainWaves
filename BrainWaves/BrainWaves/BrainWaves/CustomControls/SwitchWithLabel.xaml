@@ -11,15 +11,23 @@
                 HorizontalOptions="{Binding HorizontalOptionsProp, Source={x:Reference CustomSwitchParent}}"
                 BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomSwitchParent}}">
             <Label 
-                x:Name="SwitchText"
+                x:Name="LeftSwitchText"
                 VerticalOptions="Center"
-                Text="{Binding TitleText, Source={x:Reference CustomSwitchParent}}"
-                TextColor="{Binding LabelTextColorProp, Source={x:Reference CustomSwitchParent}}"
+                Text="{Binding LeftTitleText, Source={x:Reference CustomSwitchParent}}"
+                TextColor="{Binding LeftLabelTextColorProp, Source={x:Reference CustomSwitchParent}}"
+                IsVisible="{Binding LeftLabelIsVisible, Source={x:Reference CustomSwitchParent}}"
                 Style="{StaticResource LabelStyleNormal}"/>
             <Switch 
                 x:Name="SwitchToggle"
                 VerticalOptions="Center"
                 IsToggled="{Binding IsChecked, Source={x:Reference CustomSwitchParent}}"/>
+            <Label 
+                x:Name="RightSwitchText"
+                VerticalOptions="Center"
+                Text="{Binding RightTitleText, Source={x:Reference CustomSwitchParent}}"
+                TextColor="{Binding RightLabelTextColorProp, Source={x:Reference CustomSwitchParent}}"
+                IsVisible="{Binding RightLabelIsVisible, Source={x:Reference CustomSwitchParent}}"
+                Style="{StaticResource LabelStyleNormal}"/>
 
         </StackLayout>
     </ContentView.Content>

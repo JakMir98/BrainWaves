@@ -36,8 +36,8 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Margin="20"
-                        LabelTextColorProp="Red"
-                        TitleText="{Static resource:Resource.Theme}"
+                        LeftLabelTextColorProp="Red"
+                        LeftTitleText="{Static resource:Resource.Theme}"
                         IsChecked="{Binding IsDarkThemeOn}" />
 
                     <Picker

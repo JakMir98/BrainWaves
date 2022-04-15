@@ -24,7 +24,7 @@ namespace BrainWaves.ViewModels
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
-        private ObservableCollection<float> floatSamples = new ObservableCollection<float>();
+        private ObservableCollection<double> floatSamples = new ObservableCollection<double>();
         private SampleTranformService sampleTransformService;
         private bool areButtonsEnabled = false;
         private string outputText;
@@ -89,7 +89,7 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref entryText, value);
         }
 
-        public ObservableCollection<float> FloatSamples
+        public ObservableCollection<double> FloatSamples
         {
             get => floatSamples;
             set => SetProperty(ref floatSamples, value);
@@ -252,7 +252,7 @@ namespace BrainWaves.ViewModels
             OutputText += $"num = {FloatSamples.Count}";
             IsBusy = true;
             BusyMessage = "Opening page";
-            await OpenPage(new ChartsPage(new List<float>(FloatSamples)));
+            await OpenPage(new ChartsPage(new List<double>(FloatSamples)));
             IsBusy = false;
         }
 

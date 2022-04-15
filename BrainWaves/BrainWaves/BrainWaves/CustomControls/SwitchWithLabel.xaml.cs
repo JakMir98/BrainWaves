@@ -68,45 +68,131 @@ namespace BrainWaves.CustomControls
         }
         #endregion
 
-        #region Label
-        public static readonly BindableProperty TitleTextProperty = BindableProperty.Create(nameof(TitleText),
-            typeof(string),
-            typeof(SwitchWithLabel),
-            defaultValue: string.Empty,
-            defaultBindingMode: BindingMode.OneWay,
-            propertyChanged: TitleTextPropertyChanged);
+        #region LeftLabel
+        public static readonly BindableProperty LeftTitleTextProperty =
+            BindableProperty.Create(
+                nameof(LeftTitleText),
+                typeof(string),
+                typeof(SwitchWithLabel),
+                defaultValue: string.Empty,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: LeftTitleTextPropertyChanged);
 
-        private static void TitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void LeftTitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (SwitchWithLabel)bindable;
-            control.SwitchText.Text = newValue?.ToString();
+            control.LeftSwitchText.Text = newValue?.ToString();
         }
 
-        public string TitleText
+        public string LeftTitleText
         {
-            get => GetValue(TitleTextProperty)?.ToString();
-            set => SetValue(TitleTextProperty, value);
+            get => GetValue(LeftTitleTextProperty)?.ToString();
+            set => SetValue(LeftTitleTextProperty, value);
         }
 
-        public static readonly BindableProperty LabelTextColorProperty =
+        public static readonly BindableProperty LeftLabelTextColorProperty =
             BindableProperty.Create(
-                nameof(LabelTextColorProp),
+                nameof(LeftLabelTextColorProp),
                 typeof(Color),
                 typeof(SwitchWithLabel),
                 defaultValue: Color.White,
                 defaultBindingMode: BindingMode.OneWay,
-                propertyChanged: LabelTextColorPropertyChanged);
+                propertyChanged: LeftLabelTextColorPropertyChanged);
 
-        private static void LabelTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void LeftLabelTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (SwitchWithLabel)bindable;
-            control.SwitchText.TextColor = (Color)newValue;
+            control.LeftSwitchText.TextColor = (Color)newValue;
         }
 
-        public Color LabelTextColorProp
+        public Color LeftLabelTextColorProp
         {
-            get => (Color)GetValue(LabelTextColorProperty);
-            set => SetValue(LabelTextColorProperty, value);
+            get => (Color)GetValue(LeftLabelTextColorProperty);
+            set => SetValue(LeftLabelTextColorProperty, value);
+        }
+
+        public static readonly BindableProperty LeftLabelIsVisibleProperty =
+            BindableProperty.Create(
+                nameof(LeftLabelIsVisible),
+                typeof(bool),
+                typeof(SwitchWithLabel),
+                defaultValue: true,
+                propertyChanged: LeftLabelIsVisiblePropertyChanged);
+
+        private static void LeftLabelIsVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.LeftSwitchText.IsVisible = (bool)newValue;
+        }
+
+        public bool LeftLabelIsVisible
+        {
+            get => (bool)GetValue(LeftLabelIsVisibleProperty);
+            set => SetValue(LeftLabelIsVisibleProperty, value);
+        }
+        #endregion
+
+        #region RightLabel
+        public static readonly BindableProperty RightTitleTextProperty =
+            BindableProperty.Create(
+                nameof(RightTitleText),
+                typeof(string),
+                typeof(SwitchWithLabel),
+                defaultValue: string.Empty,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightTitleTextPropertyChanged);
+
+        private static void RightTitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.RightSwitchText.Text = newValue?.ToString();
+        }
+
+        public string RightTitleText
+        {
+            get => GetValue(RightTitleTextProperty)?.ToString();
+            set => SetValue(RightTitleTextProperty, value);
+        }
+
+        public static readonly BindableProperty RightLabelTextColorProperty =
+            BindableProperty.Create(
+                nameof(RightLabelTextColorProp),
+                typeof(Color),
+                typeof(SwitchWithLabel),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: RightLabelTextColorPropertyChanged);
+
+        private static void RightLabelTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.RightSwitchText.TextColor = (Color)newValue;
+        }
+
+        public Color RightLabelTextColorProp
+        {
+            get => (Color)GetValue(RightLabelTextColorProperty);
+            set => SetValue(RightLabelTextColorProperty, value);
+        }
+
+        public static readonly BindableProperty RightLabelIsVisibleProperty =
+            BindableProperty.Create(
+                nameof(RightLabelIsVisible),
+                typeof(bool),
+                typeof(SwitchWithLabel),
+                defaultValue: false,
+                propertyChanged: RightLabelIsVisiblePropertyChanged);
+
+        private static void RightLabelIsVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (SwitchWithLabel)bindable;
+            control.RightSwitchText.IsVisible = (bool)newValue;
+        }
+
+        public bool RightLabelIsVisible
+        {
+            get => (bool)GetValue(RightLabelIsVisibleProperty);
+            set => SetValue(RightLabelIsVisibleProperty, value);
         }
         #endregion
 
