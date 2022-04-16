@@ -376,5 +376,59 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("OpenPageText", resourceCulture);
             }
         }
+        
+        internal static string StartSettingTitle {
+            get {
+                return ResourceManager.GetString("StartSettingTitle", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingTest {
+            get {
+                return ResourceManager.GetString("StartSettingTest", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingUserDefined {
+            get {
+                return ResourceManager.GetString("StartSettingUserDefined", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingBasic {
+            get {
+                return ResourceManager.GetString("StartSettingBasic", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingAdvanced {
+            get {
+                return ResourceManager.GetString("StartSettingAdvanced", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingFull {
+            get {
+                return ResourceManager.GetString("StartSettingFull", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingMinimal {
+            get {
+                return ResourceManager.GetString("StartSettingMinimal", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingShortHighSampleRate {
+            get {
+                return ResourceManager.GetString("StartSettingShortHighSampleRate", resourceCulture);
+            }
+        }
+        
+        internal static string StartSettingLongLowSampleRate {
+            get {
+                return ResourceManager.GetString("StartSettingLongLowSampleRate", resourceCulture);
+            }
+        }
     }
 }

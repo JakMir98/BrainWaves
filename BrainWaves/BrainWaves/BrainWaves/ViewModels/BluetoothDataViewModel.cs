@@ -24,13 +24,19 @@ namespace BrainWaves.ViewModels
         private ICharacteristic receiveCharacteristic;
         private ObservableCollection<double> eegClickSamples = new ObservableCollection<double>();
         private SampleTranformService sampleTransformService;
-        private bool areButtonsEnabled = false;
+        private bool areButtonsEnabled = true;
         private string outputText;
         private string entryText;
+        private string selectedSettings;
+        private List<string> availableSettings;
+        private int samplingFreq;
+        private float timeToMeasureInMins;
+        private float expectedNumberOfSamples;
+        private bool isGoToChartsEnabled = false;
         #endregion
 
         #region ICommands
-        public ICommand InitalizeConnectionCommand { private set; get; }
+        public ICommand StartCommand { private set; get; }
         public ICommand SendCommand { private set; get; }
         public ICommand DisconnectCommand { private set; get; }
         public ICommand StartReceivingCommand { private set; get; }
@@ -46,21 +52,27 @@ namespace BrainWaves.ViewModels
         /// </summary>
         public BluetoothDataViewModel()
         {
-            _bluetoothAdapter = CrossBluetoothLE.Current.Adapter;
+            //_bluetoothAdapter = CrossBluetoothLE.Current.Adapter; on windows throws exeption if not have ble
             sampleTransformService = new SampleTranformService();
             Title = Resources.Strings.Resource.BLEData;
-            if (Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
-            {
-                InitalizeConnectionCommand = new Command(async () => await GetCharacteristicWithoutUUID());
-            }
-            else
-            {
-                InitalizeConnectionCommand = new Command(async () => await GetCharacteristic());
-            }
 
-            SendCommand = new Command(Send);
+            AvailableSettings = new List<string>
+            {
+                Resources.Strings.Resource.StartSettingTest,
+                Resources.Strings.Resource.StartSettingUserDefined,
+                Resources.Strings.Resource.StartSettingMinimal,
+                Resources.Strings.Resource.StartSettingBasic,
+                Resources.Strings.Resource.StartSettingShortHighSampleRate,
+                Resources.Strings.Resource.StartSettingLongLowSampleRate,
+                Resources.Strings.Resource.StartSettingAdvanced,
+                Resources.Strings.Resource.StartSettingFull
+            };
+            SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;
+            IsGoToChartsEnabled = false;
+            //SendCommand = new Command(Send);
+            StartCommand = new Command(async () => await StartMeasure());
             DisconnectCommand = new Command(async () => await Disconnect());
-            StartReceivingCommand = new Command(StartReceiving);
+            StartReceivingCommand = new Command(async () => await StartReceiving());
             StopReceivingCommand = new Command(StopReceiving);
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
             GoBackCommand = new Command(async () => await Disconnect());
@@ -75,18 +87,23 @@ namespace BrainWaves.ViewModels
             sampleTransformService = new SampleTranformService();
             //samples.Capacity = ;
             Title = Resources.Strings.Resource.BLEData;
-            if(Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
+
+            AvailableSettings = new List<string>
             {
-                InitalizeConnectionCommand = new Command(async () => await GetCharacteristicWithoutUUID());
-            }
-            else
-            {
-                InitalizeConnectionCommand = new Command(async () => await GetCharacteristic());
-            }
-            
-            SendCommand = new Command(Send);
+                Resources.Strings.Resource.StartSettingTest,
+                Resources.Strings.Resource.StartSettingUserDefined,
+                Resources.Strings.Resource.StartSettingMinimal,
+                Resources.Strings.Resource.StartSettingBasic,
+                Resources.Strings.Resource.StartSettingShortHighSampleRate,
+                Resources.Strings.Resource.StartSettingLongLowSampleRate,
+                Resources.Strings.Resource.StartSettingAdvanced,
+                Resources.Strings.Resource.StartSettingFull
+            };
+            SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;
+            IsGoToChartsEnabled = false;
+            StartCommand = new Command(async () => await StartMeasure());
             DisconnectCommand = new Command(async () => await Disconnect());
-            StartReceivingCommand = new Command(StartReceiving);
+            StartReceivingCommand = new Command(async () => await StartReceiving());
             StopReceivingCommand = new Command(StopReceiving);
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
             GoBackCommand = new Command(async () => await GoBack());
@@ -119,9 +136,51 @@ namespace BrainWaves.ViewModels
             get => eegClickSamples;
             set => SetProperty(ref eegClickSamples, value);
         }
+        
+        public string SelectedSettings
+        {
+            get => selectedSettings;
+            set
+            {
+                SetProperty(ref selectedSettings, value);
+                SelectedSettingsChangedHandle(value);
+            }
+        }
+
+        public List<string> AvailableSettings
+        {
+            get => availableSettings;
+            set => SetProperty(ref availableSettings, value);
+        }
+
+        public bool IsGoToChartsEnabled
+        {
+            get => isGoToChartsEnabled;
+            set => SetProperty(ref isGoToChartsEnabled, value);
+        }
         #endregion
 
         #region Functions
+        private async Task StartMeasure()
+        {
+            AreButtonsEnabled = false;
+            EegClickSamples.Clear();
+            if (Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
+            {
+                await GetCharacteristicWithoutUUID();
+            }
+            else
+            {
+                await GetCharacteristic();
+            }
+
+            await StartReceiving();
+
+            string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
+            expectedNumberOfSamples = samplingFreq * timeToMeasureInMins * 60;
+            Send(message);
+        }
+
         private async Task GetCharacteristic()
         {
             try
@@ -137,7 +196,6 @@ namespace BrainWaves.ViewModels
                         (Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Constants.GattCharacteristicReceiveId.ToString())));
                     receiveCharacteristic = await service.GetCharacteristicAsync(Guid.Parse
                         (Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Constants.GattCharacteristicSendId.ToString())));
-                    AreButtonsEnabled = true;
                 }
                 else
                 {
@@ -178,7 +236,6 @@ namespace BrainWaves.ViewModels
                             {
                                 receiveCharacteristic = characteristic;
                             }
-                            AreButtonsEnabled = true;
                         }
                     }
                     else
@@ -199,7 +256,7 @@ namespace BrainWaves.ViewModels
             }
         }
 
-        private async void Send()
+        private async void Send(string message)
         {
             try
             {
@@ -207,7 +264,7 @@ namespace BrainWaves.ViewModels
                 BusyMessage = Resources.Strings.Resource.SendingMessage;
                 if (sendCharacteristic != null)
                 {
-                    var bytes = await sendCharacteristic.WriteAsync(Encoding.UTF8.GetBytes($"{entryText}\r\n"));
+                    var bytes = await sendCharacteristic.WriteAsync(Encoding.UTF8.GetBytes($"{message}\r\n"));
                 }
             }
             catch (Exception ex)
@@ -242,7 +299,7 @@ namespace BrainWaves.ViewModels
             }
         }
 
-        private async void StartReceiving()
+        private async Task StartReceiving()
         {
             if (receiveCharacteristic != null)
             {
@@ -266,11 +323,13 @@ namespace BrainWaves.ViewModels
                 var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
                 if (string.Equals(stringValue, "End"))
                 {
-                    OutputText += "End of samples";
+                    AreButtonsEnabled = true;
+                    IsGoToChartsEnabled = true;
                 }
                 else
                 {
                     EegClickSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
+                    OutputText = $"Received: {EegClickSamples.Count}/{expectedNumberOfSamples}";
                 }
             });
             t.Wait();
@@ -293,6 +352,7 @@ namespace BrainWaves.ViewModels
         {
             await Task.Run(() =>
             {
+                IsGoToChartsEnabled = false;
                 IsBusy = true;
                 BusyMessage = "Generating long sinwave";
                 int samplingFreq = 500;
@@ -300,8 +360,9 @@ namespace BrainWaves.ViewModels
                 double[] sinWave = HelperFunctions.GenerateSinWave(samplingFreq, length, 1, 50);
                 EegClickSamples = new ObservableCollection<double>(sinWave);
                 IsBusy = false;
+                IsGoToChartsEnabled = true;
             });
-
+            
             /*
             try
             {
@@ -323,6 +384,50 @@ namespace BrainWaves.ViewModels
                 IsBusy = false;
             }
             */
+        }
+
+        private void SelectedSettingsChangedHandle(string setting)
+        {
+            if(setting == Resources.Strings.Resource.StartSettingTest)
+            {
+                samplingFreq = 80;
+                timeToMeasureInMins = 0.25f;
+            }
+            else if(setting == Resources.Strings.Resource.StartSettingUserDefined)
+            {
+                samplingFreq = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
+                timeToMeasureInMins = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
+            }
+            else if (setting == Resources.Strings.Resource.StartSettingMinimal)
+            {
+                samplingFreq = 80;
+                timeToMeasureInMins = 1;
+            }
+            else if (setting == Resources.Strings.Resource.StartSettingBasic)
+            {
+                samplingFreq = 160;
+                timeToMeasureInMins = 15;
+            }
+            else if (setting == Resources.Strings.Resource.StartSettingShortHighSampleRate)
+            {
+                samplingFreq = 500;
+                timeToMeasureInMins = 5;
+            }
+            else if (setting == Resources.Strings.Resource.StartSettingLongLowSampleRate)
+            {
+                samplingFreq = 80;
+                timeToMeasureInMins = 30;
+            }
+            else if (setting == Resources.Strings.Resource.StartSettingAdvanced)
+            {
+                samplingFreq = 500;
+                timeToMeasureInMins = 15;
+            }
+            else if (setting == Resources.Strings.Resource.StartSettingFull)
+            {
+                samplingFreq = 500;
+                timeToMeasureInMins = 60;
+            }
         }
         #endregion
     }

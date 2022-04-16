@@ -33,7 +33,7 @@ namespace BrainWaves.ViewModels
         private double minSliderValue;
         private double maxSliderValue;
         private double sliderValue;
-        private string text;
+        
         private int numberOfShownSamplesFromTheMiddle;
         private FrequencySamplesContainer freqSamples;
         private Orientation chartsOrientation;
@@ -76,9 +76,7 @@ namespace BrainWaves.ViewModels
 
             /* Generate random values
             //timeSamples = new List<double>(HelperFunctions.GenerateRandomValues(MinSampleNum));
-            */
-            Text = $"count = {timeSamples.Count}\n";
-         
+            */         
 
             //after samples
             MinSliderValue = 0;
@@ -134,12 +132,6 @@ namespace BrainWaves.ViewModels
         {
             get => timeChart;
             set => SetProperty(ref timeChart, value);
-        }
-
-        public string Text
-        {
-            get => text;
-            set => SetProperty(ref text, value);
         }
 
         public bool IsFreqChartVisible

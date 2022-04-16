@@ -7,30 +7,31 @@
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
 
-    <StackLayout
-        Orientation="Vertical">
-        <StackLayout.Margin>
-            <OnPlatform x:TypeArguments="Thickness">
-                <On Platform="iOS" Value="0,20,0,0" />
-            </OnPlatform>
-        </StackLayout.Margin>
-        <customControls:CustomToolbar
-            BackgroundColorProp="{StaticResource PrimaryColor}"
-            LeftButtonIsVisibleProp="True"
-            LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
-            LeftButtonCommand="{Binding GoBackCommand}"
-            LeftButtonCommandParameter="{Binding GoBackCommand}"
-            LeftButtonTextColorProp="White"
-            TitleText="{Binding Title}"
-            LabelSizeProp="15"
-            CustomTextColorProp="White"
-            RightButtonIsVisibleProp="True"
-            RightButtonTitleTextProp="{Static resource:Resource.Settings}"
-            RightButtonCommand="{Binding GoToSettingsCommand}"
-            RightButtonCommandParameter="{Binding GoToSettingsCommand}"
-            RightButtonTextColorProp="White"/>
+    <ScrollView>
+        <StackLayout
+            Orientation="Vertical">
+            <StackLayout.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="iOS" Value="0,20,0,0" />
+                </OnPlatform>
+            </StackLayout.Margin>
+            <customControls:CustomToolbar
+                BackgroundColorProp="{StaticResource PrimaryColor}"
+                LeftButtonIsVisibleProp="True"
+                LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
+                LeftButtonCommand="{Binding GoBackCommand}"
+                LeftButtonCommandParameter="{Binding GoBackCommand}"
+                LeftButtonTextColorProp="White"
+                TitleText="{Binding Title}"
+                LabelSizeProp="15"
+                CustomTextColorProp="White"
+                RightButtonIsVisibleProp="True"
+                RightButtonTitleTextProp="{Static resource:Resource.Settings}"
+                RightButtonCommand="{Binding GoToSettingsCommand}"
+                RightButtonCommandParameter="{Binding GoToSettingsCommand}"
+                RightButtonTextColorProp="White"/>
 
-        <customControls:ActivityIndicatorWithLabel
+            <customControls:ActivityIndicatorWithLabel
                 HorizontalOptionsProp="Center"
                 VerticalOptions="Center"
                 LeftLabelIsVisible="True"
@@ -40,97 +41,132 @@
                 ActivityIndicatorColorProp="ForestGreen"
                 ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="5*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <Picker
+                Title="{Binding SelectedSettings}"
+                TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
+                TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                BackgroundColor="Transparent"
+                WidthRequest="300"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Margin="20"
+                ItemsSource="{Binding AvailableSettings}"
+                SelectedItem="{Binding SelectedSettings}">
+            </Picker>
+
+            <StackLayout
+                Orientation="Horizontal"
+                VerticalOptions="Center"
+                HorizontalOptions="CenterAndExpand">
+                <Button
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    Text="Start"
+                    IsEnabled="{Binding AreButtonsEnabled}"
+                    Command="{Binding StartCommand}"/>
+
+                <Button
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    Text="Charts"
+                    IsEnabled="{Binding IsGoToChartsEnabled}"
+                    Command="{Binding GoToChartsCommand}"/>
+            </StackLayout>
+
+            <Label
+                Text="{Binding OutputText}"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Style="{StaticResource LabelStyleNormal}"/>
+
+            <Label
+                Text="Generate Sinwave"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Style="{StaticResource LabelStyleNormal}"/>
 
             <Button
-                Grid.Row="0"
-                Grid.Column="0"
                 Style="{StaticResource ButtonStyleNormal}"
                 Margin="10"
-                Text="Explicit Init"
-                Command="{Binding InitalizeConnectionCommand}"/>
-
-            <Button
-                Grid.Row="0"
-                Grid.Column="1"
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                Text="Charts"
-                Command="{Binding GoToChartsCommand}"/>
-
-            <Button
-                Grid.Row="1"
-                Grid.Column="0"
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                IsVisible="{Binding AreButtonsEnabled}"
-                Command="{Binding StartReceivingCommand}"
-                Text="Start receiving" />
-
-            <Button
-                Grid.Row="1"
-                Grid.Column="1"
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                IsVisible="{Binding AreButtonsEnabled}"
-                Command="{Binding StopReceivingCommand}"
-                Text="Stop receiving" />
-
-            <Button
-                Grid.Row="2"
-                Grid.Column="0"
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                Text="Disconnect"
-                Command="{Binding DisconnectCommand}"/>
-
-            <Button
-                Grid.Row="2"
-                Grid.Column="1"
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                Text="Calcualte"
+                Text="Generate Sin"
                 Command="{Binding CalculateCommand}"/>
 
-            <Entry
-               Grid.Row="3"
-               Grid.Column="0"
-               BackgroundColor="Transparent"
-               Style="{StaticResource SimpleEntry}"
-               Text="{Binding EntryText}"
-               TextColor="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}"/>
+            <Grid Margin="20"
+                  IsVisible="false">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="5*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Button
-                Grid.Row="3"
-                Grid.Column="1"
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                IsVisible="{Binding AreButtonsEnabled}"
-                Text="Send command"
-                Command="{Binding SendCommand}"/>
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    Text="Explicit Init"
+                    Command="{Binding InitalizeConnectionCommand}"/>
 
-            <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
-                <StackLayout>
-                    <Label
-                       x:Name="Output"
-                       Text="{Binding OutputText}"
-                       TextColor="White"
-                       VerticalOptions="CenterAndExpand" />
-                </StackLayout>
-            </ScrollView>
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    IsVisible="{Binding AreButtonsEnabled}"
+                    Command="{Binding StartReceivingCommand}"
+                    Text="Start receiving" />
 
-        </Grid>
-    </StackLayout>
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    IsVisible="{Binding AreButtonsEnabled}"
+                    Command="{Binding StopReceivingCommand}"
+                    Text="Stop receiving" />
+
+                <Button
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    Text="Disconnect"
+                    Command="{Binding DisconnectCommand}"/>
+
+                <Entry
+                   Grid.Row="3"
+                   Grid.Column="0"
+                   BackgroundColor="Transparent"
+                   Style="{StaticResource SimpleEntry}"
+                   Text="{Binding EntryText}"
+                   TextColor="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}"/>
+
+                <Button
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Style="{StaticResource ButtonStyleNormal}"
+                    Margin="10"
+                    IsVisible="{Binding AreButtonsEnabled}"
+                    Text="Send command"
+                    Command="{Binding SendCommand}"/>
+
+                <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
+                    <StackLayout>
+                        <Label
+                           x:Name="Output"
+                           Text="{Binding OutputText}"
+                           TextColor="White"
+                           VerticalOptions="CenterAndExpand" />
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

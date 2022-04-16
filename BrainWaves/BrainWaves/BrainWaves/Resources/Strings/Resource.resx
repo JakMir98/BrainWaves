@@ -282,4 +282,31 @@
   <data name="OpenPageText" xml:space="preserve">
     <value>Page loading</value>
   </data>
+  <data name="StartSettingTitle" xml:space="preserve">
+    <value>Measure setting</value>
+  </data>
+  <data name="StartSettingTest" xml:space="preserve">
+    <value>Test measure (15 s, 80Hz)</value>
+  </data>
+  <data name="StartSettingUserDefined" xml:space="preserve">
+    <value>Measure defined in settings</value>
+  </data>
+  <data name="StartSettingBasic" xml:space="preserve">
+    <value>Measure 15 min 160Hz</value>
+  </data>
+  <data name="StartSettingAdvanced" xml:space="preserve">
+    <value>Measure 15 min 500Hz</value>
+  </data>
+  <data name="StartSettingFull" xml:space="preserve">
+    <value>Measure 60 min 500Hz</value>
+  </data>
+  <data name="StartSettingMinimal" xml:space="preserve">
+    <value>Measure 1 min 80Hz</value>
+  </data>
+  <data name="StartSettingShortHighSampleRate" xml:space="preserve">
+    <value>Measure 5 min 500Hz</value>
+  </data>
+  <data name="StartSettingLongLowSampleRate" xml:space="preserve">
+    <value>Measure 30 min 80Hz</value>
+  </data>
 </root>

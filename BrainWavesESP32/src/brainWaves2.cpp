@@ -167,7 +167,9 @@ void loop() {
       {
         if(!sendEndMessage)
         {
-          std::string s = std::to_string(value++);
+          char outCharArr[10];
+          itoa(value++, outCharArr, 10);
+          std::string s = std::string(outCharArr);
           writeCharacteristic.setValue(s);
           writeCharacteristic.notify();
           if(value > 4095)

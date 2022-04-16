@@ -112,14 +112,6 @@
                         ActivityIndicatorColorProp="ForestGreen"
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
-                    <!-- Maybe delete this label-->
-
-                    <Label
-                        Text="{Binding Text}"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        Style="{StaticResource LabelStyleNormal}"/>
-
                     <Label
                         Text="{Static resource:Resource.TimeDomain}"
                         VerticalOptions="Center"

@@ -18,11 +18,12 @@ namespace BrainWaves.Helpers
         public const int DefaultLoadedSamples = 20;
         public const int MaxLoadedSamples = 500;
         public const int NumOfDecimalPlaces = 2;
-
         public const int MaxEntriesForSheet = 1_000_000; 
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";
+        public const string StartMeasureStartMessage = "start";
+        public const char Delimeter = ';';
 
         public const string PrefsCurrentLanguage = "currentLanguage";
         public const string PrefsTheme = "theme";
