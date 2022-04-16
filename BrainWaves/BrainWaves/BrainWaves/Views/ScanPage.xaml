@@ -54,7 +54,7 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 IsVisible="{Binding IsInfoVisible}"
-                TextColor="White"/>
+                TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
 
             <customControls:ActivityIndicatorWithLabel
                 HorizontalOptionsProp="Center"
@@ -67,12 +67,23 @@
                 ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
             <ListView
-                x:Name="DevicesList"
                 ItemsSource="{Binding GattDevices}"
+                SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
                 ItemTapped="DevicesList_ItemTapped"
-                BackgroundColor="Gray">
+                BackgroundColor="Transparent"
+                SeparatorVisibility="Default"
+                SeparatorColor="Gray">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label
+                                Text="{Binding Name}"
+                                TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                                VerticalTextAlignment="Center"/>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </StackLayout>
-        
     </Grid>
 </ContentPage>

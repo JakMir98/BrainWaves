@@ -309,4 +309,22 @@
   <data name="StartSettingLongLowSampleRate" xml:space="preserve">
     <value>Measure 30 min 80Hz</value>
   </data>
+  <data name="StartMeasure" xml:space="preserve">
+    <value>Start measure</value>
+  </data>
+  <data name="GenerateSinwave" xml:space="preserve">
+    <value>Generate sinwave</value>
+  </data>
+  <data name="SinwaveAmplitude" xml:space="preserve">
+    <value>Amplitude</value>
+  </data>
+  <data name="SinwaveLength" xml:space="preserve">
+    <value>Length(should be power of 2)</value>
+  </data>
+  <data name="SinwaveFreqency" xml:space="preserve">
+    <value>Singal frequenct</value>
+  </data>
+  <data name="GenerateText" xml:space="preserve">
+    <value>Generate</value>
+  </data>
 </root>

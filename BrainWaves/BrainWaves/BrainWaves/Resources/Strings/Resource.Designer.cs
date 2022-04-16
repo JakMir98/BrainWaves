@@ -430,5 +430,41 @@ namespace BrainWaves.Resources.Strings {
                 return ResourceManager.GetString("StartSettingLongLowSampleRate", resourceCulture);
             }
         }
+        
+        internal static string StartMeasure {
+            get {
+                return ResourceManager.GetString("StartMeasure", resourceCulture);
+            }
+        }
+        
+        internal static string GenerateSinwave {
+            get {
+                return ResourceManager.GetString("GenerateSinwave", resourceCulture);
+            }
+        }
+        
+        internal static string SinwaveAmplitude {
+            get {
+                return ResourceManager.GetString("SinwaveAmplitude", resourceCulture);
+            }
+        }
+        
+        internal static string SinwaveLength {
+            get {
+                return ResourceManager.GetString("SinwaveLength", resourceCulture);
+            }
+        }
+        
+        internal static string SinwaveFreqency {
+            get {
+                return ResourceManager.GetString("SinwaveFreqency", resourceCulture);
+            }
+        }
+        
+        internal static string GenerateText {
+            get {
+                return ResourceManager.GetString("GenerateText", resourceCulture);
+            }
+        }
     }
 }

@@ -61,16 +61,16 @@
                 <Button
                     Style="{StaticResource ButtonStyleNormal}"
                     Margin="10"
-                    Text="Start"
-                    IsEnabled="{Binding AreButtonsEnabled}"
-                    Command="{Binding StartCommand}"/>
+                    Text="{Static resource:Resource.StartMeasure}"
+                    Command="{Binding StartCommand}"
+                    IsEnabled="{Binding AreButtonsEnabled}"/>
 
                 <Button
                     Style="{StaticResource ButtonStyleNormal}"
                     Margin="10"
-                    Text="Charts"
-                    IsEnabled="{Binding IsGoToChartsEnabled}"
-                    Command="{Binding GoToChartsCommand}"/>
+                    Text="{Static resource:Resource.Charts}"
+                    Command="{Binding GoToChartsCommand}"
+                    IsEnabled="{Binding IsGoToChartsEnabled}"/>
             </StackLayout>
 
             <Label
@@ -79,67 +79,116 @@
                 HorizontalOptions="Center"
                 Style="{StaticResource LabelStyleNormal}"/>
 
-            <Label
-                Text="Generate Sinwave"
+            <customControls:CheckboxWithLabel
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
-                Style="{StaticResource LabelStyleNormal}"/>
-
-            <Button
-                Style="{StaticResource ButtonStyleNormal}"
-                Margin="10"
-                Text="Generate Sin"
-                Command="{Binding CalculateCommand}"/>
+                Margin="20"
+                LabelTextColorProp="Red"
+                CheckboxColorProp="Red"
+                TitleText="{Static resource:Resource.GenerateSinwave}"
+                IsChecked="{Binding IsGenerateSinwaveVisible}" />
 
             <Grid Margin="20"
-                  IsVisible="false">
+                  IsVisible="{Binding IsGenerateSinwaveVisible}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
-                    <RowDefinition Height="5*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button
+                <Label
+                    Grid.Column="0"
                     Grid.Row="0"
-                    Grid.Column="0"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    Text="Explicit Init"
-                    Command="{Binding InitalizeConnectionCommand}"/>
+                    Text="{Static resource:Resource.SamplingFreq}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource LabelStyleNormal}"/>
 
-                <Button
-                    Grid.Row="1"
+                <Entry
                     Grid.Column="0"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    IsVisible="{Binding AreButtonsEnabled}"
-                    Command="{Binding StartReceivingCommand}"
-                    Text="Start receiving" />
-
-                <Button
                     Grid.Row="1"
+                    Placeholder="{Static resource:Resource.SamplingFreq}"
+                    Text="{Binding SinwaveSamplingFreq, Mode=TwoWay}"
+                    PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    BackgroundColor="Transparent"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource SimpleEntry}"
+                    Keyboard="Numeric"/>
+
+                <Label
                     Grid.Column="1"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    IsVisible="{Binding AreButtonsEnabled}"
-                    Command="{Binding StopReceivingCommand}"
-                    Text="Stop receiving" />
+                    Grid.Row="0"
+                    Text="{Static resource:Resource.SinwaveLength}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource LabelStyleNormal}"/>
 
-                <Button
-                    Grid.Row="2"
+                <Entry
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Placeholder="{Static resource:Resource.SinwaveLength}"
+                    PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    BackgroundColor="Transparent"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Text="{Binding SinwaveLength, Mode=TwoWay}"
+                    Style="{StaticResource SimpleEntry}"
+                    Keyboard="Numeric"/>
+
+                <Label
                     Grid.Column="0"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    Text="Disconnect"
-                    Command="{Binding DisconnectCommand}"/>
+                    Grid.Row="2"
+                    Text="{Static resource:Resource.SinwaveAmplitude}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource LabelStyleNormal}"/>
 
+                <Entry
+                    Grid.Column="0"
+                    Grid.Row="3"
+                    Placeholder="{Static resource:Resource.SinwaveAmplitude}"
+                    Text="{Binding SinwaveAmplitude, Mode=TwoWay}"
+                    PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    BackgroundColor="Transparent"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource SimpleEntry}"
+                    Keyboard="Numeric"/>
+
+                <Label
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Text="{Static resource:Resource.SinwaveFreqency}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource LabelStyleNormal}"/>
+
+                <Entry
+                    Grid.Column="1"
+                    Grid.Row="3"
+                    Placeholder="{Static resource:Resource.SinwaveFreqency}"
+                    PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                    TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                    BackgroundColor="Transparent"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Text="{Binding SinwaveFrequency,Mode=TwoWay}"
+                    Style="{StaticResource SimpleEntry}"
+                    Keyboard="Numeric"/>
+
+                <!--
                 <Entry
                    Grid.Row="3"
                    Grid.Column="0"
@@ -156,16 +205,17 @@
                     IsVisible="{Binding AreButtonsEnabled}"
                     Text="Send command"
                     Command="{Binding SendCommand}"/>
+                -->
 
-                <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
-                    <StackLayout>
-                        <Label
-                           x:Name="Output"
-                           Text="{Binding OutputText}"
-                           TextColor="White"
-                           VerticalOptions="CenterAndExpand" />
-                    </StackLayout>
-                </ScrollView>
+                <Button
+                    Grid.Row="4"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource ButtonStyleNormal}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="10"
+                    Text="{Static resource:Resource.GenerateText}"
+                    Command="{Binding CalculateCommand}"/>
             </Grid>
         </StackLayout>
     </ScrollView>

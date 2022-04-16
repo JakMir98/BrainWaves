@@ -18,7 +18,11 @@ namespace BrainWaves.Helpers
         public const int DefaultLoadedSamples = 20;
         public const int MaxLoadedSamples = 500;
         public const int NumOfDecimalPlaces = 2;
-        public const int MaxEntriesForSheet = 1_000_000; 
+        public const int MaxEntriesForSheet = 1_000_000;
+        public const int DefaultSinwaveSamplingFreq = 1000;
+        public const int DefaultSinwaveAmplitude = 1;
+        public const int DefaultSinwaveLength = 1024;
+        public const int DefaultSinwaveFreq = 50;
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";
@@ -37,6 +41,10 @@ namespace BrainWaves.Helpers
         public const string PrefsSavedTimeToReadMindInMinutes = "savedTimeToReadMind";
         public const string PrefsSamplesToShowFromMiddle = "samplesToShow";
         public const string PrefsShouldCalculateFFT = "shouldCalculateFFT";
+        public const string PrefsSinwaveSamplingFreq = "sinwaveSamplingFreq";
+        public const string PrefsSinwaveAmplitude = "sinwaveAmplitude";
+        public const string PrefsSinwaveLength = "sinwaveLength";
+        public const string PrefsSinwaveFreq = "sinwaveFreq";
 
         public const string ExcellSheetName = "Samples";
         public const string ExcellSheetName1 = "Samples 0-1M";

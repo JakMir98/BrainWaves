@@ -24,7 +24,7 @@ namespace BrainWaves.ViewModels
         private ICharacteristic receiveCharacteristic;
         private ObservableCollection<double> eegClickSamples = new ObservableCollection<double>();
         private SampleTranformService sampleTransformService;
-        private bool areButtonsEnabled = true;
+        private bool isReadButtonEnabled = true;
         private string outputText;
         private string entryText;
         private string selectedSettings;
@@ -33,6 +33,11 @@ namespace BrainWaves.ViewModels
         private float timeToMeasureInMins;
         private float expectedNumberOfSamples;
         private bool isGoToChartsEnabled = false;
+        private int sinwaveSamplingFreq;
+        private int sinwaveLength;
+        private int sinwaveAmplitude;
+        private int sinwaveFrequency;
+        private bool isGenerateSinwaveVisible = false;
         #endregion
 
         #region ICommands
@@ -68,8 +73,11 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.StartSettingFull
             };
             SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;
-            IsGoToChartsEnabled = false;
-            //SendCommand = new Command(Send);
+            SinwaveSamplingFreq = Preferences.Get(Constants.PrefsSinwaveSamplingFreq, Constants.DefaultSinwaveSamplingFreq);
+            SinwaveLength = Preferences.Get(Constants.PrefsSinwaveLength, Constants.DefaultSinwaveLength);
+            SinwaveAmplitude = Preferences.Get(Constants.PrefsSinwaveAmplitude, Constants.DefaultSinwaveAmplitude);
+            SinwaveFrequency = Preferences.Get(Constants.PrefsSinwaveFreq, Constants.DefaultSinwaveFreq);
+
             StartCommand = new Command(async () => await StartMeasure());
             DisconnectCommand = new Command(async () => await Disconnect());
             StartReceivingCommand = new Command(async () => await StartReceiving());
@@ -100,7 +108,11 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.StartSettingFull
             };
             SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;
-            IsGoToChartsEnabled = false;
+            SinwaveSamplingFreq = Preferences.Get(Constants.PrefsSinwaveSamplingFreq, Constants.DefaultSinwaveSamplingFreq);
+            SinwaveLength = Preferences.Get(Constants.PrefsSinwaveLength, Constants.DefaultSinwaveLength);
+            SinwaveAmplitude = Preferences.Get(Constants.PrefsSinwaveAmplitude, Constants.DefaultSinwaveAmplitude);
+            SinwaveFrequency = Preferences.Get(Constants.PrefsSinwaveFreq, Constants.DefaultSinwaveFreq);
+
             StartCommand = new Command(async () => await StartMeasure());
             DisconnectCommand = new Command(async () => await Disconnect());
             StartReceivingCommand = new Command(async () => await StartReceiving());
@@ -119,10 +131,10 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref outputText, value);
         }
 
-        public bool AreButtonsEnabled
+        public bool IsReadButtonEnabled
         {
-            get => areButtonsEnabled;
-            set => SetProperty(ref areButtonsEnabled, value);
+            get => isReadButtonEnabled;
+            set => SetProperty(ref isReadButtonEnabled, value);
         }
 
         public string EntryText
@@ -158,12 +170,95 @@ namespace BrainWaves.ViewModels
             get => isGoToChartsEnabled;
             set => SetProperty(ref isGoToChartsEnabled, value);
         }
+
+        public int SinwaveSamplingFreq
+        {
+            get => sinwaveSamplingFreq;
+            set
+            {
+                int tempValue;
+                if(value < 0)
+                {
+                    tempValue = 0;
+                }
+                else
+                {
+                    tempValue = value;
+                }
+                SetProperty(ref sinwaveSamplingFreq, tempValue);
+                Preferences.Set(Constants.PrefsSinwaveSamplingFreq, tempValue);
+            }
+        }
+
+        public int SinwaveLength
+        {
+            get => sinwaveLength;
+            set
+            {
+                int tempValue;
+                if (value < 0)
+                {
+                    tempValue = 0;
+                }
+                else
+                {
+                    tempValue = value;
+                }
+                SetProperty(ref sinwaveLength, tempValue);
+                Preferences.Set(Constants.PrefsSinwaveLength, tempValue);
+            }
+        }
+
+        public int SinwaveAmplitude // todo change to float
+        {
+            get => sinwaveAmplitude;
+            set
+            {
+                int tempValue;
+                if (value < 0)
+                {
+                    tempValue = 0;
+                }
+                else
+                {
+                    tempValue = value;
+                }
+                SetProperty(ref sinwaveAmplitude, tempValue);
+                Preferences.Set(Constants.PrefsSinwaveAmplitude, tempValue);
+            }
+        }
+
+        public int SinwaveFrequency
+        {
+            get => sinwaveFrequency;
+            set
+            {
+                int tempValue;
+                if (value < 0)
+                {
+                    tempValue = 0;
+                }
+                else
+                {
+                    tempValue = value;
+                }
+                SetProperty(ref sinwaveFrequency, tempValue);
+                Preferences.Set(Constants.PrefsSinwaveFreq, tempValue);
+            }
+        }
+
+        public bool IsGenerateSinwaveVisible
+        {
+            get => isGenerateSinwaveVisible;
+            set => SetProperty(ref isGenerateSinwaveVisible, value);
+        }
         #endregion
 
         #region Functions
         private async Task StartMeasure()
         {
-            AreButtonsEnabled = false;
+            IsReadButtonEnabled = false;
+            IsGoToChartsEnabled = false;
             EegClickSamples.Clear();
             if (Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
             {
@@ -315,7 +410,7 @@ namespace BrainWaves.ViewModels
         }
 
         private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
-        {
+        {//todo upgrade
             BusyMessage = "Reading";
             var t = Task.Run(() =>
             {
@@ -323,7 +418,8 @@ namespace BrainWaves.ViewModels
                 var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
                 if (string.Equals(stringValue, "End"))
                 {
-                    AreButtonsEnabled = true;
+                    StopReceiving();
+                    IsReadButtonEnabled = true;
                     IsGoToChartsEnabled = true;
                 }
                 else
@@ -352,38 +448,27 @@ namespace BrainWaves.ViewModels
         {
             await Task.Run(() =>
             {
+                IsReadButtonEnabled = false;
                 IsGoToChartsEnabled = false;
                 IsBusy = true;
                 BusyMessage = "Generating long sinwave";
-                int samplingFreq = 500;
-                int length = 1048576; //2^20
-                double[] sinWave = HelperFunctions.GenerateSinWave(samplingFreq, length, 1, 50);
+                double[] sinWave;
+                if (FftSharp.Pad.IsPowerOfTwo(sinwaveLength))
+                {
+                    sinWave = HelperFunctions.GenerateSinWave(
+                        sinwaveSamplingFreq, sinwaveLength, sinwaveAmplitude, sinwaveFrequency);
+                }
+                else
+                {// zero padding so array is power of 2
+                    sinWave = FftSharp.Pad.ZeroPad(HelperFunctions.GenerateSinWave(
+                        sinwaveSamplingFreq, sinwaveLength, sinwaveAmplitude, sinwaveFrequency));
+                }
+                
                 EegClickSamples = new ObservableCollection<double>(sinWave);
                 IsBusy = false;
                 IsGoToChartsEnabled = true;
+                IsReadButtonEnabled = true;
             });
-            
-            /*
-            try
-            {
-                IsBusy = true;
-                BusyMessage = Resources.Strings.Resource.SendingMessage;
-                if (sendCharacteristic != null)
-                {
-                    int hz = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
-                    int time = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
-                    var bytes = await sendCharacteristic.WriteAsync(Encoding.UTF8.GetBytes($"start;{hz};{time}"));
-                }
-            }
-            catch (Exception ex)
-            {
-                OutputText += $"Error sending comand to UART. {ex.Message}" + Environment.NewLine;
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-            */
         }
 
         private void SelectedSettingsChangedHandle(string setting)

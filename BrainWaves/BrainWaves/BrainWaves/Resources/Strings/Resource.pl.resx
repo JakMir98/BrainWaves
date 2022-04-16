@@ -309,4 +309,22 @@
   <data name="StartSettingLongLowSampleRate" xml:space="preserve">
     <value>Pomiary 30 min 80Hz</value>
   </data>
+  <data name="StartMeasure" xml:space="preserve">
+    <value>Start pomiarów</value>
+  </data>
+  <data name="GenerateSinwave" xml:space="preserve">
+    <value>Wygeneruj przebieg sinusoidalny</value>
+  </data>
+  <data name="SinwaveAmplitude" xml:space="preserve">
+    <value>Amplituda</value>
+  </data>
+  <data name="SinwaveLength" xml:space="preserve">
+    <value>Długość(powinna być potęgą 2)</value>
+  </data>
+  <data name="SinwaveFreqency" xml:space="preserve">
+    <value>Częstotliwość sygnału</value>
+  </data>
+  <data name="GenerateText" xml:space="preserve">
+    <value>Generuj</value>
+  </data>
 </root>

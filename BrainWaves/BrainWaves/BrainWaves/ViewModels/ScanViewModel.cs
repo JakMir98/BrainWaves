@@ -20,6 +20,7 @@ namespace BrainWaves.ViewModels
         private bool canScan = true;
         private string infoMessage;
         private bool isInfoVisible;
+        private IDevice selectedDevice;
         #endregion
 
         #region ICommands
@@ -89,6 +90,17 @@ namespace BrainWaves.ViewModels
             get => isInfoVisible;
             set => SetProperty(ref isInfoVisible, value);
         }
+
+        public IDevice SelectedDevice
+        {
+            get => selectedDevice;
+            set
+            {
+                SetProperty(ref selectedDevice, value);
+                SelectedDeviceHandle();
+            }
+
+        }
         #endregion
 
         #region Functions
@@ -152,33 +164,34 @@ namespace BrainWaves.ViewModels
         }
 
 
-        public async Task ItemClicked(object sender, ItemTappedEventArgs e)
+        public async void SelectedDeviceHandle()
         {
             IsBusy = true;
             BusyMessage = Resources.Strings.Resource.Connecting;
             await StopScanning();
 
-            IDevice selectedItem = e.Item as IDevice;
-
-            if (selectedItem.State == DeviceState.Connected)
+            if(selectedDevice != null)
             {
-                await OpenPage(new BluetoothDataPage(selectedItem));
-            }
-            else
-            {
-                try
+                if (selectedDevice.State == DeviceState.Connected)
                 {
-                    var connectParameters = new ConnectParameters(false, true);
-                    await bluetoothAdapter.ConnectToDeviceAsync(selectedItem, connectParameters);
-                    await OpenPage(new BluetoothDataPage(selectedItem));
+                    await OpenPage(new BluetoothDataPage(selectedDevice));
                 }
-                catch
+                else
                 {
-                    await App.OpenInfoPopup(
-                            Resources.Strings.Resource.ErrorTitle,
-                            Resources.Strings.Resource.ApplicationNeedPermissionText + $" {selectedItem.Name ?? "N/A"}");
+                    try
+                    {
+                        var connectParameters = new ConnectParameters(false, true);
+                        await bluetoothAdapter.ConnectToDeviceAsync(selectedDevice, connectParameters);
+                        await OpenPage(new BluetoothDataPage(selectedDevice));
+                    }
+                    catch
+                    {
+                        await App.OpenInfoPopup(
+                                Resources.Strings.Resource.ErrorTitle,
+                                Resources.Strings.Resource.ApplicationNeedPermissionText + $" {selectedDevice.Name ?? "N/A"}");
+                    }
                 }
-            }
+            }            
             IsBusy = false;
         }
 
