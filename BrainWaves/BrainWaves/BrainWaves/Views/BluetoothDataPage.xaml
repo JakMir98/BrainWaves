@@ -63,7 +63,7 @@
                     Margin="10"
                     Text="{Static resource:Resource.StartMeasure}"
                     Command="{Binding StartCommand}"
-                    IsEnabled="{Binding AreButtonsEnabled}"/>
+                    IsEnabled="{Binding IsReadButtonEnabled}"/>
 
                 <Button
                     Style="{StaticResource ButtonStyleNormal}"
@@ -215,7 +215,7 @@
                     HorizontalOptions="Center"
                     Margin="10"
                     Text="{Static resource:Resource.GenerateText}"
-                    Command="{Binding CalculateCommand}"/>
+                    Command="{Binding GenerateCommand}"/>
             </Grid>
         </StackLayout>
     </ScrollView>

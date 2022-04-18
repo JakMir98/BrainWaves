@@ -19,7 +19,13 @@ namespace BrainWaves.Views
             InitializeComponent();
             BindingContext = new ChartsViewModel(_samples);
         }
-        
+
+        public ChartsPage(List<double> _samples, int samplingFreq)
+        {
+            InitializeComponent();
+            BindingContext = new ChartsViewModel(_samples, samplingFreq);
+        }
+
         protected override async void OnAppearing()
         {
             base.OnAppearing();

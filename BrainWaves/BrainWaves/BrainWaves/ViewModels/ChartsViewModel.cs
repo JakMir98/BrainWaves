@@ -33,12 +33,12 @@ namespace BrainWaves.ViewModels
         private double minSliderValue;
         private double maxSliderValue;
         private double sliderValue;
-        
         private int numberOfShownSamplesFromTheMiddle;
         private FrequencySamplesContainer freqSamples;
         private Orientation chartsOrientation;
         private bool shouldExportTimeSamples = true;
         private bool areFreqSamplesReady = false;
+        private int samplingFrequency;
         #endregion
 
         #region ICommands
@@ -50,22 +50,7 @@ namespace BrainWaves.ViewModels
         #region Constructors
         public ChartsViewModel()
         {
-            Title = Resources.Strings.Resource.Charts;
-            excelService = new ExcelService();
-            var shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
-            if (shouldCalculateFftOnLoad)
-            {
-                areFreqSamplesReady = false;
-            }
-            else
-            {
-                areFreqSamplesReady = true;
-            }
-
-            ExportToExcelCommand = new Command(async () => await ExportToExcel());
-            GoBackCommand = new Command(async () => await GoBack());
-            DragCompletedCommand = new Command(UpdateCharts);
-            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
+            BasicAndCommandsInit();
 
             /* Create samples to test Export to excell */
             int samplingFreq = 500;
@@ -76,48 +61,28 @@ namespace BrainWaves.ViewModels
 
             /* Generate random values
             //timeSamples = new List<double>(HelperFunctions.GenerateRandomValues(MinSampleNum));
-            */         
+            */
 
-            //after samples
-            MinSliderValue = 0;
-            MaxSliderValue = timeSamples.Count;
-            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
-            CheckChartLabelOrientation();
-            SetupTimeDomainChart();
+            InitChartsAndSlider();
             SetupFreqDomainChart();
         }
 
         public ChartsViewModel(List<double> _samples)
         {
             timeSamples = _samples;
-            /*
-            double[] timeSamplesArr = _samples.ToArray();
-            var samplingFreq = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
-            freqSamples = HelperFunctions.GenerateFreqSamples(timeSamplesArr, samplingFreq);
-            */
-            Title = Resources.Strings.Resource.Charts;
-            excelService = new ExcelService();
-            var shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
-            if (shouldCalculateFftOnLoad)
-            {
-                areFreqSamplesReady = false;
-            }
-            else
-            {
-                areFreqSamplesReady = true;
-            }
 
-            ExportToExcelCommand = new Command(async () => await ExportToExcel());
-            GoBackCommand = new Command(async () => await GoBack());
-            DragCompletedCommand = new Command(UpdateCharts);
-            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
+            BasicAndCommandsInit();
 
-            MinSliderValue = 0;
-            MaxSliderValue = timeSamples.Count;
-            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
-            CheckChartLabelOrientation();
-            SetupTimeDomainChart();
-            //SetupFreqDomainChart();
+            InitChartsAndSlider();
+        }
+
+        public ChartsViewModel(List<double> _samples, int fs)
+        {
+            timeSamples = _samples;
+
+            BasicAndCommandsInit();
+            samplingFrequency = fs;
+            InitChartsAndSlider();
         }
         #endregion
 
@@ -205,6 +170,36 @@ namespace BrainWaves.ViewModels
         #endregion
 
         #region Functions
+        private void BasicAndCommandsInit()
+        {
+            Title = Resources.Strings.Resource.Charts;
+            excelService = new ExcelService();
+            var shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
+            if (shouldCalculateFftOnLoad)
+            {
+                areFreqSamplesReady = false;
+            }
+            else
+            {
+                areFreqSamplesReady = true;
+            }
+            samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency,
+                    Constants.MinSamplingFrequency);
+
+            ExportToExcelCommand = new Command(async () => await ExportToExcel());
+            GoBackCommand = new Command(async () => await GoBack());
+            DragCompletedCommand = new Command(UpdateCharts);
+            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
+        }
+
+        private void InitChartsAndSlider()
+        {
+            MinSliderValue = 0;
+            MaxSliderValue = timeSamples.Count;
+            numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
+            CheckChartLabelOrientation();
+            SetupTimeDomainChart();
+        }
         #region Charts Handle
         private void CheckChartLabelOrientation()
         {
@@ -315,7 +310,7 @@ namespace BrainWaves.ViewModels
                 freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces))
                 {
                     Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}V",
+                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}dB",
                     Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
                     TextColor = SKColors.Gray,
                     ValueLabelColor = SKColors.Gray,
@@ -347,7 +342,7 @@ namespace BrainWaves.ViewModels
                 freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)) // todo change to fft
                 {
                     Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}V",
+                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}dB",
                     Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
                     TextColor = SKColors.Gray,
                     ValueLabelColor = SKColors.Gray,
@@ -404,9 +399,7 @@ namespace BrainWaves.ViewModels
             await Task.Run(() =>
             {
                 BusyMessage = Resources.Strings.Resource.CalculateFFT;
-                var samplingFreq = Preferences.Get(Constants.PrefsSavedSamplingFrequency,
-                    Constants.MinSamplingFrequency);
-                freqSamples = HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), samplingFreq);
+                freqSamples = HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), samplingFrequency);
             });
         }
 

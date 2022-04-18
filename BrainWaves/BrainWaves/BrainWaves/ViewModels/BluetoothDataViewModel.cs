@@ -47,7 +47,7 @@ namespace BrainWaves.ViewModels
         public ICommand StartReceivingCommand { private set; get; }
         public ICommand StopReceivingCommand { private set; get; }
         public ICommand GoToChartsCommand { private set; get; }
-        public ICommand CalculateCommand { private set; get; }
+        public ICommand GenerateCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
         #endregion
 
@@ -85,7 +85,7 @@ namespace BrainWaves.ViewModels
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
             GoBackCommand = new Command(async () => await Disconnect());
             GoToSettingsCommand = new Command(async () => await GoToSettings());
-            CalculateCommand = new Command(Calculate);
+            GenerateCommand = new Command(Generate);
         }
 
         public BluetoothDataViewModel(IDevice connectedDevice)
@@ -120,7 +120,7 @@ namespace BrainWaves.ViewModels
             GoToChartsCommand = new Command(async () => await GoToChartsPage());
             GoBackCommand = new Command(async () => await GoBack());
             GoToSettingsCommand = new Command(async () => await GoToSettings());
-            CalculateCommand = new Command(Calculate);
+            GenerateCommand = new Command(Generate);
         }
         #endregion
 
@@ -250,7 +250,11 @@ namespace BrainWaves.ViewModels
         public bool IsGenerateSinwaveVisible
         {
             get => isGenerateSinwaveVisible;
-            set => SetProperty(ref isGenerateSinwaveVisible, value);
+            set
+            {
+                SetProperty(ref isGenerateSinwaveVisible, value);
+                IsReadButtonEnabled = !value;
+            }
         }
         #endregion
 
@@ -435,7 +439,17 @@ namespace BrainWaves.ViewModels
         {
             IsBusy = true;
             BusyMessage = Resources.Strings.Resource.OpenPageText;
-            await OpenPage(new ChartsPage(new List<double>(EegClickSamples)));
+            if(isGenerateSinwaveVisible)
+            {
+                await OpenPage(new ChartsPage(new List<double>(EegClickSamples), sinwaveSamplingFreq));
+            }
+            else
+            {
+                await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
+                // todo if get values from eeg click then take frequency too
+                // so maybe use await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
+            }
+
             IsBusy = false;
         }
 
@@ -444,7 +458,7 @@ namespace BrainWaves.ViewModels
             await OpenPage(new SettingsPage());
         }
 
-        private async void Calculate()
+        private async void Generate()
         {
             await Task.Run(() =>
             {
@@ -453,6 +467,7 @@ namespace BrainWaves.ViewModels
                 IsBusy = true;
                 BusyMessage = "Generating long sinwave";
                 double[] sinWave;
+                
                 if (FftSharp.Pad.IsPowerOfTwo(sinwaveLength))
                 {
                     sinWave = HelperFunctions.GenerateSinWave(
@@ -463,11 +478,13 @@ namespace BrainWaves.ViewModels
                     sinWave = FftSharp.Pad.ZeroPad(HelperFunctions.GenerateSinWave(
                         sinwaveSamplingFreq, sinwaveLength, sinwaveAmplitude, sinwaveFrequency));
                 }
-                
+                //sinWave = FftSharp.SampleData.SampleAudio1();
+
                 EegClickSamples = new ObservableCollection<double>(sinWave);
                 IsBusy = false;
                 IsGoToChartsEnabled = true;
-                IsReadButtonEnabled = true;
+                if (!isGenerateSinwaveVisible)
+                    IsReadButtonEnabled = true;
             });
         }
 
