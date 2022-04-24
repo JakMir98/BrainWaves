@@ -13,7 +13,7 @@ namespace BrainWaves.Helpers
         public const int MaxSamplingFrequency = 500; //Hz
         public const int MinTimeToReadInMinutes = 1;
         public const int MaxTimeToReadInMinutes = 60; // max = 1khz * 3600 = 3.6MHZ/h
-        public const string FrequencyChartColor = "#FF1493";
+        public const string FrequencyChartColor = "#ff0000";
         public const string TimeChartColor = "#00BFFF";
         public const int DefaultLoadedSamples = 20;
         public const int MaxLoadedSamples = 500;

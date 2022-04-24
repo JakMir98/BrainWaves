@@ -49,7 +49,7 @@
                         HorizontalOptions="Center"
                         Margin="20"
                         ItemsSource="{Binding AvailableLanguages}"
-                        SelectedItem="{Binding SelectedLanguage}">
+                        SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}">
                     </Picker>
 
                     <customControls:CheckboxWithLabel

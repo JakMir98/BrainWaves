@@ -26,6 +26,7 @@ namespace BrainWaves.ViewModels
         private Chart frequencyChart;
         private Chart timeChart;
         private List<double> timeSamples = new List<double>();
+        private List<double> backupTimeSamples = new List<double>();
         private ExcelService excelService;
         private bool isFreqChartVisible = false;
         private bool isTimeChartVisible = true;
@@ -41,6 +42,7 @@ namespace BrainWaves.ViewModels
         private int samplingFrequency;
         private string selectedFFTSettings;
         private List<string> availableFFTSettings;
+        private bool areOriginalSamples = true;
         #endregion
 
         #region ICommands
@@ -208,7 +210,7 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.FFTSettingsWindow,
                 Resources.Strings.Resource.FFTSettingsFilterAndWindow
             };
-            SelectedFFTSettings = Resources.Strings.Resource.FFTSettingsDefault;
+            selectedFFTSettings = Resources.Strings.Resource.FFTSettingsDefault;
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
@@ -225,28 +227,26 @@ namespace BrainWaves.ViewModels
             SetupTimeDomainChart();
         }
 
-        private async void SelectedFFTSettingsChangedHandle(string value)
+        private void SelectedFFTSettingsChangedHandle(string value)
         {
-            /*
-            if(value == Resources.Strings.Resource.FFTSettingsDefault)
+            
+            if (value == Resources.Strings.Resource.FFTSettingsDefault)
             {
-                await CalculateFFT();
-            }
-            else if (value == Resources.Strings.Resource.FFTSettingsFilter)
-            {
-                await FilterCalculateFFT();
+                RevertSamples();
             }
             else if (value == Resources.Strings.Resource.FFTSettingsWindow)
             {
-                await WindowCalculateFFT();
+                WindowSamples();
+            }
+            else if (value == Resources.Strings.Resource.FFTSettingsFilter)
+            {
+                FilterSamples();
             }
             else if (value == Resources.Strings.Resource.FFTSettingsFilterAndWindow)
             {
-                await WindowAndFilterCalculateFFT();
-            }
-            SetupTimeDomainChart();
-            */
-
+                WindowAndFilterSamples();
+            }           
+            
         }
         #region Charts Handle
         private void CheckChartLabelOrientation()
@@ -454,59 +454,99 @@ namespace BrainWaves.ViewModels
                 freqSamples = HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), samplingFrequency);
             });
         }
-        /*
-        private async Task FilterCalculateFFT()
+        
+        private void FilterSamples()
         {
-            await Task.Run(async () =>
+            Task.Run(() =>
             {
                 IsBusy = true;
-                await CalculateFFT();
+                if (areOriginalSamples)
+                {
+                    backupTimeSamples = new List<double>(timeSamples);
+                }
+                else
+                {
+                    timeSamples = new List<double>(backupTimeSamples);
+                }
+                areOriginalSamples = false;
                 double[] fValues = timeSamples.ToArray();
                 fValues = FftSharp.Pad.ZeroPad(fValues);
                 fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, Constants.DefaultLowPassFilterMaxFreq);
+                timeSamples = new List<double>(fValues);
                 IsBusy = false;
             });
-        }
 
-        private async Task WindowCalculateFFT()
+            SetupTimeDomainChart();
+        }
+        
+        private void WindowSamples()
         {
-            await Task.Run(async () =>
+            Task.Run(() =>
             {
                 IsBusy = true;
-                await CalculateFFT();
+                if(areOriginalSamples)
+                {
+                    backupTimeSamples = new List<double>(timeSamples);
+                }
+                else
+                {
+                    timeSamples = new List<double>(backupTimeSamples);
+                }
+                areOriginalSamples = false;
+
                 double[] fValues = timeSamples.ToArray();
                 fValues = FftSharp.Pad.ZeroPad(fValues);
                 var window = new FftSharp.Windows.Hanning();
                 window.ApplyInPlace(fValues);
+                timeSamples = new List<double>(fValues);
                 IsBusy = false;
             });
-        }
 
-        private async Task WindowAndFilterCalculateFFT()
+            SetupTimeDomainChart();
+        }
+        
+        private void WindowAndFilterSamples()
         {
-            await Task.Run(async () =>
+            Task.Run(() =>
             {
                 IsBusy = true;
-                await CalculateFFT();
+                if (areOriginalSamples)
+                {
+                    backupTimeSamples = new List<double>(timeSamples);
+                }
+                else
+                {
+                    timeSamples = new List<double>(backupTimeSamples);
+                }
+                areOriginalSamples = false;
                 double[] fValues = timeSamples.ToArray();
                 fValues = FftSharp.Pad.ZeroPad(fValues);
                 var window = new FftSharp.Windows.Hanning();
                 window.ApplyInPlace(fValues);
                 fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, Constants.DefaultLowPassFilterMaxFreq);
+                timeSamples = new List<double>(fValues);
                 IsBusy = false;
             });
+
+            SetupTimeDomainChart();
         }
 
-        private double[] GetFreqValuesArrayFromFreqSamples()
+        private void RevertSamples()
         {
-            double[] fValues = new double[freqSamples.Samples.Length];
-            for (int i = 0; i < freqSamples.Samples.Count(); i++)
+            Task.Run(() =>
             {
-                fValues[i] = freqSamples.Samples[i].Sample;
-            }
-            return fValues;
+                IsBusy = true;
+                if(backupTimeSamples.Count > 0)
+                {
+                    timeSamples = new List<double>(backupTimeSamples);
+                    backupTimeSamples.Clear();
+                    areOriginalSamples = true;
+                }
+                IsBusy = false;
+            });
+
+            SetupTimeDomainChart();
         }
-        */
         #endregion
 
         #region Excell handle

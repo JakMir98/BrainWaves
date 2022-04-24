@@ -112,6 +112,19 @@
                         ActivityIndicatorColorProp="ForestGreen"
                         ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
+                    <Picker
+                        Title="{Binding SelectedFFTSettings}"
+                        TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        WidthRequest="300"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="20"
+                        ItemsSource="{Binding AvailableFFTSettings}"
+                        SelectedItem="{Binding SelectedFFTSettings, Mode=TwoWay}">
+                    </Picker>
+
                     <Label
                         Text="{Static resource:Resource.TimeDomain}"
                         VerticalOptions="Center"
@@ -133,19 +146,6 @@
                         FontSize="Large"
                         IsVisible="{Binding IsFreqChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
-
-                    <Picker
-                        Title="{Binding SelectedFFTSettings}"
-                        TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
-                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
-                        BackgroundColor="Transparent"
-                        WidthRequest="300"
-                        VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        Margin="20"
-                        ItemsSource="{Binding AvailableFFTSettings}"
-                        SelectedItem="{Binding SelectedFFTSettings}">
-                    </Picker>
 
                     <microchart:ChartView
                         Chart="{Binding FrequencyChart}"
