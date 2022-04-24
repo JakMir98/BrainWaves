@@ -327,4 +327,16 @@
   <data name="GenerateText" xml:space="preserve">
     <value>Generuj</value>
   </data>
+  <data name="FFTSettingsDefault" xml:space="preserve">
+    <value>Podstawowy sygnał</value>
+  </data>
+  <data name="FFTSettingsFilter" xml:space="preserve">
+    <value>Filtrowany sygnał</value>
+  </data>
+  <data name="FFTSettingsFilterAndWindow" xml:space="preserve">
+    <value>Filtrowany i oknowany sygnał</value>
+  </data>
+  <data name="FFTSettingsWindow" xml:space="preserve">
+    <value>Oknowany sygnał</value>
+  </data>
 </root>

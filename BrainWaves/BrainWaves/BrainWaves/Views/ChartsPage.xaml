@@ -134,6 +134,19 @@
                         IsVisible="{Binding IsFreqChartVisible}"
                         Style="{StaticResource LabelStyleNormal}"/>
 
+                    <Picker
+                        Title="{Binding SelectedFFTSettings}"
+                        TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        WidthRequest="300"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="20"
+                        ItemsSource="{Binding AvailableFFTSettings}"
+                        SelectedItem="{Binding SelectedFFTSettings}">
+                    </Picker>
+
                     <microchart:ChartView
                         Chart="{Binding FrequencyChart}"
                         HeightRequest="250"

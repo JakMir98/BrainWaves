@@ -39,6 +39,8 @@ namespace BrainWaves.ViewModels
         private bool shouldExportTimeSamples = true;
         private bool areFreqSamplesReady = false;
         private int samplingFrequency;
+        private string selectedFFTSettings;
+        private List<string> availableFFTSettings;
         #endregion
 
         #region ICommands
@@ -160,12 +162,26 @@ namespace BrainWaves.ViewModels
             get => shouldExportTimeSamples;
             set => SetProperty(ref shouldExportTimeSamples, value);
         }
-
-        
+ 
         public bool AreFreqSamplesReady
         {
             get => areFreqSamplesReady;
             set => SetProperty(ref areFreqSamplesReady, value);
+        }
+
+        public string SelectedFFTSettings
+        {
+            get => selectedFFTSettings;
+            set
+            {
+                SetProperty(ref selectedFFTSettings, value);
+                SelectedFFTSettingsChangedHandle(value);
+            }
+        }
+        public List<string> AvailableFFTSettings
+        {
+            get => availableFFTSettings;
+            set => SetProperty(ref availableFFTSettings, value);
         }
         #endregion
 
@@ -185,6 +201,14 @@ namespace BrainWaves.ViewModels
             }
             samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency,
                     Constants.MinSamplingFrequency);
+            AvailableFFTSettings = new List<string>
+            {
+                Resources.Strings.Resource.FFTSettingsDefault,
+                Resources.Strings.Resource.FFTSettingsFilter,
+                Resources.Strings.Resource.FFTSettingsWindow,
+                Resources.Strings.Resource.FFTSettingsFilterAndWindow
+            };
+            SelectedFFTSettings = Resources.Strings.Resource.FFTSettingsDefault;
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
             GoBackCommand = new Command(async () => await GoBack());
@@ -199,6 +223,30 @@ namespace BrainWaves.ViewModels
             numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
             CheckChartLabelOrientation();
             SetupTimeDomainChart();
+        }
+
+        private async void SelectedFFTSettingsChangedHandle(string value)
+        {
+            /*
+            if(value == Resources.Strings.Resource.FFTSettingsDefault)
+            {
+                await CalculateFFT();
+            }
+            else if (value == Resources.Strings.Resource.FFTSettingsFilter)
+            {
+                await FilterCalculateFFT();
+            }
+            else if (value == Resources.Strings.Resource.FFTSettingsWindow)
+            {
+                await WindowCalculateFFT();
+            }
+            else if (value == Resources.Strings.Resource.FFTSettingsFilterAndWindow)
+            {
+                await WindowAndFilterCalculateFFT();
+            }
+            SetupTimeDomainChart();
+            */
+
         }
         #region Charts Handle
         private void CheckChartLabelOrientation()
@@ -335,28 +383,32 @@ namespace BrainWaves.ViewModels
             BusyMessage = Resources.Strings.Resource.SettingUpFreqChartsMessage;
             List<ChartEntry> freqRecords = new List<ChartEntry>();
 
-            double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
-            double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < freqSamples.Samples.Count() ? sliderValue + numberOfShownSamplesFromTheMiddle : freqSamples.Samples.Count();
-            for (int i = (int)minValue; i < maxValue; i++)
+            if(freqSamples.Samples != null)
             {
-                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)) // todo change to fft
+                double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
+                double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < freqSamples.Samples.Count() ? sliderValue + numberOfShownSamplesFromTheMiddle : freqSamples.Samples.Count();
+                for (int i = (int)minValue; i < maxValue; i++)
                 {
-                    Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}dB",
-                    Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
-                    TextColor = SKColors.Gray,
-                    ValueLabelColor = SKColors.Gray,
-                });
-            }
+                    freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)) // todo change to fft
+                    {
+                        Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
+                        ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}dB",
+                        Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
+                        TextColor = SKColors.Gray,
+                        ValueLabelColor = SKColors.Gray,
+                    });
+                }
 
-            FrequencyChart = new PointChart
-            {
-                Entries = freqRecords,
-                ValueLabelOrientation = chartsOrientation,
-                LabelOrientation = chartsOrientation,
-                BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.Gray
-            };
+                FrequencyChart = new PointChart
+                {
+                    Entries = freqRecords,
+                    ValueLabelOrientation = chartsOrientation,
+                    LabelOrientation = chartsOrientation,
+                    BackgroundColor = SKColors.Transparent,
+                    LabelColor = SKColors.Gray
+                };
+            }
+            
             IsBusy = false;
         }
 
@@ -402,7 +454,59 @@ namespace BrainWaves.ViewModels
                 freqSamples = HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), samplingFrequency);
             });
         }
+        /*
+        private async Task FilterCalculateFFT()
+        {
+            await Task.Run(async () =>
+            {
+                IsBusy = true;
+                await CalculateFFT();
+                double[] fValues = timeSamples.ToArray();
+                fValues = FftSharp.Pad.ZeroPad(fValues);
+                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, Constants.DefaultLowPassFilterMaxFreq);
+                IsBusy = false;
+            });
+        }
 
+        private async Task WindowCalculateFFT()
+        {
+            await Task.Run(async () =>
+            {
+                IsBusy = true;
+                await CalculateFFT();
+                double[] fValues = timeSamples.ToArray();
+                fValues = FftSharp.Pad.ZeroPad(fValues);
+                var window = new FftSharp.Windows.Hanning();
+                window.ApplyInPlace(fValues);
+                IsBusy = false;
+            });
+        }
+
+        private async Task WindowAndFilterCalculateFFT()
+        {
+            await Task.Run(async () =>
+            {
+                IsBusy = true;
+                await CalculateFFT();
+                double[] fValues = timeSamples.ToArray();
+                fValues = FftSharp.Pad.ZeroPad(fValues);
+                var window = new FftSharp.Windows.Hanning();
+                window.ApplyInPlace(fValues);
+                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, Constants.DefaultLowPassFilterMaxFreq);
+                IsBusy = false;
+            });
+        }
+
+        private double[] GetFreqValuesArrayFromFreqSamples()
+        {
+            double[] fValues = new double[freqSamples.Samples.Length];
+            for (int i = 0; i < freqSamples.Samples.Count(); i++)
+            {
+                fValues[i] = freqSamples.Samples[i].Sample;
+            }
+            return fValues;
+        }
+        */
         #endregion
 
         #region Excell handle
