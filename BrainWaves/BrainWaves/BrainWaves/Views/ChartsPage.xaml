@@ -164,15 +164,33 @@
                         RightLabelTextColorProp="Red"
                         RightTitleText="{Static resource:Resource.ExportTimeSamples}"/>
 
-                    <Button 
-                        Command="{Binding ExportToExcelCommand}"
-                        Text="{Static resource:Resource.ExportToExcell}"
+
+
+                    <StackLayout
+                        Orientation="Horizontal"
+                        Margin="5"
                         VerticalOptions="Center"
-                        HorizontalOptions="Center"
-                        Margin="0,20,0,60"
-                        WidthRequest="250"
-                        IsEnabled="{Binding IsExportButtonEnabled}"
-                        Style="{StaticResource ButtonStyleNormal}"/>
+                        HorizontalOptions="CenterAndExpand">
+                        <Button 
+                            Command="{Binding ExportToExcelCommand}"
+                            Text="{Static resource:Resource.ExportExcel}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Fill"
+                            WidthRequest="150"
+                            Margin="0,20,5,60"
+                            IsEnabled="{Binding IsExportButtonEnabled}"
+                            Style="{StaticResource ButtonStyleNormal}"/>
+
+                        <Button 
+                            Command="{Binding ExportToCSVCommand}"
+                            Text="{Static resource:Resource.ExportCSV}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Fill"
+                            WidthRequest="150"
+                            Margin="5,20,0,60"
+                            IsEnabled="{Binding IsExportButtonEnabled}"
+                            Style="{StaticResource ButtonStyleNormal}"/>
+                    </StackLayout>
                 </StackLayout>
             </ScrollView>
         </StackLayout>

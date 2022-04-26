@@ -24,10 +24,7 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
-/* for adc esp32 
-#include "driver/adc.h"
-#include "esp_adc_cal.h"
-*/
+
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
@@ -36,6 +33,8 @@
 #define READ_CHARACTERISTIC_UUID "cba1d466-344c-4be3-ab3f-189f80dd7518"
 
 #define BUFF_LENGTH 25
+std::string EndMessage = "end";
+std::string StartMessage = "start";
 
 BLEServer* pServer = NULL;
 
@@ -176,14 +175,14 @@ void loop() {
           {
             value = 0;
             sendEndMessage = true;
-            shouldStartMeasure = false;
           }
         }
         else
         {
-          writeCharacteristic.setValue("End");
+          writeCharacteristic.setValue(EndMessage);
           writeCharacteristic.notify();
           sendEndMessage = false;
+          shouldStartMeasure = false;
         }
       }
       delay(5); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
@@ -200,6 +199,4 @@ void loop() {
         // do stuff here on connecting
         oldDeviceConnected = deviceConnected;
     }
-    // todo delay based on hz
-    //delay(1/hz);
 }

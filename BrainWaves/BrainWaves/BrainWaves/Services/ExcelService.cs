@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BrainWaves.Helpers;
 using BrainWaves.Models;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Xamarin.Essentials;
 
 namespace BrainWaves.Services
 {
@@ -172,6 +174,18 @@ namespace BrainWaves.Services
 
             workbookPart.Workbook.Save();
             ssDoc.Close();
+        }
+
+        public async void ExportCsvFile(string filename, string title, string text)
+        {
+            var file = Path.Combine(FileSystem.CacheDirectory, filename);
+            File.WriteAllText(file, text);
+
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = title,
+                File = new ShareFile(file)
+            });
         }
     }
 }

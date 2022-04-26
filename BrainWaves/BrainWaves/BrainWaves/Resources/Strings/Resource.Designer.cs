@@ -259,6 +259,33 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Export csv.
+        /// </summary>
+        internal static string ExportCSV {
+            get {
+                return ResourceManager.GetString("ExportCSV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Export data.
+        /// </summary>
+        internal static string ExportData {
+            get {
+                return ResourceManager.GetString("ExportData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Export xlsx.
+        /// </summary>
+        internal static string ExportExcel {
+            get {
+                return ResourceManager.GetString("ExportExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Export frequency samples.
         /// </summary>
         internal static string ExportFreqSamples {
@@ -282,15 +309,6 @@ namespace BrainWaves.Resources.Strings {
         internal static string ExportTimeSamples {
             get {
                 return ResourceManager.GetString("ExportTimeSamples", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Export to excell.
-        /// </summary>
-        internal static string ExportToExcell {
-            get {
-                return ResourceManager.GetString("ExportToExcell", resourceCulture);
             }
         }
         

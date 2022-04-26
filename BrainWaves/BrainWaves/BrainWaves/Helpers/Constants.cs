@@ -29,6 +29,7 @@ namespace BrainWaves.Helpers
         public const string PolishLanguageCode = "pl";
         public const string StartMeasureStartMessage = "start";
         public const char Delimeter = ';';
+        public const string EndMeasureEndMessage = "end";
 
         public const string PrefsCurrentLanguage = "currentLanguage";
         public const string PrefsTheme = "theme";

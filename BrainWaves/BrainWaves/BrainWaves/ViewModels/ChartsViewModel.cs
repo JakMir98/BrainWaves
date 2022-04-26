@@ -12,6 +12,7 @@ using Xamarin.Forms;
 using System.Linq;
 using FftSharp;
 using System.Globalization;
+using System.Text;
 
 namespace BrainWaves.ViewModels
 {
@@ -47,6 +48,7 @@ namespace BrainWaves.ViewModels
 
         #region ICommands
         public ICommand ExportToExcelCommand { private set; get; }
+        public ICommand ExportToCSVCommand { private set; get; }
         public ICommand DragCompletedCommand { private set; get; }
         public ICommand CalculateFFTCommand { private set; get; }
         #endregion
@@ -213,6 +215,7 @@ namespace BrainWaves.ViewModels
             selectedFFTSettings = Resources.Strings.Resource.FFTSettingsDefault;
 
             ExportToExcelCommand = new Command(async () => await ExportToExcel());
+            ExportToCSVCommand = new Command(async () => await ExportToCSV());
             GoBackCommand = new Command(async () => await GoBack());
             DragCompletedCommand = new Command(UpdateCharts);
             CalculateFFTCommand = new Command(async () => await FreqChartLoad());
@@ -245,9 +248,9 @@ namespace BrainWaves.ViewModels
             else if (value == Resources.Strings.Resource.FFTSettingsFilterAndWindow)
             {
                 WindowAndFilterSamples();
-            }           
-            
-        }
+            }
+        }       
+
         #region Charts Handle
         private void CheckChartLabelOrientation()
         {
@@ -549,7 +552,7 @@ namespace BrainWaves.ViewModels
         }
         #endregion
 
-        #region Excell handle
+        #region Excel handle
         private async Task ExportToExcel()
         {
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
@@ -643,6 +646,45 @@ namespace BrainWaves.ViewModels
         {
             PopulateList(data, shouldExportTimeDomain);
             excelService.CreateAndInsertDataToManySheets(filepath, data);
+        }
+
+        private async Task ExportToCSV()
+        {
+            IsBusy = true;
+            IsExportButtonEnabled = false;
+            StringBuilder text = new StringBuilder();
+            var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.csv";
+            await Task.Run(() =>
+            {
+                if (shouldExportTimeSamples)
+                {
+                    for(int i = 0; i < timeSamples.Count; i++)
+                    {
+                        text.AppendLine($"{i}{Constants.Delimeter}{timeSamples[i]}");
+
+                        if (i % 10000 == 0)
+                        {
+                            BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{timeSamples.Count}";
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < freqSamples.Samples.Count(); i++)
+                    {
+                        text.AppendLine($"{freqSamples.Samples[i].Freq}{Constants.Delimeter}{freqSamples.Samples[i].Sample}");
+
+                        if (i % 10000 == 0)
+                        {
+                            BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{timeSamples.Count}";
+                        }
+                    }
+                } 
+            });
+
+            excelService.ExportCsvFile(fileName, Constants.ExcellSheetName, text.ToString());
+            IsExportButtonEnabled = true;
+            IsBusy = false;
         }
         #endregion
         #endregion

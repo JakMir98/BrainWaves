@@ -147,8 +147,8 @@
   <data name="ErrorTitle" xml:space="preserve">
     <value>Błąd</value>
   </data>
-  <data name="ExportToExcell" xml:space="preserve">
-    <value>Eksportuj do excella</value>
+  <data name="ExportData" xml:space="preserve">
+    <value>Eksportuj dane</value>
   </data>
   <data name="FindDevice" xml:space="preserve">
     <value>Znajdź urządzenie</value>
@@ -338,5 +338,11 @@
   </data>
   <data name="FFTSettingsWindow" xml:space="preserve">
     <value>Oknowany sygnał</value>
+  </data>
+  <data name="ExportCSV" xml:space="preserve">
+    <value>Eksport csv</value>
+  </data>
+  <data name="ExportExcel" xml:space="preserve">
+    <value>Eksport xlsx</value>
   </data>
 </root>
