@@ -446,8 +446,6 @@ namespace BrainWaves.ViewModels
             else
             {
                 await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
-                // todo if get values from eeg click then take frequency too
-                // so maybe use await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
             }
 
             IsBusy = false;
@@ -465,7 +463,7 @@ namespace BrainWaves.ViewModels
                 IsReadButtonEnabled = false;
                 IsGoToChartsEnabled = false;
                 IsBusy = true;
-                BusyMessage = "Generating long sinwave";
+                BusyMessage = Resources.Strings.Resource.GenerateSinwave;
                 double[] sinWave;
                 
                 if (FftSharp.Pad.IsPowerOfTwo(sinwaveLength))
@@ -478,7 +476,6 @@ namespace BrainWaves.ViewModels
                     sinWave = FftSharp.Pad.ZeroPad(HelperFunctions.GenerateSinWave(
                         sinwaveSamplingFreq, sinwaveLength, sinwaveAmplitude, sinwaveFrequency));
                 }
-                //sinWave = FftSharp.SampleData.SampleAudio1();
 
                 EegClickSamples = new ObservableCollection<double>(sinWave);
                 IsBusy = false;

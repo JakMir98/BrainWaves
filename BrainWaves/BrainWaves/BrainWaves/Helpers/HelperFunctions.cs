@@ -42,7 +42,5 @@ namespace BrainWaves.Helpers
 
             return new FrequencySamplesContainer(psd, freq);
         }
-
-        
     }
 }

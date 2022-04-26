@@ -33,8 +33,9 @@
 #define READ_CHARACTERISTIC_UUID "cba1d466-344c-4be3-ab3f-189f80dd7518"
 
 #define BUFF_LENGTH 25
-std::string EndMessage = "end";
-std::string StartMessage = "start";
+const std::string EndMessage = "end";
+const std::string StartMessage = "start";
+const int eegClickPin = 34;
 
 BLEServer* pServer = NULL;
 
@@ -52,7 +53,8 @@ int value = 0;
 int counter = 0;
 bool sendEndMessage = false;
 bool shouldStartMeasure = false;
-//std::string sendValue = "Jakub";
+int samplingFrequency = 200; // 5 mili sec delay
+int timeToMeasureInMinutes = 0;
 
 bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
 {
@@ -86,6 +88,12 @@ bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
     return false;
 }
 
+int sample_freq_to_microseconds_delay_converter(int sampleFreq) 
+{
+  double delayInMicroSeconds = (1.0/sampleFreq) * 1000000; 
+  return (int) delayInMicroSeconds;
+}
+
 class ServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
       deviceConnected = true;
@@ -101,12 +109,11 @@ class ServerCallbacks: public BLEServerCallbacks {
 class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
       std::string value = pCharacteristic->getValue();  
-      int hz = 0;
-      int timeValue = 0;
-      if (get_numbers(value, &hz, &timeValue))
+
+      if (get_numbers(value, &samplingFrequency, &timeToMeasureInMinutes))
       {
         shouldStartMeasure = true;
-        Serial.println("Received start: " + String(hz) +"hz "+ String(timeValue) + " min");
+        Serial.println("Received start: " + String(samplingFrequency) +"hz "+ String(timeToMeasureInMinutes) + " min");
       }
       else
       {
@@ -127,7 +134,7 @@ void setup() {
   Serial.begin(115200);
 
   // Create the BLE Device
-  BLEDevice::init("ESP32");
+  BLEDevice::init("JMBW_ESP32");
 
   // Create the BLE Server
   pServer = BLEDevice::createServer();
@@ -166,6 +173,7 @@ void loop() {
       {
         if(!sendEndMessage)
         {
+          int eegClickValue = analogRead(eegClickPin);
           char outCharArr[10];
           itoa(value++, outCharArr, 10);
           std::string s = std::string(outCharArr);
@@ -185,7 +193,9 @@ void loop() {
           shouldStartMeasure = false;
         }
       }
-      delay(5); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
+      // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
+      // 330 possible max cus of ble
+      delay(sample_freq_to_microseconds_delay_converter(samplingFrequency));
     }
     // disconnecting
     if (!deviceConnected && oldDeviceConnected) {

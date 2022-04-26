@@ -42,29 +42,5 @@ namespace BrainWaves.Services
 
             return 0.0f;
         }
-
-        public void Filter(double[] samples, double sampleRate)
-        {
-            double[] filtered = FftSharp.Filter.LowPass(samples, sampleRate, maxFrequency: 2000);
-            FftSharp.Filter.BandPass(samples, sampleRate, minFrequency: 20, maxFrequency: 2000);
-            FftSharp.Filter.BandStop(samples, sampleRate, minFrequency: 20, maxFrequency: 2000);
-            FftSharp.Filter.HighPass(samples, sampleRate, minFrequency: 20);
-        }
-
-        public void Window(double[] signal)
-        {
-            var window = new FftSharp.Windows.Hanning();
-            double[] windowed = window.Apply(signal);
-        }
-
-        public void Transform(double[] signal)
-        {
-            Complex[] fftRaw = FftSharp.Transform.FFT(signal);
-        }
-
-        public void TransformBack(Complex[] signal)
-        {
-            FftSharp.Transform.IFFT(signal);
-        }
     }
 }
