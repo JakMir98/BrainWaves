@@ -20,7 +20,7 @@ namespace BrainWaves
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(language, false);
             InitializeComponent();
 
-            MainPage = new NavigationPage(new BluetoothDataPage());
+            MainPage = new NavigationPage(new ScanPage());
         }
 
         protected override void OnStart()

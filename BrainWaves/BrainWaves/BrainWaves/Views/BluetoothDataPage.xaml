@@ -86,10 +86,10 @@
                 LabelTextColorProp="Red"
                 CheckboxColorProp="Red"
                 TitleText="{Static resource:Resource.GenerateSinwave}"
-                IsChecked="{Binding IsGenerateSinwaveVisible}" />
+                IsChecked="{Binding SinwaveModel.IsGenerateSinwaveVisible}" />
 
             <Grid Margin="20"
-                  IsVisible="{Binding IsGenerateSinwaveVisible}">
+                  IsVisible="{Binding SinwaveModel.IsGenerateSinwaveVisible}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
@@ -114,7 +114,7 @@
                     Grid.Column="0"
                     Grid.Row="1"
                     Placeholder="{Static resource:Resource.SamplingFreq}"
-                    Text="{Binding SinwaveSamplingFreq, Mode=TwoWay}"
+                    Text="{Binding SinwaveModel.SinwaveSamplingFreq, Mode=TwoWay}"
                     PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                     TextColor="{AppThemeBinding Dark=White, Light=Black}"
                     BackgroundColor="Transparent"
@@ -141,7 +141,7 @@
                     VerticalTextAlignment="Center"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
-                    Text="{Binding SinwaveLength, Mode=TwoWay}"
+                    Text="{Binding SinwaveModel.SinwaveLength, Mode=TwoWay}"
                     Style="{StaticResource SimpleEntry}"
                     Keyboard="Numeric"/>
 
@@ -157,7 +157,7 @@
                     Grid.Column="0"
                     Grid.Row="3"
                     Placeholder="{Static resource:Resource.SinwaveAmplitude}"
-                    Text="{Binding SinwaveAmplitude, Mode=TwoWay}"
+                    Text="{Binding SinwaveModel.SinwaveAmplitude, Mode=TwoWay}"
                     PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                     TextColor="{AppThemeBinding Dark=White, Light=Black}"
                     BackgroundColor="Transparent"
@@ -184,28 +184,9 @@
                     VerticalTextAlignment="Center"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
-                    Text="{Binding SinwaveFrequency,Mode=TwoWay}"
+                    Text="{Binding SinwaveModel.SinwaveFrequency,Mode=TwoWay}"
                     Style="{StaticResource SimpleEntry}"
                     Keyboard="Numeric"/>
-
-                <!--
-                <Entry
-                   Grid.Row="3"
-                   Grid.Column="0"
-                   BackgroundColor="Transparent"
-                   Style="{StaticResource SimpleEntry}"
-                   Text="{Binding EntryText}"
-                   TextColor="{AppThemeBinding Dark={StaticResource TextColorDarkTheme}, Light={StaticResource TextColorLight}}"/>
-
-                <Button
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    IsVisible="{Binding AreButtonsEnabled}"
-                    Text="Send command"
-                    Command="{Binding SendCommand}"/>
-                -->
 
                 <Button
                     Grid.Row="4"
@@ -217,6 +198,69 @@
                     Text="{Static resource:Resource.GenerateText}"
                     Command="{Binding GenerateCommand}"/>
             </Grid>
+
+            <customControls:CheckboxWithLabel
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Margin="20"
+                LabelTextColorProp="Red"
+                CheckboxColorProp="Red"
+                TitleText="{Static resource:Resource.BrainActivity}"
+                IsChecked="{Binding Game.IsBrainActivityVisible, Mode=TwoWay}" />
+
+            <StackLayout
+                Margin="20"
+                IsVisible="{Binding Game.IsBrainActivityVisible}"
+                Orientation="Vertical">
+
+                <Label 
+                    Text="{Binding Game.LabelText}" 
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Style="{StaticResource LabelStyleNormal}"
+                    IsVisible="{Binding Game.IsBrainRelaxViewVisible}"/>
+
+                <Grid 
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding Game.IsBrainActivityViewVisible}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="6*" />
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0"
+                        Text="{Binding Game.QuestionLabelText}" 
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Entry
+                        Grid.Column="1"
+                        Placeholder="{Static resource:Resource.AnswerText}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="{Binding Game.AnswerColor}"
+                        VerticalTextAlignment="Center"
+                        Text="{Binding Game.AnswerEntryText,Mode=TwoWay}"
+                        Style="{StaticResource SimpleEntry}"
+                        ReturnCommand="{Binding CheckCommand}"
+                        Keyboard="Numeric"/>
+
+                    <Button
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource ButtonStyleNormal}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{Static resource:Resource.CheckText}"
+                        Command="{Binding CheckCommand}"/>
+                </Grid>
+            </StackLayout>
         </StackLayout>
     </ScrollView>
 </ContentPage>

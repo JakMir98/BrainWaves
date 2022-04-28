@@ -94,11 +94,7 @@ namespace BrainWaves.ViewModels
         public IDevice SelectedDevice
         {
             get => selectedDevice;
-            set
-            {
-                SetProperty(ref selectedDevice, value);
-                SelectedDeviceHandle();
-            }
+            set => SetProperty(ref selectedDevice, value);
 
         }
         #endregion
@@ -163,47 +159,58 @@ namespace BrainWaves.ViewModels
             }
         }
 
-
-        public async void SelectedDeviceHandle()
-        {
-            IsBusy = true;
-            BusyMessage = Resources.Strings.Resource.Connecting;
-            await StopScanning();
-
-            if(selectedDevice != null)
-            {
-                if (selectedDevice.State == DeviceState.Connected)
-                {
-                    await OpenPage(new BluetoothDataPage(selectedDevice));
-                }
-                else
-                {
-                    try
-                    {
-                        var connectParameters = new ConnectParameters(false, true);
-                        await bluetoothAdapter.ConnectToDeviceAsync(selectedDevice, connectParameters);
-                        await OpenPage(new BluetoothDataPage(selectedDevice));
-                    }
-                    catch
-                    {
-                        await App.OpenInfoPopup(
-                                Resources.Strings.Resource.ErrorTitle,
-                                Resources.Strings.Resource.ApplicationNeedPermissionText + $" {selectedDevice.Name ?? "N/A"}");
-                    }
-                }
-            }            
-            IsBusy = false;
-        }
-
         private async Task StopScanning()
         {
-            await bluetoothAdapter.StopScanningForDevicesAsync();
-            IsScanning = false;
+            try
+            {
+                await bluetoothAdapter.StopScanningForDevicesAsync();
+            }
+            catch (Exception)
+            {
+                await App.OpenInfoPopup(
+                            Resources.Strings.Resource.ErrorTitle,
+                            Resources.Strings.Resource.ScanningMessage);
+            }
+            finally
+            {
+                IsScanning = false;
+            }
+            
         }
 
         private async Task GoToSettings()
         {
             await OpenPage(new SettingsPage());
+        }
+
+        public async Task ItemClicked(object sender, ItemTappedEventArgs e)
+        {
+            IsBusy = true;
+            BusyMessage = Resources.Strings.Resource.Connecting;
+            await StopScanning();
+
+            IDevice selectedItem = e.Item as IDevice;
+
+            if (selectedItem.State == DeviceState.Connected)
+            {
+                await OpenPage(new BluetoothDataPage(selectedItem));
+            }
+            else
+            {
+                try
+                {
+                    var connectParameters = new ConnectParameters(false, true);
+                    await bluetoothAdapter.ConnectToDeviceAsync(selectedItem, connectParameters);
+                    await OpenPage(new BluetoothDataPage(selectedItem));
+                }
+                catch
+                {
+                    await App.OpenInfoPopup(
+                            Resources.Strings.Resource.ErrorTitle,
+                            Resources.Strings.Resource.ErrorConnectingBLE + $" {selectedItem.Name ?? "N/A"}");
+                }
+            }
+            IsBusy = false;
         }
         #endregion
     }

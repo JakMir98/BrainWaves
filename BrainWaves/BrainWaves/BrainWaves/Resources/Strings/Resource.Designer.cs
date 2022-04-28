@@ -61,6 +61,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Answer.
+        /// </summary>
+        internal static string AnswerText {
+            get {
+                return ResourceManager.GetString("AnswerText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Appliaction needs perrmission.
         /// </summary>
         internal static string ApplicationNeedPermissionText {
@@ -133,6 +142,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Activity while gathering data.
+        /// </summary>
+        internal static string BrainActivity {
+            get {
+                return ResourceManager.GetString("BrainActivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Calculating fft....
         /// </summary>
         internal static string CalculateFFT {
@@ -183,6 +201,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string Charts {
             get {
                 return ResourceManager.GetString("Charts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Check answer.
+        /// </summary>
+        internal static string CheckText {
+            get {
+                return ResourceManager.GetString("CheckText", resourceCulture);
             }
         }
         
@@ -484,6 +511,24 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Reading....
+        /// </summary>
+        internal static string ReadingText {
+            get {
+                return ResourceManager.GetString("ReadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Received.
+        /// </summary>
+        internal static string ReceivedDataText {
+            get {
+                return ResourceManager.GetString("ReceivedDataText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Sample.
         /// </summary>
         internal static string Sample {
@@ -732,6 +777,24 @@ namespace BrainWaves.Resources.Strings {
         internal static string TimeDomain {
             get {
                 return ResourceManager.GetString("TimeDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Relax for a little while.
+        /// </summary>
+        internal static string TimeForRelaxText {
+            get {
+                return ResourceManager.GetString("TimeForRelaxText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Focus and solve exercises.
+        /// </summary>
+        internal static string TimeToFocusText {
+            get {
+                return ResourceManager.GetString("TimeToFocusText", resourceCulture);
             }
         }
         

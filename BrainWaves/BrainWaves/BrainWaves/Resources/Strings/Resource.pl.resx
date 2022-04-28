@@ -345,4 +345,25 @@
   <data name="ExportExcel" xml:space="preserve">
     <value>Eksport xlsx</value>
   </data>
+  <data name="AnswerText" xml:space="preserve">
+    <value>Odpowiedź</value>
+  </data>
+  <data name="BrainActivity" xml:space="preserve">
+    <value>Aktywność w czasie badania</value>
+  </data>
+  <data name="ReceivedDataText" xml:space="preserve">
+    <value>Odebrano</value>
+  </data>
+  <data name="ReadingText" xml:space="preserve">
+    <value>Gromadzenie danych...</value>
+  </data>
+  <data name="CheckText" xml:space="preserve">
+    <value>Sprawdź</value>
+  </data>
+  <data name="TimeForRelaxText" xml:space="preserve">
+    <value>Zrelaksuj się</value>
+  </data>
+  <data name="TimeToFocusText" xml:space="preserve">
+    <value>Czas na rozwiązywanie zadań</value>
+  </data>
 </root>

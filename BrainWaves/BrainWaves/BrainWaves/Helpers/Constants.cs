@@ -24,6 +24,8 @@ namespace BrainWaves.Helpers
         public const int DefaultSinwaveLength = 1024;
         public const int DefaultSinwaveFreq = 50;
         public const int DefaultLowPassFilterMaxFreq = 50; //Hz
+        public const int DefaultMaxRandomValue = 1_000_000;
+        public const int DefaultNumOfExercisesToChangeLevel = 10;
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";

@@ -19,9 +19,9 @@ namespace BrainWaves.Views
             await (BindingContext as ScanViewModel).SetupAdapterAsync();
         }
 
-        void DevicesList_ItemTapped(System.Object sender, Xamarin.Forms.ItemTappedEventArgs e)
+        private async void DevicesList_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            ((ListView)sender).SelectedItem = null;
+            await (BindingContext as ScanViewModel).ItemClicked(sender, e);
         }
     }
 }

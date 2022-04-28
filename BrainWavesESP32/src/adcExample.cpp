@@ -74,13 +74,13 @@ void app_main(void)
     //Configure ADC
     if (unit == ADC_UNIT_1) {
         adc1_config_width(width);
-        adc1_config_channel_atten(channel, atten);
+        //adc1_config_channel_atten(channel, atten);
     } else {
         adc2_config_channel_atten((adc2_channel_t)channel, atten);
     }
 
     //Characterize ADC
-    adc_chars = calloc(1, sizeof(esp_adc_cal_characteristics_t));
+    //adc_chars = calloc(1, sizeof(esp_adc_cal_characteristics_t));
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize(unit, atten, width, DEFAULT_VREF, adc_chars);
     print_char_val_type(val_type);
 

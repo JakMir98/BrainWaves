@@ -35,6 +35,8 @@
 #define BUFF_LENGTH 25
 const std::string EndMessage = "end";
 const std::string StartMessage = "start";
+const std::string CancelMessage = "cancel";
+const char Delimeter = ';';
 const int eegClickPin = 34;
 
 BLEServer* pServer = NULL;
@@ -58,34 +60,70 @@ int timeToMeasureInMinutes = 0;
 
 bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
 {
-    char c = ';';
     bool firstFound = false;
     bool secondFound = false;
     
-    std::size_t firstDelimeter = inputStr.find(c);
+    std::size_t firstDelimeter = inputStr.find(Delimeter);
     if (firstDelimeter != std::string::npos)
     {
         firstFound = true;
     }
         
-    std::size_t secondDelimeter = inputStr.find(c,firstDelimeter+1);
+    std::size_t secondDelimeter = inputStr.find(Delimeter,firstDelimeter+1);
     if (secondDelimeter!=std::string::npos)
     {
         secondFound = true;
     }
-    std::string message = inputStr.substr(0, firstDelimeter);
 
-    if(firstFound && secondFound && message.compare("start") == 0)
+    std::string message;
+    if (firstFound)
     {
-        std::string firstNum = inputStr.substr(firstDelimeter+1,secondDelimeter-firstDelimeter-1);
-        *hzOut = atoi(firstNum.c_str());
+       message = inputStr.substr(0, firstDelimeter);
+       if(secondFound && message.compare("start") == 0)
+        {
+            std::string firstNum = inputStr.substr(firstDelimeter+1,secondDelimeter-firstDelimeter-1);
+            *hzOut = atoi(firstNum.c_str());
 
-        std::string secondNum = inputStr.substr(secondDelimeter+1,inputStr.length()-secondDelimeter);
-        *timeOut = atoi(secondNum.c_str());
-        return true;
+            std::string secondNum = inputStr.substr(secondDelimeter+1,inputStr.length()-secondDelimeter);
+            *timeOut = atoi(secondNum.c_str());
+            return true;
+        }
+        else
+        {
+          return false;
+        }
+    }
+    else
+    {
+      return false;
+    }
+}
+
+int decrypt_message(std::string inputStr)// returns 1 when start message, returns 2 when cancel message, returns -1 when error
+{
+  bool firstFound = false;
+  
+  std::size_t firstDelimeter = inputStr.find(Delimeter);
+  if (firstDelimeter != std::string::npos)
+  {
+      firstFound = true;
+  }
+  std::string message;
+  if (firstFound)
+    {
+       message = inputStr.substr(0, firstDelimeter);
+       if(message.compare(StartMessage) == 0)
+       {
+          return 1;
+       }
+       else if (message.compare(CancelMessage) == 0)
+       {
+          return 2;
+       }
+       return -1;
     }
 
-    return false;
+  return -1;
 }
 
 int sample_freq_to_microseconds_delay_converter(int sampleFreq) 
