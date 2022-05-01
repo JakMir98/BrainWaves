@@ -468,18 +468,21 @@ namespace BrainWaves.ViewModels
             gameModel.ExerciseCounter++;
             if(gameModel.ExerciseCounter > 4 * Constants.DefaultNumOfExercisesToChangeLevel)
             {
-                gameModel.gameService.Level = DifficultyLevel.ULTRA;
                 gameModel.ExerciseCounter = 0;
             }
             else if (gameModel.ExerciseCounter > 3 * Constants.DefaultNumOfExercisesToChangeLevel)
             {
-                gameModel.gameService.Level = DifficultyLevel.HARD;
+                gameModel.gameService.Level = DifficultyLevel.ULTRA;
             }
             else if (gameModel.ExerciseCounter > 2 * Constants.DefaultNumOfExercisesToChangeLevel)
             {
-                gameModel.gameService.Level = DifficultyLevel.MEDIUM;
+                gameModel.gameService.Level = DifficultyLevel.HARD;
             }
             else if (gameModel.ExerciseCounter > Constants.DefaultNumOfExercisesToChangeLevel)
+            {
+                gameModel.gameService.Level = DifficultyLevel.MEDIUM;
+            }
+            else if (gameModel.ExerciseCounter < Constants.DefaultNumOfExercisesToChangeLevel)
             {
                 gameModel.gameService.Level = DifficultyLevel.EASY;
             }
