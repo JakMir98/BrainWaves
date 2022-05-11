@@ -366,4 +366,10 @@
   <data name="TimeToFocusText" xml:space="preserve">
     <value>Czas na rozwiązywanie zadań</value>
   </data>
+  <data name="NoData" xml:space="preserve">
+    <value>Brak danych do przekazania</value>
+  </data>
+  <data name="CutoffFreqForLowPasFilter" xml:space="preserve">
+    <value>Częstotliwość odcięcia filtru dolnoprzepustowego</value>
+  </data>
 </root>

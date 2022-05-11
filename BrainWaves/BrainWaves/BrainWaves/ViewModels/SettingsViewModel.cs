@@ -24,6 +24,7 @@ namespace BrainWaves.ViewModels
         private Color entryTimeToReadMindColor;
         private Color entrySamplingFreqColor;
         private bool shouldCalculateFftOnLoad;
+        private int cutoffFreqOfLowPassFilter;
         #endregion
 
         #region Constructors
@@ -46,7 +47,7 @@ namespace BrainWaves.ViewModels
             timeToReadMindInMinutes = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
             samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
             shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
-
+            cutoffFreqOfLowPassFilter = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
 
             OSAppTheme currentTheme = Application.Current.RequestedTheme;
             if (currentTheme == OSAppTheme.Light)
@@ -204,6 +205,26 @@ namespace BrainWaves.ViewModels
                 Preferences.Set(Constants.PrefsShouldCalculateFFT, value);
             }
         }
+
+        public int CutoffFreqOfLowPassFilter
+        {
+            get => cutoffFreqOfLowPassFilter;
+            set
+            {
+                int tempVal;
+                if (value < 0)
+                {
+                    tempVal = Constants.DefaultLowPassFilterMaxFreq;
+                }
+                else
+                {
+                    tempVal = value;
+                }
+                SetProperty(ref cutoffFreqOfLowPassFilter, tempVal);
+                Preferences.Set(Constants.PrefsCutoffFreqOfLowPassFilter, tempVal);
+            }
+        }
+        
         #endregion
 
         #region Functions

@@ -474,7 +474,8 @@ namespace BrainWaves.ViewModels
                 areOriginalSamples = false;
                 double[] fValues = timeSamples.ToArray();
                 fValues = FftSharp.Pad.ZeroPad(fValues);
-                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, Constants.DefaultLowPassFilterMaxFreq);
+                var cutoffFreq = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
+                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, cutoffFreq);
                 timeSamples = new List<double>(fValues);
                 IsBusy = false;
             });
@@ -526,7 +527,8 @@ namespace BrainWaves.ViewModels
                 fValues = FftSharp.Pad.ZeroPad(fValues);
                 var window = new FftSharp.Windows.Hanning();
                 window.ApplyInPlace(fValues);
-                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, Constants.DefaultLowPassFilterMaxFreq);
+                var cutoffFreq = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
+                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, cutoffFreq);
                 timeSamples = new List<double>(fValues);
                 IsBusy = false;
             });

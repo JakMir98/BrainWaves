@@ -366,4 +366,10 @@
   <data name="TimeToFocusText" xml:space="preserve">
     <value>Focus and solve exercises</value>
   </data>
+  <data name="NoData" xml:space="preserve">
+    <value>There is no data to share</value>
+  </data>
+  <data name="CutoffFreqForLowPasFilter" xml:space="preserve">
+    <value>Cutoff frequency of low pass filter</value>
+  </data>
 </root>

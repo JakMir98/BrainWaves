@@ -3,9 +3,9 @@ using System;
 using System.Diagnostics;
 using Xamarin.Forms;
 
-namespace BrainWaves.Models
+namespace BrainWaves.ViewModels
 {
-    public class GameModel : ModelWithINotify
+    public  class GameViewModel : BaseViewModel
     {
         private bool isBrainActivityVisible = false;
         private ImageSource randomImageSource;
@@ -20,7 +20,7 @@ namespace BrainWaves.Models
         public int ExerciseCounter { get; set; }
         public GameService gameService { get; }
 
-        public GameModel()
+        public GameViewModel()
         {
             gameService = new GameService();
             randomImageSource = new Uri("https://picsum.photos/200/300?random=1");
@@ -35,7 +35,7 @@ namespace BrainWaves.Models
             set
             {
                 SetProperty(ref isBrainActivityVisible, value);
-                if(value)
+                if (value)
                 {
                     (gameService.CurrentAnswer, QuestionLabelText) = gameService.GenerateExercise();
                 }

@@ -26,6 +26,7 @@
                 TitleText="{Binding Title}"
                 CustomTextColorProp="White"
                 LabelSizeProp="25.0"
+                RightButtonTextSizeProp="15.0"
                 RightButtonIsVisibleProp="True"
                 RightButtonTitleTextProp="{Static resource:Resource.Settings}"
                 RightButtonCommand="{Binding GoToSettingsCommand}"
@@ -72,6 +73,7 @@
                 ItemTapped="DevicesList_ItemTapped"
                 BackgroundColor="Transparent"
                 SeparatorVisibility="Default"
+                Margin="20"
                 SeparatorColor="Gray">
                 <ListView.ItemTemplate>
                     <DataTemplate>

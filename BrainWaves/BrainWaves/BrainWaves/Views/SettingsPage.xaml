@@ -22,6 +22,7 @@
                     BackgroundColorProp="{StaticResource PrimaryColor}"
                     LeftButtonIsVisibleProp="True"
                     LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
+                    LeftButtonTextSizeProp="15.0"
                     LeftButtonCommand="{Binding GoBackCommand}"
                     LeftButtonCommandParameter="{Binding GoBackCommand}"
                     LeftButtonTextColorProp="White"
@@ -76,6 +77,7 @@
                         HorizontalOptions="Center"
                         BackgroundColor="{Binding EntryTimeToReadMindColor}"
                         Style="{StaticResource SimpleEntry}"
+                        Margin="0,0,0,20"
                         Keyboard="Numeric"/>
 
                     <Label
@@ -93,6 +95,26 @@
                         HorizontalOptions="Center"
                         BackgroundColor="{Binding EntrySamplingFreqColor}"
                         Style="{StaticResource SimpleEntry}"
+                        Margin="0,0,0,20"
+                        Keyboard="Numeric"/>
+
+                    <Label
+                        VerticalOptions="Center"
+                        Text="{Static resource:Resource.CutoffFreqForLowPasFilter}"
+                        Style="{StaticResource LabelStyleNormal}"
+                        HorizontalTextAlignment="Center"
+                        HorizontalOptions="Center"
+                        TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
+                    <Entry 
+                        Placeholder="{Static resource:Resource.CutoffFreqForLowPasFilter}"
+                        Text="{Binding CutoffFreqOfLowPassFilter, Mode=TwoWay}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{Binding EntrySamplingFreqColor}"
+                        Style="{StaticResource SimpleEntry}"
+                        Margin="0,0,0,20"
                         Keyboard="Numeric"/>
 
                     <StackLayout

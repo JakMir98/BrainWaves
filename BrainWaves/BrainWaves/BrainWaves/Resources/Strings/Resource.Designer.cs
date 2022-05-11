@@ -232,6 +232,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cutoff frequency of low pass filter.
+        /// </summary>
+        internal static string CutoffFreqForLowPasFilter {
+            get {
+                return ResourceManager.GetString("CutoffFreqForLowPasFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Disconnecting....
         /// </summary>
         internal static string DisconnectingMessage {
@@ -480,6 +489,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string LanguagePL {
             get {
                 return ResourceManager.GetString("LanguagePL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu There is no data to share.
+        /// </summary>
+        internal static string NoData {
+            get {
+                return ResourceManager.GetString("NoData", resourceCulture);
             }
         }
         

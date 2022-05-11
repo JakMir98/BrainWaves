@@ -49,6 +49,7 @@ namespace BrainWaves.Helpers
         public const string PrefsSinwaveAmplitude = "sinwaveAmplitude";
         public const string PrefsSinwaveLength = "sinwaveLength";
         public const string PrefsSinwaveFreq = "sinwaveFreq";
+        public const string PrefsCutoffFreqOfLowPassFilter = "cutoffFreqLowPass";
 
         public const string ExcellSheetName = "Samples";
         public const string ExcellSheetName1 = "Samples 0-1M";

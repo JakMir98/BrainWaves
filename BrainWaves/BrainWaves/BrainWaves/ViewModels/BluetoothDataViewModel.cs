@@ -1,5 +1,4 @@
 ﻿using BrainWaves.Helpers;
-using BrainWaves.Models;
 using BrainWaves.Services;
 using BrainWaves.Views;
 using Plugin.BLE;
@@ -8,7 +7,6 @@ using Plugin.BLE.Abstractions.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -34,8 +32,9 @@ namespace BrainWaves.ViewModels
         private float timeToMeasureInMins;
         private float expectedNumberOfSamples;
         private bool isGoToChartsEnabled = false;
-        private GenerateSinwaveModel sinwaveModel; 
-        private GameModel gameModel;
+        private bool isGenerateSinwaveVisible = false;
+        private GenerateSinwaveViewModel sinwaveModel; 
+        private GameViewModel gameModel;
         
         #endregion
 
@@ -110,13 +109,23 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref isGoToChartsEnabled, value);
         }
 
-        public GameModel Game
+        public bool IsGenerateSinwaveVisible
+        {
+            get => isGenerateSinwaveVisible;
+            set
+            {
+                SetProperty(ref isGenerateSinwaveVisible, value);
+                IsReadButtonEnabled = !value;
+            }
+        }
+
+        public GameViewModel Game
         {
             get => gameModel;
             set => SetProperty(ref gameModel, value);
         }
 
-        public GenerateSinwaveModel SinwaveModel
+        public GenerateSinwaveViewModel SinwaveModel
         {
             get => sinwaveModel;
             set => SetProperty(ref sinwaveModel, value);
@@ -127,8 +136,8 @@ namespace BrainWaves.ViewModels
         private void InitVariables()
         {
             sampleTransformService = new SampleTranformService();
-            gameModel = new GameModel();
-            sinwaveModel = new GenerateSinwaveModel();
+            gameModel = new GameViewModel();
+            sinwaveModel = new GenerateSinwaveViewModel();
             Title = Resources.Strings.Resource.BLEData;
             AvailableSettings = new List<string>
             {
@@ -363,13 +372,21 @@ namespace BrainWaves.ViewModels
         {
             IsBusy = true;
             BusyMessage = Resources.Strings.Resource.OpenPageText;
-            if(sinwaveModel.IsGenerateSinwaveVisible)
+            if(IsGenerateSinwaveVisible)
             {
                 await OpenPage(new ChartsPage(new List<double>(EegClickSamples), sinwaveModel.SinwaveSamplingFreq));
             }
             else
             {
-                await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
+                if(EegClickSamples.Count > 0)
+                {
+                    await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
+                }
+                else
+                {
+                    await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                                Resources.Strings.Resource.NoData);
+                }
             }
 
             IsBusy = false;
@@ -384,7 +401,7 @@ namespace BrainWaves.ViewModels
         {
             await Task.Run(() =>
             {
-                IsReadButtonEnabled = sinwaveModel.IsReadButtonEnabled = false;
+                IsReadButtonEnabled = false;
                 IsGoToChartsEnabled = false;
                 IsBusy = true;
                 BusyMessage = Resources.Strings.Resource.GenerateSinwave;
@@ -404,8 +421,7 @@ namespace BrainWaves.ViewModels
                 EegClickSamples = new ObservableCollection<double>(sinWave);
                 IsBusy = false;
                 IsGoToChartsEnabled = true;
-                if (!sinwaveModel.IsGenerateSinwaveVisible)
-                    IsReadButtonEnabled = sinwaveModel.IsReadButtonEnabled = true;
+                IsReadButtonEnabled = true;
             });
         }
 

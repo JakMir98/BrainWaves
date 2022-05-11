@@ -16,6 +16,7 @@
             </StackLayout.Margin>
             <customControls:CustomToolbar
                     BackgroundColorProp="{StaticResource PrimaryColor}"
+                    LeftButtonTextSizeProp="15.0"
                     LeftButtonIsVisibleProp="True"
                     LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
                     LeftButtonCommand="{Binding GoBackCommand}"

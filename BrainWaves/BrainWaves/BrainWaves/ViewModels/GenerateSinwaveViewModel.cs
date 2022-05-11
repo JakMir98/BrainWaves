@@ -1,18 +1,16 @@
 ﻿using BrainWaves.Helpers;
 using Xamarin.Essentials;
 
-namespace BrainWaves.Models
+namespace BrainWaves.ViewModels
 {
-    public class GenerateSinwaveModel : ModelWithINotify
+    public class GenerateSinwaveViewModel : BaseViewModel
     {
         private int sinwaveSamplingFreq;
         private int sinwaveLength;
         private int sinwaveAmplitude;
         private int sinwaveFrequency;
-        private bool isGenerateSinwaveVisible = false;
-        private bool isReadButtonEnabled = false;
-
-        public GenerateSinwaveModel()
+       
+        public GenerateSinwaveViewModel()
         {
             SinwaveSamplingFreq = Preferences.Get(Constants.PrefsSinwaveSamplingFreq, Constants.DefaultSinwaveSamplingFreq);
             SinwaveLength = Preferences.Get(Constants.PrefsSinwaveLength, Constants.DefaultSinwaveLength);
@@ -94,22 +92,6 @@ namespace BrainWaves.Models
                 SetProperty(ref sinwaveFrequency, tempValue);
                 Preferences.Set(Constants.PrefsSinwaveFreq, tempValue);
             }
-        }
-
-        public bool IsGenerateSinwaveVisible
-        {
-            get => isGenerateSinwaveVisible;
-            set
-            {
-                SetProperty(ref isGenerateSinwaveVisible, value);
-                IsReadButtonEnabled = !value;
-            }
-        }
-
-        public bool IsReadButtonEnabled
-        {
-            get => isReadButtonEnabled;
-            set => SetProperty(ref isReadButtonEnabled, value);
         }
     }
 }
