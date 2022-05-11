@@ -35,7 +35,8 @@ namespace BrainWaves.ViewModels
         private bool isGenerateSinwaveVisible = false;
         private GenerateSinwaveViewModel sinwaveModel; 
         private GameViewModel gameModel;
-        
+        private double progress;
+        private bool progressBarIsVisible = false;
         #endregion
 
         #region ICommands
@@ -130,6 +131,18 @@ namespace BrainWaves.ViewModels
             get => sinwaveModel;
             set => SetProperty(ref sinwaveModel, value);
         }
+
+        public double Progress
+        {
+            get => progress;
+            set => SetProperty(ref progress, value);
+        }
+
+        public bool ProgressBarIsVisible
+        {
+            get => progressBarIsVisible;
+            set => SetProperty(ref progressBarIsVisible, value);
+        }
         #endregion
 
         #region Functions
@@ -182,6 +195,7 @@ namespace BrainWaves.ViewModels
             string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
             expectedNumberOfSamples = samplingFreq * timeToMeasureInMins * 60;
             Send(message);
+            ProgressBarIsVisible = true;
             gameModel.StopwatchGame.Start();
             gameModel.IsBrainRelaxViewVisible = true;
             gameModel.IsBrainActivityViewVisible = false;
@@ -334,14 +348,15 @@ namespace BrainWaves.ViewModels
                     IsReadButtonEnabled = true;
                     IsGoToChartsEnabled = true;
                     gameModel.StopwatchGame.Reset();
+                    ProgressBarIsVisible = false;
                 }
                 else
                 {
                     EegClickSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
                     OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {EegClickSamples.Count}/{expectedNumberOfSamples}";
-
                     // todo check possible loss of samples 
                     // these actions slows down receiving samples
+                    Progress = EegClickSamples.Count / expectedNumberOfSamples;
                     if (gameModel.IsBrainActivityVisible)
                     {
                         if (gameModel.StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)

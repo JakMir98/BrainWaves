@@ -81,6 +81,12 @@
                 HorizontalOptions="Center"
                 Style="{StaticResource LabelStyleNormal}"/>
 
+            <ProgressBar 
+                ProgressColor="Red"
+                Progress="{Binding Progress}"
+                IsVisible="{Binding ProgressBarIsVisible}"
+                Margin="20"/>
+
             <customControls:CheckboxWithLabel
                 VerticalOptions="Center"
                 HorizontalOptions="Center"

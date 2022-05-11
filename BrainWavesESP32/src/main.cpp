@@ -24,6 +24,8 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
+#include <algorithm>
+#include <string>
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -37,7 +39,7 @@ const std::string EndMessage = "end";
 const std::string StartMessage = "start";
 const std::string CancelMessage = "cancel";
 const char Delimeter = ';';
-const int eegClickPin = 34;
+const int eegClickPin = 15;
 
 BLEServer* pServer = NULL;
 
@@ -56,9 +58,11 @@ int counter = 0;
 bool sendEndMessage = false;
 bool shouldStartMeasure = false;
 int samplingFrequency = 200; // 5 mili sec delay
-int timeToMeasureInMinutes = 0;
+float timeToMeasureInMinutes = 0;
+int expectedNumOfSamples = 0;
+int currentNumberOfSamples = 0;
 
-bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
+bool get_numbers(std::string inputStr, int * hzOut, float * timeOut)
 {
     bool firstFound = false;
     bool secondFound = false;
@@ -85,7 +89,8 @@ bool get_numbers(std::string inputStr, int * hzOut, int * timeOut)
             *hzOut = atoi(firstNum.c_str());
 
             std::string secondNum = inputStr.substr(secondDelimeter+1,inputStr.length()-secondDelimeter);
-            *timeOut = atoi(secondNum.c_str());
+            std::replace(secondNum.begin(), secondNum.end(), ',', '.');
+            *timeOut = atof(secondNum.c_str());
             return true;
         }
         else
@@ -150,6 +155,7 @@ class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
 
       if (get_numbers(value, &samplingFrequency, &timeToMeasureInMinutes))
       {
+        expectedNumOfSamples = samplingFrequency * timeToMeasureInMinutes * 60;
         shouldStartMeasure = true;
         Serial.println("Received start: " + String(samplingFrequency) +"hz "+ String(timeToMeasureInMinutes) + " min");
       }
@@ -213,13 +219,15 @@ void loop() {
         {
           int eegClickValue = analogRead(eegClickPin);
           char outCharArr[10];
-          itoa(value++, outCharArr, 10);
+          //itoa(value++, outCharArr, 10);
+          currentNumberOfSamples++;
+          itoa(eegClickValue, outCharArr, 10);
           std::string s = std::string(outCharArr);
           writeCharacteristic.setValue(s);
           writeCharacteristic.notify();
-          if(value > 4095)
+          if(currentNumberOfSamples > expectedNumOfSamples)
           {
-            value = 0;
+            currentNumberOfSamples = 0;
             sendEndMessage = true;
           }
         }
@@ -233,7 +241,7 @@ void loop() {
       }
       // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
       // 330 possible max cus of ble
-      delay(sample_freq_to_microseconds_delay_converter(samplingFrequency));
+      delayMicroseconds(sample_freq_to_microseconds_delay_converter(samplingFrequency));
     }
     // disconnecting
     if (!deviceConnected && oldDeviceConnected) {
