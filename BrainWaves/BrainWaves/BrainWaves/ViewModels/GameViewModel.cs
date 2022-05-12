@@ -9,16 +9,19 @@ namespace BrainWaves.ViewModels
     {
         private bool isBrainActivityVisible = false;
         private ImageSource randomImageSource;
-        private int answerEntryText;
+        private string answerEntryText;
         private string questionLabelText;
         private bool isBrainActivityViewVisible = false;
         private bool isBrainRelaxViewVisible = true;
         private Color answerColor;
         private string labelText;
+        private string correctAnswersText;
         public Stopwatch StopwatchGame { get; set; }
         public int DotCounter { get; set; }
         public int ExerciseCounter { get; set; }
         public GameService gameService { get; }
+        public int TotalExerciseCounter { get; set; }
+        public int TotalCorrectAnswersCounter { get; set; }
 
         public GameViewModel()
         {
@@ -26,6 +29,8 @@ namespace BrainWaves.ViewModels
             randomImageSource = new Uri("https://picsum.photos/200/300?random=1");
             DotCounter = 1;
             ExerciseCounter = 1;
+            TotalExerciseCounter = 1;
+            TotalCorrectAnswersCounter = 0;
             StopwatchGame = new Stopwatch();
         }
 
@@ -47,7 +52,7 @@ namespace BrainWaves.ViewModels
             get => randomImageSource;
             set => SetProperty(ref randomImageSource, value);
         }
-        public int AnswerEntryText
+        public string AnswerEntryText
         {
             get => answerEntryText;
             set => SetProperty(ref answerEntryText, value);
@@ -78,6 +83,12 @@ namespace BrainWaves.ViewModels
         {
             get => labelText;
             set => SetProperty(ref labelText, value);
+        }
+
+        public string CorrectAnswersText
+        {
+            get => correctAnswersText;
+            set => SetProperty(ref correctAnswersText, value);
         }
     }
 }

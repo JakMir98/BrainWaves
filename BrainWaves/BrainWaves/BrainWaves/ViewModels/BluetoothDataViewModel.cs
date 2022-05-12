@@ -125,7 +125,6 @@ namespace BrainWaves.ViewModels
             get => gameModel;
             set => SetProperty(ref gameModel, value);
         }
-
         public GenerateSinwaveViewModel SinwaveModel
         {
             get => sinwaveModel;
@@ -290,7 +289,6 @@ namespace BrainWaves.ViewModels
             }
             catch (Exception ex)
             {
-                
                 await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
                     Resources.Strings.Resource.BleCommandSendingError + $" {ex.Message}");
             }
@@ -407,11 +405,6 @@ namespace BrainWaves.ViewModels
             IsBusy = false;
         }
 
-        private async Task GoToSettings()
-        {
-            await OpenPage(new SettingsPage());
-        }
-
         private async void Generate()
         {
             await Task.Run(() =>
@@ -486,16 +479,27 @@ namespace BrainWaves.ViewModels
 
         private void CheckExercise()
         {
-            if(gameModel.gameService.CurrentAnswer == gameModel.AnswerEntryText)
+            if(int.TryParse(gameModel.AnswerEntryText, out var number))
             {
-                gameModel.AnswerColor = Color.Green;
+                if (gameModel.gameService.CurrentAnswer == number)
+                {
+                    gameModel.AnswerColor = Color.Green;
+                    gameModel.TotalCorrectAnswersCounter++;
+                }
+                else
+                {
+                    gameModel.AnswerColor = Color.Red;
+                }
             }
             else
             {
                 gameModel.AnswerColor = Color.Red;
             }
+            
+            gameModel.AnswerEntryText = string.Empty;
             (gameModel.gameService.CurrentAnswer, gameModel.QuestionLabelText) = gameModel.gameService.GenerateExercise();
-
+            gameModel.CorrectAnswersText = $"{Resources.Strings.Resource.CorrectAnswersText}{gameModel.TotalCorrectAnswersCounter}/{gameModel.TotalExerciseCounter}";
+            gameModel.TotalExerciseCounter++;
             gameModel.ExerciseCounter++;
             if(gameModel.ExerciseCounter > 4 * Constants.DefaultNumOfExercisesToChangeLevel)
             {

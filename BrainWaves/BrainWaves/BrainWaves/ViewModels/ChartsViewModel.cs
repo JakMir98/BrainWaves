@@ -10,7 +10,6 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Linq;
-using FftSharp;
 using System.Globalization;
 using System.Text;
 
@@ -36,7 +35,7 @@ namespace BrainWaves.ViewModels
         private double maxSliderValue;
         private double sliderValue;
         private int numberOfShownSamplesFromTheMiddle;
-        private FrequencySamplesContainer freqSamples;
+        private List<Sample> freqSamples;
         private Orientation chartsOrientation;
         private bool shouldExportTimeSamples = true;
         private bool areFreqSamplesReady = false;
@@ -51,6 +50,7 @@ namespace BrainWaves.ViewModels
         public ICommand ExportToCSVCommand { private set; get; }
         public ICommand DragCompletedCommand { private set; get; }
         public ICommand CalculateFFTCommand { private set; get; }
+        public ICommand GoToSettingsCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -76,16 +76,15 @@ namespace BrainWaves.ViewModels
         public ChartsViewModel(List<double> _samples)
         {
             timeSamples = _samples;
-
+            freqSamples = new List<Sample>();
             BasicAndCommandsInit();
-
             InitChartsAndSlider();
         }
 
         public ChartsViewModel(List<double> _samples, int fs)
         {
             timeSamples = _samples;
-
+            freqSamples = new List<Sample>();
             BasicAndCommandsInit();
             samplingFrequency = fs;
             InitChartsAndSlider();
@@ -219,6 +218,7 @@ namespace BrainWaves.ViewModels
             GoBackCommand = new Command(async () => await GoBack());
             DragCompletedCommand = new Command(UpdateCharts);
             CalculateFFTCommand = new Command(async () => await FreqChartLoad());
+            GoToSettingsCommand = new Command(async () => await GoToSettings());
         }
 
         private void InitChartsAndSlider()
@@ -249,6 +249,7 @@ namespace BrainWaves.ViewModels
             {
                 WindowAndFilterSamples();
             }
+            SliderValue = 0;
         }       
 
         #region Charts Handle
@@ -355,13 +356,13 @@ namespace BrainWaves.ViewModels
             BusyMessage = Resources.Strings.Resource.SettingUpFreqChartsMessage;
             List<ChartEntry> freqRecords = new List<ChartEntry>();
 
-            int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > freqSamples.Samples.Count() ? freqSamples.Samples.Count() : 2 * numberOfShownSamplesFromTheMiddle;
+            int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > freqSamples.Count() ? freqSamples.Count() : 2 * numberOfShownSamplesFromTheMiddle;
             for (int i = 0; i < countToLoad; i++)
             {
-                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces))
+                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces))
                 {
-                    Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}dB",
+                    Label = $"{Math.Round(freqSamples[i].SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
+                    ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)}dB",
                     Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
                     TextColor = SKColors.Gray,
                     ValueLabelColor = SKColors.Gray,
@@ -386,16 +387,16 @@ namespace BrainWaves.ViewModels
             BusyMessage = Resources.Strings.Resource.SettingUpFreqChartsMessage;
             List<ChartEntry> freqRecords = new List<ChartEntry>();
 
-            if(freqSamples.Samples != null)
+            if(freqSamples != null)
             {
                 double minValue = sliderValue - numberOfShownSamplesFromTheMiddle > 0 ? sliderValue - numberOfShownSamplesFromTheMiddle : 0;
-                double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < freqSamples.Samples.Count() ? sliderValue + numberOfShownSamplesFromTheMiddle : freqSamples.Samples.Count();
+                double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < freqSamples.Count() ? sliderValue + numberOfShownSamplesFromTheMiddle : freqSamples.Count();
                 for (int i = (int)minValue; i < maxValue; i++)
                 {
-                    freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)) // todo change to fft
+                    freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)) // todo change to fft
                     {
-                        Label = $"{Math.Round(freqSamples.Samples[i].Freq, Constants.NumOfDecimalPlaces)} Hz",
-                        ValueLabel = $"{Math.Round(freqSamples.Samples[i].Sample, Constants.NumOfDecimalPlaces)}dB",
+                        Label = $"{Math.Round(freqSamples[i].SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
+                        ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)} dB",
                         Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
                         TextColor = SKColors.Gray,
                         ValueLabelColor = SKColors.Gray,
@@ -473,7 +474,7 @@ namespace BrainWaves.ViewModels
                 }
                 areOriginalSamples = false;
                 double[] fValues = timeSamples.ToArray();
-                fValues = FftSharp.Pad.ZeroPad(fValues);
+                HelperFunctions.PerformZeroPaddingIfNeeded(ref fValues);
                 var cutoffFreq = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
                 fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, cutoffFreq);
                 timeSamples = new List<double>(fValues);
@@ -499,7 +500,7 @@ namespace BrainWaves.ViewModels
                 areOriginalSamples = false;
 
                 double[] fValues = timeSamples.ToArray();
-                fValues = FftSharp.Pad.ZeroPad(fValues);
+                HelperFunctions.PerformZeroPaddingIfNeeded(ref fValues);
                 var window = new FftSharp.Windows.Hanning();
                 window.ApplyInPlace(fValues);
                 timeSamples = new List<double>(fValues);
@@ -524,7 +525,7 @@ namespace BrainWaves.ViewModels
                 }
                 areOriginalSamples = false;
                 double[] fValues = timeSamples.ToArray();
-                fValues = FftSharp.Pad.ZeroPad(fValues);
+                HelperFunctions.PerformZeroPaddingIfNeeded(ref fValues);
                 var window = new FftSharp.Windows.Hanning();
                 window.ApplyInPlace(fValues);
                 var cutoffFreq = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
@@ -559,6 +560,7 @@ namespace BrainWaves.ViewModels
         {
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.xlsx";
             string filepath = excelService.PathToExcellFile(fileName);
+            bool result = false;
             await Task.Run(() =>
             {
                 IsBusy = true;
@@ -566,27 +568,34 @@ namespace BrainWaves.ViewModels
 
                 ExcelStructure data = new ExcelStructure();
                 
-                if (timeSamples.Count > Constants.MaxEntriesForSheet)
+                if (timeSamples.Count > Constants.MaxEntriesForSheet) // freq samples will have same len
                 {
-                    PopulateBigList(data, filepath, shouldExportTimeSamples);
+                    result = PopulateBigList(data, filepath, shouldExportTimeSamples);
                 }
                 else
                 {
-                    PopulateSmallList(data, filepath, Constants.ExcellSheetName1, shouldExportTimeSamples);
+                    result = PopulateSmallList(data, filepath, Constants.ExcellSheetName1, shouldExportTimeSamples);
                 }
 
                 IsExportButtonEnabled = true;
                 IsBusy = false;
             });
 
-
-            await Launcher.OpenAsync(new OpenFileRequest()
+            if(result)
             {
-                File = new ReadOnlyFile(filepath)
-            });
+                await Launcher.OpenAsync(new OpenFileRequest()
+                {
+                    File = new ReadOnlyFile(filepath)
+                });
+            }
+            else
+            {
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                               Resources.Strings.Resource.NoData);
+            }
         }
 
-        private void PopulateList(ExcelStructure data, bool shouldExportTimeDomain)
+        private bool PopulateList(ExcelStructure data, bool shouldExportTimeDomain)
         {
             if(shouldExportTimeDomain)
             {
@@ -614,40 +623,57 @@ namespace BrainWaves.ViewModels
             }
             else
             {
-                data.Headers = new List<string>()
+                if(freqSamples.Count() > 0)
                 {
-                    Resources.Strings.Resource.Freqz,
-                    Resources.Strings.Resource.Sample
-                };
-                for (int i = 0; i < freqSamples.Samples.Count(); i++)
-                {
-                    List<string> values = new List<string>
+                    data.Headers = new List<string>()
                     {
-                        freqSamples.Samples[i].FreqToString(), freqSamples.Samples[i].SampleToString()
+                        Resources.Strings.Resource.Freqz,
+                        Resources.Strings.Resource.Sample
                     };
-                    data.Values.Add(values);
-
-                    if (i % 10000 == 0)
+                    for (int i = 0; i < freqSamples.Count(); i++)
                     {
-                        BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{timeSamples.Count}";
+                        List<string> values = new List<string>
+                        {
+                            freqSamples[i].SampleXToString(), freqSamples[i].SampleYToString()
+                        };
+                        data.Values.Add(values);
+
+                        if (i % 10000 == 0)
+                        {
+                            BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{timeSamples.Count}";
+                        }
                     }
                 }
+                else
+                { 
+                    return false;
+                }
             }
-            
             BusyMessage = Resources.Strings.Resource.ExportingToExcellMessage;
+            return true;
         }
 
-        private void PopulateSmallList(ExcelStructure data, string filepath, string excellSheetName, bool shouldExportTimeDomain)
+        private bool PopulateSmallList(ExcelStructure data, string filepath, string excellSheetName, bool shouldExportTimeDomain)
         {
             excelService.GenerateExcel(filepath);
-            PopulateList(data, shouldExportTimeDomain);
-            excelService.InsertDataIntoSheet(filepath, excellSheetName, data);
+            if (PopulateList(data, shouldExportTimeDomain))
+            {
+                excelService.InsertDataIntoSheet(filepath, excellSheetName, data);
+                return true;
+            }
+
+            return false;
         }
 
-        private void PopulateBigList(ExcelStructure data, string filepath, bool shouldExportTimeDomain)
+        private bool PopulateBigList(ExcelStructure data, string filepath, bool shouldExportTimeDomain)
         {
-            PopulateList(data, shouldExportTimeDomain);
-            excelService.CreateAndInsertDataToManySheets(filepath, data);
+            if(PopulateList(data, shouldExportTimeDomain))
+            {
+                excelService.CreateAndInsertDataToManySheets(filepath, data);
+                return true;
+            }
+
+            return false;
         }
 
         private async Task ExportToCSV()
@@ -656,6 +682,7 @@ namespace BrainWaves.ViewModels
             IsExportButtonEnabled = false;
             StringBuilder text = new StringBuilder();
             var fileName = $"{Constants.ExcellSheetName}-{Guid.NewGuid()}.csv";
+            bool returnError = false;
             await Task.Run(() =>
             {
                 if (shouldExportTimeSamples)
@@ -672,19 +699,36 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    for (int i = 0; i < freqSamples.Samples.Count(); i++)
+                    if(freqSamples.Count() > 0)
                     {
-                        text.AppendLine($"{freqSamples.Samples[i].Freq}{Constants.Delimeter}{freqSamples.Samples[i].Sample}");
-
-                        if (i % 10000 == 0)
+                        for (int i = 0; i < freqSamples.Count(); i++)
                         {
-                            BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{timeSamples.Count}";
+                            text.AppendLine($"{freqSamples[i].SampleXValue}{Constants.Delimeter}{freqSamples[i].SampleYValue}");
+
+                            if (i % 10000 == 0)
+                            {
+                                BusyMessage = Resources.Strings.Resource.ExcellProcessing + $" {i}/{timeSamples.Count}";
+                            }
                         }
                     }
+                    else
+                    {
+                        returnError = true;
+                    }
+                    
                 } 
             });
 
-            excelService.ExportCsvFile(fileName, Constants.ExcellSheetName, text.ToString());
+            if(returnError)
+            {
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                                Resources.Strings.Resource.NoData);
+            }
+            else
+            {
+                excelService.ExportCsvFile(fileName, Constants.ExcellSheetName, text.ToString());
+            }
+
             IsExportButtonEnabled = true;
             IsBusy = false;
         }

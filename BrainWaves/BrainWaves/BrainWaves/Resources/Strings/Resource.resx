@@ -372,4 +372,7 @@
   <data name="CutoffFreqForLowPasFilter" xml:space="preserve">
     <value>Cutoff frequency of low pass filter</value>
   </data>
+  <data name="CorrectAnswersText" xml:space="preserve">
+    <value>Correct answers: </value>
+  </data>
 </root>

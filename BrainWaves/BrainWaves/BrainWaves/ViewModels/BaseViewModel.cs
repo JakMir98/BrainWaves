@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BrainWaves.Views;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -74,6 +75,11 @@ namespace BrainWaves.ViewModels
         protected async Task GoBack()
         {
             await Application.Current.MainPage.Navigation.PopAsync();
+        }
+
+        protected async Task GoToSettings()
+        {
+            await OpenPage(new SettingsPage());
         }
         #endregion
     }

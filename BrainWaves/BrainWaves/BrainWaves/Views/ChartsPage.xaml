@@ -24,7 +24,12 @@
                     LeftButtonTextColorProp="White"
                     TitleText="{Binding Title}"
                     CustomTextColorProp="White"
-                    RightButtonIsVisibleProp="False"/>
+                    RightButtonTextSizeProp="15.0"
+                    RightButtonIsVisibleProp="True"
+                    RightButtonTitleTextProp="{Static resource:Resource.Settings}"
+                    RightButtonCommand="{Binding GoToSettingsCommand}"
+                    RightButtonCommandParameter="{Binding GoToSettingsCommand}"
+                    RightButtonTextColorProp="White"/>
             <ScrollView>
                 <StackLayout>
 

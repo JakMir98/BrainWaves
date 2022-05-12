@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BrainWaves.Models;
 using FftSharp;
 
@@ -35,21 +36,26 @@ namespace BrainWaves.Helpers
             return samples;
         }
 
-        public static FrequencySamplesContainer GenerateFreqSamples(double[] input, int samplingFreq)
+        public static List<Sample> GenerateFreqSamples(double[] input, int samplingFreq)
         {
-            double[] psd;
+            PerformZeroPaddingIfNeeded(ref input);
+            double[] psd = FftSharp.Transform.FFTpower(input);
+            double[] freq = FftSharp.Transform.FFTfreq(samplingFreq, psd.Length);
+            List<Sample> samples = new List<Sample>();
+            for(int i = 0; i < freq.Length; i++)
+            {
+                samples.Add(new Sample(psd[i], freq[i]));
+            }
+
+            return samples;
+        }
+
+        public static void PerformZeroPaddingIfNeeded(ref double[] input)
+        {
             if (!FftSharp.Pad.IsPowerOfTwo(input.Length))
             {
-                psd = FftSharp.Transform.FFTpower(FftSharp.Pad.ZeroPad(input));
+                input = FftSharp.Pad.ZeroPad(input);
             }
-            else
-            {
-                psd = FftSharp.Transform.FFTpower(input);
-            }
-            
-            double[] freq = FftSharp.Transform.FFTfreq(samplingFreq, psd.Length);
-
-            return new FrequencySamplesContainer(psd, freq);
         }
     }
 }

@@ -232,6 +232,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Correct answers: .
+        /// </summary>
+        internal static string CorrectAnswersText {
+            get {
+                return ResourceManager.GetString("CorrectAnswersText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cutoff frequency of low pass filter.
         /// </summary>
         internal static string CutoffFreqForLowPasFilter {

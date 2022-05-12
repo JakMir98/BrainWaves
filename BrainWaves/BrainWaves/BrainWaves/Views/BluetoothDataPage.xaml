@@ -235,6 +235,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />
@@ -259,8 +260,17 @@
                         ReturnCommand="{Binding CheckCommand}"
                         Keyboard="Numeric"/>
 
-                    <Button
+                    <Label 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
                         Grid.Row="1"
+                        Text="{Binding Game.CorrectAnswersText}" 
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Button
+                        Grid.Row="2"
                         Grid.ColumnSpan="2"
                         Style="{StaticResource ButtonStyleNormal}"
                         VerticalOptions="Center"

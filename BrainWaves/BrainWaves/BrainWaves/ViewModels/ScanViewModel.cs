@@ -178,11 +178,6 @@ namespace BrainWaves.ViewModels
             
         }
 
-        private async Task GoToSettings()
-        {
-            await OpenPage(new SettingsPage());
-        }
-
         public async Task ItemClicked(object sender, ItemTappedEventArgs e)
         {
             IsBusy = true;
