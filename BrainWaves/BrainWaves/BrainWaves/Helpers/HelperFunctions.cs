@@ -37,7 +37,16 @@ namespace BrainWaves.Helpers
 
         public static FrequencySamplesContainer GenerateFreqSamples(double[] input, int samplingFreq)
         {
-            double[] psd = FftSharp.Transform.FFTpower(input);
+            double[] psd;
+            if (!FftSharp.Pad.IsPowerOfTwo(input.Length))
+            {
+                psd = FftSharp.Transform.FFTpower(FftSharp.Pad.ZeroPad(input));
+            }
+            else
+            {
+                psd = FftSharp.Transform.FFTpower(input);
+            }
+            
             double[] freq = FftSharp.Transform.FFTfreq(samplingFreq, psd.Length);
 
             return new FrequencySamplesContainer(psd, freq);
