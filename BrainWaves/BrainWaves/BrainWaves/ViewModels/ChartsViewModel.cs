@@ -73,7 +73,7 @@ namespace BrainWaves.ViewModels
             SetupFreqDomainChart();
         }
 
-        public ChartsViewModel(List<double> _samples)
+        public ChartsViewModel(List<double> _samples) // when samples from esp32
         {
             timeSamples = _samples;
             freqSamples = new List<Sample>();
@@ -81,7 +81,7 @@ namespace BrainWaves.ViewModels
             InitChartsAndSlider();
         }
 
-        public ChartsViewModel(List<double> _samples, int fs)
+        public ChartsViewModel(List<double> _samples, int fs) // when sinwave created
         {
             timeSamples = _samples;
             freqSamples = new List<Sample>();
@@ -232,7 +232,6 @@ namespace BrainWaves.ViewModels
 
         private void SelectedFFTSettingsChangedHandle(string value)
         {
-            
             if (value == Resources.Strings.Resource.FFTSettingsDefault)
             {
                 RevertSamples();
@@ -278,7 +277,7 @@ namespace BrainWaves.ViewModels
                 }
             }            
         }
-
+        //todo change x of 
         private void SetupTimeDomainChart()
         {
             IsBusy = true;

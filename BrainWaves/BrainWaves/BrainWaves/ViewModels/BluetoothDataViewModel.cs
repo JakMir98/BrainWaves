@@ -320,11 +320,19 @@ namespace BrainWaves.ViewModels
 
         private async Task StartReceiving()
         {
-            if (receiveCharacteristic != null)
+            try
             {
-                receiveCharacteristic.ValueUpdated += ReadValues;
+                if (receiveCharacteristic != null)
+                {
+                    receiveCharacteristic.ValueUpdated += ReadValues;
 
-                await receiveCharacteristic.StartUpdatesAsync();
+                    await receiveCharacteristic.StartUpdatesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await App.OpenInfoPopup(Resources.Strings.Resource.ErrorTitle,
+                    Resources.Strings.Resource.BleCommandSendingError + $" {ex.Message}");
             }
         }
 
@@ -335,7 +343,7 @@ namespace BrainWaves.ViewModels
 
         private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
         {//todo upgrade
-            BusyMessage = Resources.Strings.Resource.ReadingText;//
+            BusyMessage = Resources.Strings.Resource.ReadingText;
             Task.Run(() =>
             {
                 var receivedBytes = args.Characteristic.Value;

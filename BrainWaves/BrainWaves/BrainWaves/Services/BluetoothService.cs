@@ -3,9 +3,7 @@ using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BrainWaves.Services

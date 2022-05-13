@@ -56,7 +56,7 @@ bool oldDeviceConnected = false;
 int value = 0;
 int counter = 0;
 bool sendEndMessage = false;
-bool shouldStartMeasure = false;
+bool shouldMeasure = false;
 int samplingFrequency = 200; // 5 mili sec delay
 float timeToMeasureInMinutes = 0;
 int expectedNumOfSamples = 0;
@@ -156,7 +156,7 @@ class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
       if (get_numbers(value, &samplingFrequency, &timeToMeasureInMinutes))
       {
         expectedNumOfSamples = samplingFrequency * timeToMeasureInMinutes * 60;
-        shouldStartMeasure = true;
+        shouldMeasure = true;
         Serial.println("Received start: " + String(samplingFrequency) +"hz "+ String(timeToMeasureInMinutes) + " min");
       }
       else
@@ -213,7 +213,7 @@ void loop() {
     // notify changed value
     if (deviceConnected) 
     {
-      if(shouldStartMeasure)
+      if(shouldMeasure)
       {
         if(!sendEndMessage)
         {
@@ -236,7 +236,7 @@ void loop() {
           writeCharacteristic.setValue(EndMessage);
           writeCharacteristic.notify();
           sendEndMessage = false;
-          shouldStartMeasure = false;
+          shouldMeasure = false;
         }
       }
       // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms

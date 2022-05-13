@@ -26,7 +26,7 @@ namespace BrainWaves.ViewModels
         public GameViewModel()
         {
             gameService = new GameService();
-            randomImageSource = new Uri("https://picsum.photos/200/300?random=1");
+            randomImageSource = new Uri("https://picsum.photos/200/300?random=1"); // in future maybe add calming photos 
             DotCounter = 1;
             ExerciseCounter = 1;
             TotalExerciseCounter = 1;

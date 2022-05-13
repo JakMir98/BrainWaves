@@ -1,27 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using BrainWaves.Models;
-using FftSharp;
 
 namespace BrainWaves.Helpers
 {
     public static class HelperFunctions
     {
-        public static double[] GenerateSinWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
+        public static double[] GenerateTimeVector(int samplingFrequency, int length)
         {
-            float T = (float)1 / samplingFrequency;            // % Sampling period
-            float[] t = new float[length];
+            double T = (double)1 / samplingFrequency;            // % Sampling period
+            double[] t = new double[length];
             for (int i = 0; i < length - 1; i++)
             {
                 t[i] = i * T;
             }
 
+            return t;
+        }
+        public static double[] GenerateSinWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
+        {
+            double[] t = GenerateTimeVector(samplingFrequency, length);
             double[] sinWave = new double[length];
             for (int i = 0; i < length; i++)
             {
                 sinWave[i] = amplitude * Math.Sin(2 * Math.PI * signalFrequency * t[i]);
             }
             return sinWave;
+        }
+
+        public static double[] GenerateCosWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
+        {
+            double[] t = GenerateTimeVector(samplingFrequency, length);
+            double[] cosWave = new double[length];
+            for (int i = 0; i < length; i++)
+            {
+                cosWave[i] = amplitude * Math.Cos(2 * Math.PI * signalFrequency * t[i]);
+            }
+            return cosWave;
         }
 
         public static double[] GenerateRandomValues(int numOfValues)

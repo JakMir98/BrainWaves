@@ -37,13 +37,14 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.LanguageENG,
                 Resources.Strings.Resource.LanguagePL
             };
-
             selectedLanguage = Preferences.Get(Constants.PrefsCurrentLanguage, 
                 new CultureInfo(Constants.EnglishLanguageCode, false).Name);
+
             isAutomaticServiceChoosingActive = Preferences.Get(Constants.PrefsAutomaticServiceChossing, true);
-            serviceUUID = Preferences.Get(Constants.PrefsSavedServiceUUID, Resources.Strings.Resource.EmptyText);
-            sendCharacteristicUUID = Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Resources.Strings.Resource.EmptyText);
-            receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Resources.Strings.Resource.EmptyText);
+            serviceUUID = Preferences.Get(Constants.PrefsSavedServiceUUID, Constants.UartGattServiceId.ToString());
+            sendCharacteristicUUID = Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Constants.GattCharacteristicReceiveId.ToString());
+            receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Constants.GattCharacteristicSendId.ToString());
+
             timeToReadMindInMinutes = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
             samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
             shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
