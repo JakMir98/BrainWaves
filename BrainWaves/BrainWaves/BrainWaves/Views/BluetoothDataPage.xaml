@@ -62,6 +62,7 @@
                 HorizontalOptions="CenterAndExpand">
                 <Button
                     Style="{StaticResource ButtonStyleNormal}"
+                    WidthRequest="150"
                     Margin="10"
                     Text="{Static resource:Resource.StartMeasure}"
                     Command="{Binding StartCommand}"
@@ -73,6 +74,14 @@
                     Text="{Static resource:Resource.Charts}"
                     Command="{Binding GoToChartsCommand}"
                     IsEnabled="{Binding IsGoToChartsEnabled}"/>
+
+                <Button
+                    Style="{StaticResource ButtonStyleNormal}"
+                    WidthRequest="150"
+                    Margin="10"
+                    Text="{Static resource:Resource.TestSignalButton}"
+                    Command="{Binding SendTestSignalCommand}"
+                    IsEnabled="{Binding IsReadButtonEnabled}"/>
             </StackLayout>
 
             <Label

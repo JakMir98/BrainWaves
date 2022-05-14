@@ -375,4 +375,22 @@
   <data name="CorrectAnswersText" xml:space="preserve">
     <value>Correct answers: </value>
   </data>
+  <data name="TestSignalButton" xml:space="preserve">
+    <value>Test signal</value>
+  </data>
+  <data name="AlfaWavesText" xml:space="preserve">
+    <value>Alfa waves</value>
+  </data>
+  <data name="BetaWavesText" xml:space="preserve">
+    <value>Beta waves</value>
+  </data>
+  <data name="DeltaWavesText" xml:space="preserve">
+    <value>Delta waves</value>
+  </data>
+  <data name="ThetaWavesText" xml:space="preserve">
+    <value>Theta waves</value>
+  </data>
+  <data name="WavesTitle" xml:space="preserve">
+    <value>Waves</value>
+  </data>
 </root>

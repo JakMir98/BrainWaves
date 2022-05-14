@@ -13,20 +13,6 @@ namespace BrainWaves.Services
 {
     public class ExcelService
     {
-        public List<string> ExcellSheetsNames = new List<string>
-        {
-            Constants.ExcellSheetName1,
-            Constants.ExcellSheetName2,
-            Constants.ExcellSheetName3,
-            Constants.ExcellSheetName4,
-            Constants.ExcellSheetName5,
-            Constants.ExcellSheetName6,
-            Constants.ExcellSheetName7,
-            Constants.ExcellSheetName8,
-            Constants.ExcellSheetName9,
-            Constants.ExcellSheetName10
-        };
-
         private string AppFolder => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         public string PathToExcellFile(string fileName)
@@ -62,7 +48,7 @@ namespace BrainWaves.Services
                             {
                                 Id = wbPart.GetIdOfPart(part),
                                 SheetId = 1,
-                                Name = Constants.ExcellSheetName1
+                                Name = Constants.ExcelSheetNames[0]
                             }
                         )
                 );
@@ -162,13 +148,21 @@ namespace BrainWaves.Services
                 worksheet1.AppendChild(sheetData1);
                 worksheetPart1.Worksheet = worksheet1;
 
-                Sheet sheet1 = new Sheet()
+                if(i < Constants.ExcelSheetNames.Length)
                 {
-                    Id = ssDoc.WorkbookPart.GetIdOfPart(worksheetPart1),
-                    SheetId = (uint)i,
-                    Name = ExcellSheetsNames[i]
-                };
-                sheets.Append(sheet1);
+                    Sheet sheet1 = new Sheet()
+                    {
+                        Id = ssDoc.WorkbookPart.GetIdOfPart(worksheetPart1),
+                        SheetId = (uint)i,
+                        Name = Constants.ExcelSheetNames[i]
+                    };
+                    sheets.Append(sheet1);
+                }
+                else
+                {
+                    break;
+                }
+                
             }
 
             workbookPart.Workbook.Save();

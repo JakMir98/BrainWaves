@@ -1,54 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
 using BrainWaves.Models;
+using Microcharts;
+using SkiaSharp;
 
 namespace BrainWaves.Helpers
 {
     public static class HelperFunctions
     {
-        public static double[] GenerateTimeVector(int samplingFrequency, int length)
+        public static BarChart GenerateBarChart(List<ChartEntry> entries, Orientation chartsOrientation)
         {
-            double T = (double)1 / samplingFrequency;            // % Sampling period
-            double[] t = new double[length];
-            for (int i = 0; i < length - 1; i++)
-            {
-                t[i] = i * T;
-            }
-
-            return t;
-        }
-        public static double[] GenerateSinWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
-        {
-            double[] t = GenerateTimeVector(samplingFrequency, length);
-            double[] sinWave = new double[length];
-            for (int i = 0; i < length; i++)
-            {
-                sinWave[i] = amplitude * Math.Sin(2 * Math.PI * signalFrequency * t[i]);
-            }
-            return sinWave;
+            return new BarChart
+                {
+                    Entries = entries,
+                    ValueLabelOrientation = chartsOrientation,
+                    LabelOrientation = chartsOrientation,
+                    BackgroundColor = SKColors.Transparent,
+                    LabelColor = SKColors.Gray
+                };
         }
 
-        public static double[] GenerateCosWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
+        public static LineChart GenerateLineChart(List<ChartEntry> entries, Orientation chartsOrientation)
         {
-            double[] t = GenerateTimeVector(samplingFrequency, length);
-            double[] cosWave = new double[length];
-            for (int i = 0; i < length; i++)
-            {
-                cosWave[i] = amplitude * Math.Cos(2 * Math.PI * signalFrequency * t[i]);
-            }
-            return cosWave;
+            return new LineChart
+                {
+                    Entries = entries,
+                    ValueLabelOrientation = chartsOrientation,
+                    LabelOrientation = chartsOrientation,
+                    BackgroundColor = SKColors.Transparent,
+                    LabelColor = SKColors.Gray
+                };
         }
 
-        public static double[] GenerateRandomValues(int numOfValues)
+        public static PointChart GeneratePointChart(List<ChartEntry> entries, Orientation chartsOrientation)
         {
-            Random random = new Random();
-            double[] samples = new double[numOfValues];
-            double range = 3.3;
-            for (int i = 0; i < numOfValues; i++)
+            return new PointChart
+                {
+                    Entries = entries,
+                    ValueLabelOrientation = chartsOrientation,
+                    LabelOrientation = chartsOrientation,
+                    BackgroundColor = SKColors.Transparent,
+                    LabelColor = SKColors.Gray
+                };
+        }
+
+        public static ChartEntry GenerateChartEntryForFreqSamples(Sample sample, SKColor color)
+        {
+            return new ChartEntry((float)Math.Round(sample.SampleYValue, Constants.NumOfDecimalPlaces))
+                {
+                    Label = $"{Math.Round(sample.SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
+                    ValueLabel = $"{Math.Round(sample.SampleYValue, Constants.NumOfDecimalPlaces)}_V",
+                    Color = color,
+                    TextColor = SKColors.Gray,
+                    ValueLabelColor = SKColors.Gray,
+                };
+        }
+
+        public static ChartEntry GenerateChartEntryForTimeSamples(double value, int index, SKColor color)
+        {
+            return new ChartEntry((float)Math.Round(value, Constants.NumOfDecimalPlaces))
+                {
+                    Label = $"{index}.",
+                    ValueLabel = $"{Math.Round(value, Constants.NumOfDecimalPlaces)}V",
+                    Color = color,
+                    TextColor = SKColors.Gray,
+                    ValueLabelColor = SKColors.Gray
+                };
+        }
+
+        public static ChartEntry GenerateChartEntryForWaves(double value, int index)
+        {
+            return new ChartEntry((float)Math.Round(value, Constants.NumOfDecimalPlaces))
             {
-                samples[i] = random.NextDouble() * range;
-            }
-            return samples;
+                Label = Constants.WavesChartLabels[index],
+                ValueLabel = $"{Math.Round(value, Constants.NumOfDecimalPlaces)}V",
+                Color = Constants.Colors[index],
+                TextColor = SKColors.Gray,
+                ValueLabelColor = SKColors.Gray
+            };
         }
 
         public static List<Sample> GenerateFreqSamples(double[] input, int samplingFreq)

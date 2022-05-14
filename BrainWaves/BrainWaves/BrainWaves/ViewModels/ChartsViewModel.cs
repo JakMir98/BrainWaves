@@ -61,7 +61,7 @@ namespace BrainWaves.ViewModels
             /* Create samples to test Export to excell */
             int samplingFreq = 500;
             int length = 1048576; //2^20
-            double[] sinWave = HelperFunctions.GenerateSinWave(samplingFreq, length, 1, 50);
+            double[] sinWave = TestSamplesGenerator.GenerateSinWave(samplingFreq, length, 1, 50);
             timeSamples = new List<double>(sinWave);
             freqSamples = HelperFunctions.GenerateFreqSamples(sinWave, samplingFreq);
 
@@ -268,7 +268,7 @@ namespace BrainWaves.ViewModels
                 }
             }            
         }
-        //todo change x of 
+
         private void SetupTimeDomainChart()
         {
             IsBusy = true;
@@ -278,24 +278,10 @@ namespace BrainWaves.ViewModels
             int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > timeSamples.Count ? timeSamples.Count : 2 * numberOfShownSamplesFromTheMiddle;
             for (int i = 0; i < countToLoad; i++)
             {
-                timeRecords.Add(new ChartEntry((float)Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces))
-                {
-                    Label = $"{i}.",
-                    ValueLabel = $"{Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces)}V",
-                    Color = SkiaSharp.SKColor.Parse(Constants.TimeChartColor),
-                    TextColor = SKColors.Gray,
-                    ValueLabelColor = SKColors.Gray,
-                });
+                timeRecords.Add(HelperFunctions.GenerateChartEntryForTimeSamples(timeSamples[i], i, Constants.Colors[0]));
             }
 
-            TimeChart = new LineChart
-            {
-                Entries = timeRecords,
-                ValueLabelOrientation = chartsOrientation,
-                LabelOrientation = chartsOrientation,
-                BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.Gray
-            };
+            TimeChart = HelperFunctions.GenerateLineChart(timeRecords, chartsOrientation);
 
             IsBusy = false;
         }
@@ -311,24 +297,11 @@ namespace BrainWaves.ViewModels
             double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < timeSamples.Count ? sliderValue + numberOfShownSamplesFromTheMiddle : timeSamples.Count;
             for (int i = (int)minValue; i < maxValue; i++)
             {
-                timeRecords.Add(new ChartEntry((float)Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces))
-                {
-                    Label = $"{i}.",
-                    ValueLabel = $"{Math.Round(timeSamples[i], Constants.NumOfDecimalPlaces)}V",
-                    Color = SkiaSharp.SKColor.Parse(Constants.TimeChartColor),
-                    TextColor = SKColors.Gray,
-                    ValueLabelColor = SKColors.Gray,
-                });
+                timeRecords.Add(HelperFunctions.GenerateChartEntryForTimeSamples(timeSamples[i], i, Constants.Colors[0]));
             }
 
-            TimeChart = new LineChart
-            {
-                Entries = timeRecords,
-                ValueLabelOrientation = chartsOrientation,
-                LabelOrientation = chartsOrientation,
-                BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.Gray
-            };
+            TimeChart = HelperFunctions.GenerateLineChart(timeRecords, chartsOrientation);
+
             IsTimeChartVisible = true;
             if (areFreqSamplesReady) //because frequency is calcualted later
             {
@@ -349,24 +322,10 @@ namespace BrainWaves.ViewModels
             int countToLoad = 2 * numberOfShownSamplesFromTheMiddle > freqSamples.Count() ? freqSamples.Count() : 2 * numberOfShownSamplesFromTheMiddle;
             for (int i = 0; i < countToLoad; i++)
             {
-                freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces))
-                {
-                    Label = $"{Math.Round(freqSamples[i].SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)}_V",
-                    Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
-                    TextColor = SKColors.Gray,
-                    ValueLabelColor = SKColors.Gray,
-                });
+                freqRecords.Add(HelperFunctions.GenerateChartEntryForFreqSamples(freqSamples[i], Constants.Colors[1]));
             }
 
-            FrequencyChart = new PointChart
-            {
-                Entries = freqRecords,
-                ValueLabelOrientation = chartsOrientation,
-                LabelOrientation = chartsOrientation,
-                BackgroundColor = SKColors.Transparent,
-                LabelColor = SKColors.Gray
-            };
+            FrequencyChart = HelperFunctions.GeneratePointChart(freqRecords, chartsOrientation);
 
             IsBusy = false;
         }
@@ -383,24 +342,10 @@ namespace BrainWaves.ViewModels
                 double maxValue = sliderValue + numberOfShownSamplesFromTheMiddle < freqSamples.Count() ? sliderValue + numberOfShownSamplesFromTheMiddle : freqSamples.Count();
                 for (int i = (int)minValue; i < maxValue; i++)
                 {
-                    freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)) // todo change to fft
-                    {
-                        Label = $"{Math.Round(freqSamples[i].SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
-                        ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)}_V",
-                        Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
-                        TextColor = SKColors.Gray,
-                        ValueLabelColor = SKColors.Gray,
-                    });
+                    freqRecords.Add(HelperFunctions.GenerateChartEntryForFreqSamples(freqSamples[i], Constants.Colors[1]));
                 }
 
-                FrequencyChart = new PointChart
-                {
-                    Entries = freqRecords,
-                    ValueLabelOrientation = chartsOrientation,
-                    LabelOrientation = chartsOrientation,
-                    BackgroundColor = SKColors.Transparent,
-                    LabelColor = SKColors.Gray
-                };
+                FrequencyChart = HelperFunctions.GeneratePointChart(freqRecords, chartsOrientation);
             }
             
             IsBusy = false;
@@ -564,7 +509,7 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    result = PopulateSmallList(data, filepath, Constants.ExcellSheetName1, shouldExportTimeSamples);
+                    result = PopulateSmallList(data, filepath, Constants.ExcelSheetNames[0], shouldExportTimeSamples);
                 }
 
                 IsExportButtonEnabled = true;

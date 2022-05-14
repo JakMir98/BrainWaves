@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 
 namespace BrainWaves.Helpers
 {
@@ -13,8 +14,6 @@ namespace BrainWaves.Helpers
         public const int MaxSamplingFrequency = 500; //Hz
         public const int MinTimeToReadInMinutes = 1;
         public const int MaxTimeToReadInMinutes = 60; // max = 1khz * 3600 = 3.6MHZ/h
-        public const string FrequencyChartColor = "#ff0000";
-        public const string TimeChartColor = "#00BFFF";
         public const int DefaultLoadedSamples = 20;
         public const int MaxLoadedSamples = 500;
         public const int NumOfDecimalPlaces = 2;
@@ -32,6 +31,7 @@ namespace BrainWaves.Helpers
         public const string StartMeasureStartMessage = "start";
         public const char Delimeter = ';';
         public const string EndMeasureEndMessage = "end";
+        public const string TestSingalMessage = "test";
 
         public const string PrefsCurrentLanguage = "currentLanguage";
         public const string PrefsTheme = "theme";
@@ -52,16 +52,38 @@ namespace BrainWaves.Helpers
         public const string PrefsCutoffFreqOfLowPassFilter = "cutoffFreqLowPass";
 
         public const string ExcellSheetName = "Samples";
-        public const string ExcellSheetName1 = "Samples 0-1M";
-        public const string ExcellSheetName2 = "Samples 1M-2M";
-        public const string ExcellSheetName3 = "Samples 2M-3M";
-        public const string ExcellSheetName4 = "Samples 3M-4M";
-        public const string ExcellSheetName5 = "Samples 4M-5M";
-        public const string ExcellSheetName6 = "Samples 5M-6M";
-        public const string ExcellSheetName7 = "Samples 6M-7M";
-        public const string ExcellSheetName8 = "Samples 7M-8M";
-        public const string ExcellSheetName9 = "Samples 8M-9M";
-        public const string ExcellSheetName10 = "Samples 9M-10M";
+        public static string[] ExcelSheetNames =
+        {
+            "Samples 0-1M",
+            "Samples 1M-2M",
+            "Samples 2M-3M",
+            "Samples 3M-4M",
+            "Samples 4M-5M",
+            "Samples 5M-6M",
+            "Samples 6M-7M",
+            "Samples 7M-8M",
+            "Samples 8M-9M",
+            "Samples 9M-10M"
+        };
 
+        public static SKColor[] Colors =
+        {
+            SkiaSharp.SKColor.Parse("#ff0000"),
+            SkiaSharp.SKColor.Parse("00BFFF"),
+            SkiaSharp.SKColor.Parse("#00D100"),
+            SkiaSharp.SKColor.Parse("#8B4513"),
+            SkiaSharp.SKColor.Parse("#800080"),
+            SkiaSharp.SKColor.Parse("#FF8C00"),
+        };
+
+        public static string[] WavesChartLabels =
+        {
+            "0 - 10 min",
+            "10 - 20 min",
+            "20 - 30 min",
+            "30 - 40 min",
+            "40 - 50 min",
+            "50 - 60 min",
+        };
     }
 }

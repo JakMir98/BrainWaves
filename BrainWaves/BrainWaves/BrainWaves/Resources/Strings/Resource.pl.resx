@@ -375,4 +375,22 @@
   <data name="CorrectAnswersText" xml:space="preserve">
     <value>Poprawnych odpowiedzi: </value>
   </data>
+  <data name="TestSignalButton" xml:space="preserve">
+    <value>Sygnał test</value>
+  </data>
+  <data name="AlfaWavesText" xml:space="preserve">
+    <value>Fale Alfa</value>
+  </data>
+  <data name="BetaWavesText" xml:space="preserve">
+    <value>Fale Beta</value>
+  </data>
+  <data name="DeltaWavesText" xml:space="preserve">
+    <value>Fale Delta</value>
+  </data>
+  <data name="ThetaWavesText" xml:space="preserve">
+    <value>Fale Theta</value>
+  </data>
+  <data name="WavesTitle" xml:space="preserve">
+    <value>Fale mózgowe</value>
+  </data>
 </root>

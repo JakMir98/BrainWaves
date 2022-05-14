@@ -61,6 +61,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Alfa waves.
+        /// </summary>
+        internal static string AlfaWavesText {
+            get {
+                return ResourceManager.GetString("AlfaWavesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Answer.
         /// </summary>
         internal static string AnswerText {
@@ -84,6 +93,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string AutomaticServiceChoosing {
             get {
                 return ResourceManager.GetString("AutomaticServiceChoosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Beta waves.
+        /// </summary>
+        internal static string BetaWavesText {
+            get {
+                return ResourceManager.GetString("BetaWavesText", resourceCulture);
             }
         }
         
@@ -246,6 +264,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string CutoffFreqForLowPasFilter {
             get {
                 return ResourceManager.GetString("CutoffFreqForLowPasFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delta waves.
+        /// </summary>
+        internal static string DeltaWavesText {
+            get {
+                return ResourceManager.GetString("DeltaWavesText", resourceCulture);
             }
         }
         
@@ -790,11 +817,29 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Test signal.
+        /// </summary>
+        internal static string TestSignalButton {
+            get {
+                return ResourceManager.GetString("TestSignalButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Theme.
         /// </summary>
         internal static string Theme {
             get {
                 return ResourceManager.GetString("Theme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Theta waves.
+        /// </summary>
+        internal static string ThetaWavesText {
+            get {
+                return ResourceManager.GetString("ThetaWavesText", resourceCulture);
             }
         }
         
@@ -831,6 +876,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string TimeToReadMindInMin {
             get {
                 return ResourceManager.GetString("TimeToReadMindInMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Waves.
+        /// </summary>
+        internal static string WavesTitle {
+            get {
+                return ResourceManager.GetString("WavesTitle", resourceCulture);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace BrainWaves.ViewModels
         private readonly IAdapter _bluetoothAdapter;
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
-        private ObservableCollection<double> eegClickSamples = new ObservableCollection<double>();
+        private ObservableCollection<double> dataFromBleDevice = new ObservableCollection<double>();
         private SampleTranformService sampleTransformService;
         private bool isReadButtonEnabled = true;
         private string outputText;
@@ -37,6 +37,7 @@ namespace BrainWaves.ViewModels
         private GameViewModel gameModel;
         private double progress;
         private bool progressBarIsVisible = false;
+        private bool isTestMessage;
         #endregion
 
         #region ICommands
@@ -46,6 +47,7 @@ namespace BrainWaves.ViewModels
         public ICommand GenerateCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
         public ICommand CheckCommand { private set; get; }
+        public ICommand SendTestSignalCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -82,10 +84,10 @@ namespace BrainWaves.ViewModels
             set => SetProperty(ref isReadButtonEnabled, value);
         }
 
-        public ObservableCollection<double> EegClickSamples
+        public ObservableCollection<double> DataFromBleDevice
         {
-            get => eegClickSamples;
-            set => SetProperty(ref eegClickSamples, value);
+            get => dataFromBleDevice;
+            set => SetProperty(ref dataFromBleDevice, value);
         }
         
         public string SelectedSettings
@@ -173,27 +175,21 @@ namespace BrainWaves.ViewModels
             GoToSettingsCommand = new Command(async () => await GoToSettings());
             GenerateCommand = new Command(Generate);
             CheckCommand = new Command(CheckExercise);
+            SendTestSignalCommand = new Command(async () => await SendTestSignal());
         }
 
         private async Task StartMeasure()
         {
+            isTestMessage = false;
             IsReadButtonEnabled = false;
             IsGoToChartsEnabled = false;
-            EegClickSamples.Clear();
-            if (Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
-            {
-                await GetCharacteristicWithoutUUID();
-            }
-            else
-            {
-                await GetCharacteristic();
-            }
 
+            DataFromBleDevice.Clear();
             await StartReceiving();
-
             string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
             expectedNumberOfSamples = samplingFreq * timeToMeasureInMins * 60;
             Send(message);
+
             ProgressBarIsVisible = true;
             gameModel.StopwatchGame.Start();
             gameModel.IsBrainRelaxViewVisible = true;
@@ -305,6 +301,7 @@ namespace BrainWaves.ViewModels
                 IsBusy = true;
                 BusyMessage = Resources.Strings.Resource.DisconnectingMessage;
                 await _bluetoothAdapter.DisconnectDeviceAsync(_connectedDevice);
+                StopReceiving();
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch
@@ -324,7 +321,14 @@ namespace BrainWaves.ViewModels
             {
                 if (receiveCharacteristic != null)
                 {
-                    receiveCharacteristic.ValueUpdated += ReadValues;
+                    if(isTestMessage)
+                    {
+                        receiveCharacteristic.ValueUpdated += ReadTestValues;
+                    }
+                    else
+                    {
+                        receiveCharacteristic.ValueUpdated += ReadEEGValues;
+                    }
 
                     await receiveCharacteristic.StartUpdatesAsync();
                 }
@@ -338,10 +342,17 @@ namespace BrainWaves.ViewModels
 
         private void StopReceiving()
         {
-            receiveCharacteristic.ValueUpdated -= ReadValues;
+            if (isTestMessage)
+            {
+                receiveCharacteristic.ValueUpdated -= ReadTestValues;
+            }
+            else
+            {
+                receiveCharacteristic.ValueUpdated -= ReadEEGValues;
+            }
         }
 
-        private void ReadValues(object o, CharacteristicUpdatedEventArgs args)
+        private void ReadEEGValues(object o, CharacteristicUpdatedEventArgs args)
         {//todo upgrade
             BusyMessage = Resources.Strings.Resource.ReadingText;
             Task.Run(() =>
@@ -358,11 +369,11 @@ namespace BrainWaves.ViewModels
                 }
                 else
                 {
-                    EegClickSamples.Add(sampleTransformService.ConvertToVoltage(stringValue));
-                    OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {EegClickSamples.Count}/{expectedNumberOfSamples}";
+                    DataFromBleDevice.Add(sampleTransformService.ConvertToVoltage(stringValue));
+                    OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}";
                     // todo check possible loss of samples 
                     // these actions slows down receiving samples
-                    Progress = EegClickSamples.Count / expectedNumberOfSamples;
+                    Progress = DataFromBleDevice.Count / expectedNumberOfSamples;
                     if (gameModel.IsBrainActivityVisible)
                     {
                         if (gameModel.StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)
@@ -371,20 +382,39 @@ namespace BrainWaves.ViewModels
                             gameModel.LabelText = Resources.Strings.Resource.TimeToFocusText;
                         }
 
-                        if (!gameModel.IsBrainActivityViewVisible && EegClickSamples.Count % 100 == 0)
+                        if (!gameModel.IsBrainActivityViewVisible && DataFromBleDevice.Count % 100 == 0)
                         {
                             gameModel.LabelText = $"{Resources.Strings.Resource.TimeForRelaxText}";
-                            for (int i = 0; i < gameModel.DotCounter; i++)
-                            {
-                                gameModel.LabelText += ".";
-                            }
-                            gameModel.DotCounter++;
-                            if (gameModel.DotCounter > 3)
-                            {
-                                gameModel.DotCounter = 0;
-                            }
                         }
                     }
+                }
+            });
+        }
+
+        private void ReadTestValues(object o, CharacteristicUpdatedEventArgs args)
+        {
+            BusyMessage = Resources.Strings.Resource.ReadingText;
+            Task.Run(() =>
+            {
+                var receivedBytes = args.Characteristic.Value;
+                var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
+                if (string.Equals(stringValue, Constants.EndMeasureEndMessage))
+                {
+                    StopReceiving();
+                    IsReadButtonEnabled = true;
+                    ProgressBarIsVisible = false;
+                }
+                else
+                {
+                    if(double.TryParse(stringValue, out var value))
+                    {
+                        DataFromBleDevice.Add(value);
+                    }
+                    OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}"; // todo check len of look up table
+                    // todo check possible loss of samples 
+                    // these actions slows down receiving samples
+                    Progress = DataFromBleDevice.Count / expectedNumberOfSamples;// todo check len of look up table
+
                 }
             });
         }
@@ -395,13 +425,13 @@ namespace BrainWaves.ViewModels
             BusyMessage = Resources.Strings.Resource.OpenPageText;
             if(IsGenerateSinwaveVisible)
             {
-                await OpenPage(new ChartsPage(new List<double>(EegClickSamples), sinwaveModel.SinwaveSamplingFreq));
+                await OpenPage(new ChartsPage(new List<double>(DataFromBleDevice), sinwaveModel.SinwaveSamplingFreq));
             }
             else
             {
-                if(EegClickSamples.Count > 0)
+                if(DataFromBleDevice.Count > 0)
                 {
-                    await OpenPage(new ChartsPage(new List<double>(EegClickSamples), samplingFreq));
+                    await OpenPage(new ChartsPage(new List<double>(DataFromBleDevice), samplingFreq));
                 }
                 else
                 {
@@ -425,16 +455,16 @@ namespace BrainWaves.ViewModels
                 
                 if (FftSharp.Pad.IsPowerOfTwo(sinwaveModel.SinwaveLength))
                 {
-                    sinWave = HelperFunctions.GenerateSinWave(
+                    sinWave = TestSamplesGenerator.GenerateSinWave(
                         sinwaveModel.SinwaveSamplingFreq, sinwaveModel.SinwaveLength, sinwaveModel.SinwaveAmplitude, sinwaveModel.SinwaveFrequency);
                 }
                 else
                 {// zero padding so array is power of 2
-                    sinWave = FftSharp.Pad.ZeroPad(HelperFunctions.GenerateSinWave(
+                    sinWave = FftSharp.Pad.ZeroPad(TestSamplesGenerator.GenerateSinWave(
                         sinwaveModel.SinwaveSamplingFreq, sinwaveModel.SinwaveLength, sinwaveModel.SinwaveAmplitude, sinwaveModel.SinwaveFrequency));
                 }
 
-                EegClickSamples = new ObservableCollection<double>(sinWave);
+                DataFromBleDevice = new ObservableCollection<double>(sinWave);
                 IsBusy = false;
                 IsGoToChartsEnabled = true;
                 IsReadButtonEnabled = true;
@@ -528,6 +558,29 @@ namespace BrainWaves.ViewModels
             else if (gameModel.ExerciseCounter < Constants.DefaultNumOfExercisesToChangeLevel)
             {
                 gameModel.gameService.Level = DifficultyLevel.EASY;
+            }
+        }
+
+        private async Task SendTestSignal()
+        {
+            isTestMessage = true;
+            await StartReceiving();
+            string message = $"{Constants.TestSingalMessage}";
+            Send(message);
+        }
+
+        public async Task SetupCharacteristicAsync()
+        {
+            if(_connectedDevice != null)
+            {
+                if (Preferences.Get(Constants.PrefsAutomaticServiceChossing, true))
+                {
+                    await GetCharacteristicWithoutUUID();
+                }
+                else
+                {
+                    await GetCharacteristic();
+                }
             }
         }
 

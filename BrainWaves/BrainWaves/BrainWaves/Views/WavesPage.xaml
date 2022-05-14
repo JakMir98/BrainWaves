@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels" 
+             xmlns:customControls="clr-namespace:BrainWaves.CustomControls" 
+             xmlns:microchart="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             NavigationPage.HasNavigationBar="False"
+             x:Name="ScanPageRef"
+             BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
+             x:Class="BrainWaves.Views.WavesPage">
+    <ContentPage.BindingContext>
+        <viewModels:WavesViewModel/>
+    </ContentPage.BindingContext>
+    <StackLayout
+        Orientation="Vertical">
+        <StackLayout.Margin>
+            <OnPlatform x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,20,0,0" />
+            </OnPlatform>
+        </StackLayout.Margin>
+        <customControls:CustomToolbar
+            BackgroundColorProp="{StaticResource PrimaryColor}"
+            LeftButtonTextSizeProp="15.0"
+            LeftButtonIsVisibleProp="True"
+            LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
+            LeftButtonCommand="{Binding GoBackCommand}"
+            LeftButtonCommandParameter="{Binding GoBackCommand}"
+            LeftButtonTextColorProp="White"
+            TitleText="{Binding Title}"
+            LabelSizeProp="25.0"
+            CustomTextColorProp="White"
+            RightButtonTextSizeProp="15.0"
+            RightButtonIsVisibleProp="True"
+            RightButtonTitleTextProp="{Static resource:Resource.Settings}"
+            RightButtonCommand="{Binding GoToSettingsCommand}"
+            RightButtonCommandParameter="{Binding GoToSettingsCommand}"
+            RightButtonTextColorProp="White"/>
+
+        <ScrollView
+            Orientation="Vertical">
+            <StackLayout
+                Orientation="Vertical">
+
+                <Label
+                    Text="{Static resource:Resource.DeltaWavesText}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Large"
+                    Style="{StaticResource LabelStyleNormal}"/>
+
+                <microchart:ChartView
+                    Chart="{Binding DeltaWavesChart}"
+                    HeightRequest="250"
+                    Margin="0,0,0,40"/>
+
+                <Label
+                    Text="{Static resource:Resource.ThetaWavesText}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Large"
+                    Style="{StaticResource LabelStyleNormal}"/>
+
+                <microchart:ChartView
+                    Chart="{Binding ThetaWavesChart}"
+                    HeightRequest="250"
+                    Margin="0,0,0,40"/>
+
+                <Label
+                    Text="{Static resource:Resource.AlfaWavesText}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Large"
+                    Style="{StaticResource LabelStyleNormal}"/>
+
+                <microchart:ChartView
+                    Chart="{Binding AlfaWavesChart}"
+                    HeightRequest="250"
+                    Margin="0,0,0,40"/>
+
+                <Label
+                    Text="{Static resource:Resource.BetaWavesText}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    FontSize="Large"
+                    Style="{StaticResource LabelStyleNormal}"/>
+
+                <microchart:ChartView
+                    Chart="{Binding BetaWavesChart}"
+                    HeightRequest="250"
+                    Margin="0,0,0,40"/>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
+</ContentPage>

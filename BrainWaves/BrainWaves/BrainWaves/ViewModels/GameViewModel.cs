@@ -17,7 +17,6 @@ namespace BrainWaves.ViewModels
         private string labelText;
         private string correctAnswersText;
         public Stopwatch StopwatchGame { get; set; }
-        public int DotCounter { get; set; }
         public int ExerciseCounter { get; set; }
         public GameService gameService { get; }
         public int TotalExerciseCounter { get; set; }
@@ -27,7 +26,6 @@ namespace BrainWaves.ViewModels
         {
             gameService = new GameService();
             randomImageSource = new Uri("https://picsum.photos/200/300?random=1"); // in future maybe add calming photos 
-            DotCounter = 1;
             ExerciseCounter = 1;
             TotalExerciseCounter = 1;
             TotalCorrectAnswersCounter = 0;

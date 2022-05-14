@@ -22,5 +22,11 @@ namespace BrainWaves.Views
             InitializeComponent();
             BindingContext = new BluetoothDataViewModel(connectedDevice);
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await (BindingContext as BluetoothDataViewModel).SetupCharacteristicAsync();
+        }
     }
 }

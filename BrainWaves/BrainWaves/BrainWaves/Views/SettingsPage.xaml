@@ -113,6 +113,7 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Style="{StaticResource SimpleEntry}"
+                        BackgroundColor="Transparent"
                         Margin="0,0,0,20"
                         Keyboard="Numeric"/>
 
