@@ -54,12 +54,12 @@ namespace BrainWaves.Helpers
         public static List<Sample> GenerateFreqSamples(double[] input, int samplingFreq)
         {
             PerformZeroPaddingIfNeeded(ref input);
-            double[] psd = FftSharp.Transform.FFTpower(input);
-            double[] freq = FftSharp.Transform.FFTfreq(samplingFreq, psd.Length);
+            double[] fft = FftSharp.Transform.Absolute(FftSharp.Transform.FFT(input));
+            double[] freq = FftSharp.Transform.FFTfreq(samplingFreq, fft.Length);
             List<Sample> samples = new List<Sample>();
-            for(int i = 0; i < freq.Length; i++)
+            for(int i = 0; i < freq.Length/2; i++)
             {
-                samples.Add(new Sample(psd[i], freq[i]));
+                samples.Add(new Sample(fft[i], freq[i]*2));
             }
 
             return samples;

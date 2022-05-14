@@ -145,17 +145,8 @@ namespace BrainWaves.ViewModels
             get => numberOfShownSamplesFromTheMiddle;
             set
             {
-                int tempValue;
-                if(value > Constants.MaxLoadedSamples)
-                {
-                    tempValue = Constants.MaxLoadedSamples;
-                }
-                else
-                {
-                    tempValue = value;
-                }
-                SetProperty(ref numberOfShownSamplesFromTheMiddle, tempValue);
-                Preferences.Set(Constants.PrefsSamplesToShowFromMiddle, tempValue);
+                SetProperty(ref numberOfShownSamplesFromTheMiddle, value);
+                Preferences.Set(Constants.PrefsSamplesToShowFromMiddle, value);
                 CheckChartLabelOrientation();
             }
         }
@@ -361,7 +352,7 @@ namespace BrainWaves.ViewModels
                 freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces))
                 {
                     Label = $"{Math.Round(freqSamples[i].SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
-                    ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)}dB",
+                    ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)}_V",
                     Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
                     TextColor = SKColors.Gray,
                     ValueLabelColor = SKColors.Gray,
@@ -395,7 +386,7 @@ namespace BrainWaves.ViewModels
                     freqRecords.Add(new ChartEntry((float)Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)) // todo change to fft
                     {
                         Label = $"{Math.Round(freqSamples[i].SampleXValue, Constants.NumOfDecimalPlaces)} Hz",
-                        ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)} dB",
+                        ValueLabel = $"{Math.Round(freqSamples[i].SampleYValue, Constants.NumOfDecimalPlaces)}_V",
                         Color = SkiaSharp.SKColor.Parse(Constants.FrequencyChartColor),
                         TextColor = SKColors.Gray,
                         ValueLabelColor = SKColors.Gray,

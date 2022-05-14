@@ -112,7 +112,6 @@
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
-                        BackgroundColor="{Binding EntrySamplingFreqColor}"
                         Style="{StaticResource SimpleEntry}"
                         Margin="0,0,0,20"
                         Keyboard="Numeric"/>

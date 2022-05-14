@@ -35,6 +35,7 @@ namespace BrainWaves.Services
 
         public float ConvertToVoltage(string receivedString)
         {
+            //samples[i]//4095*3.3*2)-2.048)/3000
             if (float.TryParse(receivedString, out var voltage))
             {
                 return ((((voltage * McuVoltage * VoltageDividerRescale) / BitResolution) - ConstantComponent) * VolatgeScalingFactor) / EegAmplification;
