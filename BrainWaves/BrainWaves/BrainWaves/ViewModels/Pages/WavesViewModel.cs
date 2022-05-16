@@ -15,7 +15,7 @@ namespace BrainWaves.ViewModels
         private Chart thetaWavesChart;
         private Chart betaWavesChart;
         private Chart deltaWavesChart;
-        private List<List<BrainWaveSample>> brainWaveSamples;
+        private List<BrainWaveSample> brainWaveSamples;
         #endregion
 
         #region ICommands
@@ -26,16 +26,11 @@ namespace BrainWaves.ViewModels
         public WavesViewModel()
         {
             Title = Resources.Strings.Resource.WavesTitle;
-            brainWaveSamples = new List<List<BrainWaveSample>>();
-            for(int i = 0; i < Constants.DefaultNumOfMeasurementsForWaves; i++)
-            {
-                List<BrainWaveSample> samples = TestSamplesGenerator.GenerateBrainWaveSamples(1000);
-                brainWaveSamples.Add(samples);
-            }
+            brainWaveSamples = TestSamplesGenerator.GenerateBrainWaveSamples(Constants.DefaultNumOfMeasurementsForWaves);
             InitCommands();
             InitCharts();
         }
-        public WavesViewModel(List<List<BrainWaveSample>> samples)
+        public WavesViewModel(List<BrainWaveSample> samples)
         {
             Title = Resources.Strings.Resource.WavesTitle;
             brainWaveSamples = samples; // count should be 6
@@ -93,29 +88,21 @@ namespace BrainWaves.ViewModels
 
             for (int i = 0; i < brainWaveSamples.Count; i++)
             {
-                double average = 0;
                 switch (type)
                 {
                     case ChartType.ALFA:
-                        foreach (var sample in brainWaveSamples[i])
-                            average += sample.AlfaWave;
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].AlfaWave, i));
                         break;
                     case ChartType.BETA:
-                        foreach (var sample in brainWaveSamples[i])
-                            average += sample.BetaWave;
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].BetaWave, i));
                         break;
                     case ChartType.THETA:
-                        foreach (var sample in brainWaveSamples[i])
-                            average += sample.ThetaWave;
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].ThetaWave, i));
                         break;
                     case ChartType.DELTA:
-                        foreach (var sample in brainWaveSamples[i])
-                            average += sample.DeltaWave;
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].DeltaWave, i));
                         break;
                 }
-                
-                average /= brainWaveSamples[i].Count; // todo maybe change average to sth else
-                samples.Add(HelperFunctions.GenerateChartEntryForWaves(average, i));
             }
 
             switch (type)

@@ -138,7 +138,8 @@
                     Margin="10"
                     Text="{Static resource:Resource.ChartsWaves}"
                     Command="{Binding GoToWaveChartsPageCommand}"
-                    IsEnabled="{Binding IsGoToChartsEnabled}"/>
+                    />
+                <!--"IsEnabled="{Binding IsGoToChartsEnabled}"-->
             </StackLayout>
 
             <StackLayout

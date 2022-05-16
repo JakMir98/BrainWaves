@@ -47,7 +47,7 @@
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Large"
-                    Style="{StaticResource LabelStyleNormal}"/>
+                    Style="{StaticResource LabelStyleTitle}"/>
 
                 <microchart:ChartView
                     Chart="{Binding DeltaWavesChart}"
@@ -59,7 +59,7 @@
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Large"
-                    Style="{StaticResource LabelStyleNormal}"/>
+                    Style="{StaticResource LabelStyleTitle}"/>
 
                 <microchart:ChartView
                     Chart="{Binding ThetaWavesChart}"
@@ -71,7 +71,7 @@
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Large"
-                    Style="{StaticResource LabelStyleNormal}"/>
+                    Style="{StaticResource LabelStyleTitle}"/>
 
                 <microchart:ChartView
                     Chart="{Binding AlfaWavesChart}"
@@ -83,7 +83,7 @@
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     FontSize="Large"
-                    Style="{StaticResource LabelStyleNormal}"/>
+                    Style="{StaticResource LabelStyleTitle}"/>
 
                 <microchart:ChartView
                     Chart="{Binding BetaWavesChart}"

@@ -30,6 +30,7 @@ namespace BrainWaves.Helpers
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";
         public const string StartMeasureStartMessage = "start";
+        public const string StartWavesMeasureStartMessage = "waves";
         public const char Delimeter = ';';
         public const string EndMeasureEndMessage = "end";
         public const string TestSingalMessage = "test";

@@ -15,7 +15,7 @@ namespace BrainWaves.Views
             InitializeComponent();
         }
 
-        public WavesPage(List<List<BrainWaveSample>> samples)
+        public WavesPage(List<BrainWaveSample> samples)
         {
             InitializeComponent();
             BindingContext = new WavesViewModel(samples);

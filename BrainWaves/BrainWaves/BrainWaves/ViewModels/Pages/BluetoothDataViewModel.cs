@@ -8,6 +8,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,6 +25,7 @@ namespace BrainWaves.ViewModels
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
         private ObservableCollection<double> dataFromBleDevice = new ObservableCollection<double>();
+        private List<List<double>> dataToWavesPage = new List<List<double>>();
         private SampleTranformService sampleTransformService;
         private string outputText;
         private string selectedSettings;
@@ -38,14 +40,12 @@ namespace BrainWaves.ViewModels
         private GameViewModel gameModel;
         private double progress;
         private bool progressBarIsVisible = false;
-        private bool isTestMessage;
         private string selectedMeasurement;
         private bool isTimeFreqMesVisible;
         private bool isWavesVisible;
         private bool isTestSigVisible;
         private bool isGameVisible;
         private int dataPartCounter = 0;
-        List<List<BrainWaveSample>> brainWavesSamples = new List<List<BrainWaveSample>>();
         #endregion
 
         #region ICommands
@@ -226,12 +226,11 @@ namespace BrainWaves.ViewModels
 
         private async Task StartMeasure()
         {
-            isTestMessage = false;
             IsReadButtonEnabled = false;
             IsGoToChartsEnabled = false;
 
             DataFromBleDevice.Clear();
-            await StartReceiving();
+            await StartReceiving(MeasurementType.TIME_FREQUENCY_MEASUREMENT);
             string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
             expectedNumberOfSamples = samplingFreq * timeToMeasureInMins * 60;
             Send(message);
@@ -245,25 +244,29 @@ namespace BrainWaves.ViewModels
 
         private async Task StartOneHourMeasure()
         {
-
-            /*
-            isTestMessage = false;
             IsReadButtonEnabled = false;
             IsGoToChartsEnabled = false;
 
             DataFromBleDevice.Clear();
             dataPartCounter = 0;
-            await StartReceiving();
-            string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
-            expectedNumberOfSamples = 200 * 10 * 60; // freq * timeInMinutes*scalingToMinutes
-            Send(message);
+            await StartReceiving(MeasurementType.WAVES_MEASUREMENT);
+
+            SendStartTenMinuteMeasurementMessage();
 
             ProgressBarIsVisible = true;
             gameModel.StopwatchGame.Start();
             gameModel.IsBrainRelaxViewVisible = true;
             gameModel.IsBrainActivityViewVisible = false;
             gameModel.LabelText = Resources.Strings.Resource.TimeForRelaxText;
-            */
+        }
+
+        private void SendStartTenMinuteMeasurementMessage()
+        {
+            int fs = 200;
+            int measureInMin = 10;
+            string message = $"{Constants.StartWavesMeasureStartMessage}{Constants.Delimeter}{fs}{Constants.Delimeter}{measureInMin}";
+            expectedNumberOfSamples = fs * measureInMin * 60; // freq * timeInMinutes * scalingToMinutes
+            Send(message);
         }
 
         private async Task GetCharacteristic()
@@ -370,7 +373,6 @@ namespace BrainWaves.ViewModels
                 IsBusy = true;
                 BusyMessage = Resources.Strings.Resource.DisconnectingMessage;
                 await _bluetoothAdapter.DisconnectDeviceAsync(_connectedDevice);
-                StopReceiving();
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch
@@ -384,25 +386,24 @@ namespace BrainWaves.ViewModels
             }
         }
 
-        private async Task StartReceiving()
+        private async Task StartReceiving(MeasurementType type)
         {
             try
             {
                 if (receiveCharacteristic != null)
                 {
-                    if(isTestMessage)
+                    switch(type)
                     {
-                        receiveCharacteristic.ValueUpdated += ReadTestValues;
+                        case MeasurementType.TIME_FREQUENCY_MEASUREMENT:
+                            receiveCharacteristic.ValueUpdated += ReadEEGValues;
+                            break;
+                        case MeasurementType.TEST_MEASUREMENT:
+                            receiveCharacteristic.ValueUpdated += ReadTestValues;
+                            break;
+                        case MeasurementType.WAVES_MEASUREMENT:
+                            receiveCharacteristic.ValueUpdated += ReadOneHourMeasurement;
+                            break;
                     }
-                    else if(!isTestMessage && isTimeFreqMesVisible)
-                    {
-                        receiveCharacteristic.ValueUpdated += ReadEEGValues;
-                    }
-                    else
-                    {
-                        receiveCharacteristic.ValueUpdated += ReadOneHourMeasurement;
-                    }
-
                     await receiveCharacteristic.StartUpdatesAsync();
                 }
             }
@@ -413,19 +414,19 @@ namespace BrainWaves.ViewModels
             }
         }
 
-        private void StopReceiving()
+        private void StopReceiving(MeasurementType type)
         {
-            if (isTestMessage)
+            switch (type)
             {
-                receiveCharacteristic.ValueUpdated -= ReadTestValues;
-            }
-            else if (!isTestMessage && isTimeFreqMesVisible)
-            {
-                receiveCharacteristic.ValueUpdated -= ReadEEGValues;
-            }
-            else
-            {
-                receiveCharacteristic.ValueUpdated -= ReadOneHourMeasurement;
+                case MeasurementType.TIME_FREQUENCY_MEASUREMENT:
+                    receiveCharacteristic.ValueUpdated -= ReadEEGValues;
+                    break;
+                case MeasurementType.TEST_MEASUREMENT:
+                    receiveCharacteristic.ValueUpdated -= ReadTestValues;
+                    break;
+                case MeasurementType.WAVES_MEASUREMENT:
+                    receiveCharacteristic.ValueUpdated -= ReadOneHourMeasurement;
+                    break;
             }
         }
 
@@ -438,7 +439,7 @@ namespace BrainWaves.ViewModels
                 var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
                 if (string.Equals(stringValue, Constants.EndMeasureEndMessage))
                 {
-                    StopReceiving();
+                    StopReceiving(MeasurementType.TIME_FREQUENCY_MEASUREMENT);
                     IsReadButtonEnabled = true;
                     IsGoToChartsEnabled = true;
                     gameModel.StopwatchGame.Reset();
@@ -450,20 +451,8 @@ namespace BrainWaves.ViewModels
                     OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}";
                     // todo check possible loss of samples 
                     // these actions slows down receiving samples
-                    Progress = DataFromBleDevice.Count / expectedNumberOfSamples;
-                    if (gameModel.IsBrainActivityVisible)
-                    {
-                        if (gameModel.StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)
-                        {
-                            gameModel.IsBrainActivityViewVisible = true;
-                            gameModel.LabelText = Resources.Strings.Resource.TimeToFocusText;
-                        }
-
-                        if (!gameModel.IsBrainActivityViewVisible && DataFromBleDevice.Count % 100 == 0)
-                        {
-                            gameModel.LabelText = $"{Resources.Strings.Resource.TimeForRelaxText}";
-                        }
-                    }
+                    UpdateProgressBar(expectedNumberOfSamples);
+                    UpdateUiGame();
                 }
             });
         }
@@ -477,7 +466,7 @@ namespace BrainWaves.ViewModels
                 var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
                 if (string.Equals(stringValue, Constants.EndMeasureEndMessage))
                 {
-                    StopReceiving();
+                    StopReceiving(MeasurementType.TEST_MEASUREMENT);
                     IsReadButtonEnabled = true;
                     ProgressBarIsVisible = false;
                 }
@@ -487,11 +476,7 @@ namespace BrainWaves.ViewModels
                     {
                         DataFromBleDevice.Add(value);
                     }
-                    OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}"; // todo check len of look up table
-                    // todo check possible loss of samples 
-                    // these actions slows down receiving samples
-                    Progress = DataFromBleDevice.Count / expectedNumberOfSamples;// todo check len of look up table
-
+                    UpdateProgressBar(expectedNumberOfSamples);// todo check len of look up table
                 }
             });
         }
@@ -508,7 +493,7 @@ namespace BrainWaves.ViewModels
                     dataPartCounter++;
                     if(dataPartCounter >= Constants.DefaultNumOfMeasurementsForWaves)
                     {
-                        StopReceiving();
+                        StopReceiving(MeasurementType.WAVES_MEASUREMENT);
                         IsReadButtonEnabled = true;
                         IsGoToChartsEnabled = true;
                         gameModel.StopwatchGame.Reset();
@@ -516,7 +501,10 @@ namespace BrainWaves.ViewModels
                     }
                     else
                     {
-                        //todo send another start signal
+                        dataToWavesPage.Add(new List<double>(DataFromBleDevice));
+                        DataFromBleDevice.Clear();
+                        SendStartTenMinuteMeasurementMessage();
+                        // parse values maybe??
                     }
                 }
                 else
@@ -525,25 +513,34 @@ namespace BrainWaves.ViewModels
                     {
                         DataFromBleDevice.Add(value); // raw value
                     }
-
-                    OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}";
-
-                    Progress = DataFromBleDevice.Count / expectedNumberOfSamples;
-                    if (gameModel.IsBrainActivityVisible)
-                    {
-                        if (gameModel.StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)
-                        {
-                            gameModel.IsBrainActivityViewVisible = true;
-                            gameModel.LabelText = Resources.Strings.Resource.TimeToFocusText;
-                        }
-
-                        if (!gameModel.IsBrainActivityViewVisible && DataFromBleDevice.Count % 100 == 0)
-                        {
-                            gameModel.LabelText = $"{Resources.Strings.Resource.TimeForRelaxText}";
-                        }
-                    }
+                    UpdateProgressBar(expectedNumberOfSamples);
+                    UpdateUiGame();
                 }
             });
+        }
+
+        private void UpdateProgressBar(float maxReceivedNumOfSamples)
+        {
+            OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{maxReceivedNumOfSamples}";
+
+            Progress = DataFromBleDevice.Count / maxReceivedNumOfSamples;
+        }
+
+        private void UpdateUiGame()
+        {
+            if (gameModel.IsBrainActivityVisible)
+            {
+                if (gameModel.StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)
+                {
+                    gameModel.IsBrainActivityViewVisible = true;
+                    gameModel.LabelText = Resources.Strings.Resource.TimeToFocusText;
+                }
+
+                if (!gameModel.IsBrainActivityViewVisible && DataFromBleDevice.Count % 100 == 0)
+                {
+                    gameModel.LabelText = $"{Resources.Strings.Resource.TimeForRelaxText}";
+                }
+            }
         }
 
         private async Task GoToChartsPage()
@@ -690,8 +687,7 @@ namespace BrainWaves.ViewModels
 
         private async Task SendTestSignal()
         {
-            isTestMessage = true;
-            await StartReceiving();
+            await StartReceiving(MeasurementType.TEST_MEASUREMENT);
             string message = $"{Constants.TestSingalMessage}";
             Send(message);
         }
@@ -713,14 +709,71 @@ namespace BrainWaves.ViewModels
 
         private async Task GoToWavesChartPage()
         {
-            List<List<BrainWaveSample>> brainWavesSamples = new List<List<BrainWaveSample>>();
-            /*Generate random values*/
-            for (int i = 0; i < Constants.DefaultNumOfMeasurementsForWaves; i++)
+            IsBusy = true;
+            Random random = new Random();
+            for(int i = 0; i < 6; i++)
             {
-                List<BrainWaveSample> sample = TestSamplesGenerator.GenerateBrainWaveSamples(500);
-                brainWavesSamples.Add(sample);
+                List<double> samples = new List<double>();
+                for(int j =0; j < 20000; j++)
+                {
+                    if(j < 5000)
+                    {
+                        samples.Add(8 + random.NextDouble());
+                    }
+                    else if (j < 10000)
+                    {
+                        samples.Add(3 + random.NextDouble());
+                    }
+                    else if (j < 15000)
+                    {
+                        samples.Add(6 + random.NextDouble());
+                    }
+                    else
+                    {
+                        samples.Add(2 + random.NextDouble());
+                    }
+                }
+                dataToWavesPage.Add(samples);
             }
-            
+
+            List<BrainWaveSample> brainWavesSamples = new List<BrainWaveSample>();
+            foreach(var list in dataToWavesPage)
+            {
+                List<Sample> freqSamples = new List<Sample>();
+                await Task.Run(() =>
+                {
+                    BusyMessage = Resources.Strings.Resource.CalculateFFT;
+                    freqSamples = HelperFunctions.GenerateFreqSamples(list.ToArray(), 200);
+                });
+
+                IEnumerable<double> alfaWaves = (from sample in freqSamples
+                                          where sample.SampleXValue >= 8 && sample.SampleXValue <= 13
+                                          select sample.SampleYValue).Cast<double>();
+                double avgAlfa = AverageYValues(alfaWaves.ToList());
+
+                IEnumerable<double> betaWaves = ((from sample in freqSamples
+                                                         where sample.SampleXValue >= 3 && sample.SampleXValue <= 30
+                                                         select sample.SampleYValue)).Cast<double>();
+                double avgBeta = AverageYValues(betaWaves.ToList());
+
+                IEnumerable<double> thetaWaves = ((from sample in freqSamples
+                                                         where sample.SampleXValue >= 4 && sample.SampleXValue <= 8
+                                                         select sample.SampleYValue)).Cast<double>();
+                double avgTheta = AverageYValues(thetaWaves.ToList());
+
+                IEnumerable<double> deltaWaves= ((from sample in freqSamples
+                                                         where sample.SampleXValue >= 0.5 && sample.SampleXValue <= 3
+                                                         select sample.SampleYValue)).Cast<double>();
+                double avgDelta = AverageYValues(deltaWaves.ToList());
+                
+                brainWavesSamples.Add(new BrainWaveSample()
+                {
+                    AlfaWave = avgAlfa,
+                    BetaWave = avgBeta,
+                    ThetaWave = avgTheta,
+                    DeltaWave = avgDelta
+                });
+            }
             await OpenPage(new WavesPage(brainWavesSamples));
         }
 
@@ -749,6 +802,27 @@ namespace BrainWaves.ViewModels
             }
         }
 
+        private double AverageYValues(List<Sample> samples)
+        {
+            double avg = 0;
+            foreach (var item in samples)
+            {
+                avg = item.SampleYValue;
+            }
+            avg /= samples.Count;
+            return avg;
+        }
+
+        private double AverageYValues(List<double> samples)
+        {
+            double avg = 0;
+            foreach (var item in samples)
+            {
+                avg = item;
+            }
+            avg /= samples.Count;
+            return avg;
+        }
         #endregion
     }
 }
