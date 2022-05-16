@@ -28,7 +28,7 @@
             LeftButtonCommandParameter="{Binding GoBackCommand}"
             LeftButtonTextColorProp="White"
             TitleText="{Binding Title}"
-            LabelSizeProp="25.0"
+            LabelSizeProp="15"
             CustomTextColorProp="White"
             RightButtonTextSizeProp="15.0"
             RightButtonIsVisibleProp="True"

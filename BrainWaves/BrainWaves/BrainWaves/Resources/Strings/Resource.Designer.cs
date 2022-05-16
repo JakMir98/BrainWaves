@@ -214,11 +214,20 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Charts.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Charts t/f.
         /// </summary>
         internal static string Charts {
             get {
                 return ResourceManager.GetString("Charts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Charts waves.
+        /// </summary>
+        internal static string ChartsWaves {
+            get {
+                return ResourceManager.GetString("ChartsWaves", resourceCulture);
             }
         }
         
@@ -529,6 +538,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Typ pomiaru.
+        /// </summary>
+        internal static string MeasurementType {
+            get {
+                return ResourceManager.GetString("MeasurementType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu There is no data to share.
         /// </summary>
         internal static string NoData {
@@ -727,6 +745,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Start 1h measure.
+        /// </summary>
+        internal static string StartOneHourMeasure {
+            get {
+                return ResourceManager.GetString("StartOneHourMeasure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Measure 15 min 500Hz.
         /// </summary>
         internal static string StartSettingAdvanced {
@@ -819,6 +846,15 @@ namespace BrainWaves.Resources.Strings {
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Test signal.
         /// </summary>
+        internal static string TestMeasurements {
+            get {
+                return ResourceManager.GetString("TestMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Test signal.
+        /// </summary>
         internal static string TestSignalButton {
             get {
                 return ResourceManager.GetString("TestSignalButton", resourceCulture);
@@ -862,6 +898,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Simple measurement.
+        /// </summary>
+        internal static string TimeFreqMeasurement {
+            get {
+                return ResourceManager.GetString("TimeFreqMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Focus and solve exercises.
         /// </summary>
         internal static string TimeToFocusText {
@@ -876,6 +921,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string TimeToReadMindInMin {
             get {
                 return ResourceManager.GetString("TimeToReadMindInMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Specific waves measurement.
+        /// </summary>
+        internal static string WavesMeasurements {
+            get {
+                return ResourceManager.GetString("WavesMeasurements", resourceCulture);
             }
         }
         

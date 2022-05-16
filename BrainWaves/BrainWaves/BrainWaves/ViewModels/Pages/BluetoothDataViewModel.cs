@@ -1,4 +1,5 @@
 ﻿using BrainWaves.Helpers;
+using BrainWaves.Models;
 using BrainWaves.Services;
 using BrainWaves.Views;
 using Plugin.BLE;
@@ -24,13 +25,13 @@ namespace BrainWaves.ViewModels
         private ICharacteristic receiveCharacteristic;
         private ObservableCollection<double> dataFromBleDevice = new ObservableCollection<double>();
         private SampleTranformService sampleTransformService;
-        private bool isReadButtonEnabled = true;
         private string outputText;
         private string selectedSettings;
         private List<string> availableSettings;
         private int samplingFreq;
         private float timeToMeasureInMins;
         private float expectedNumberOfSamples;
+        private bool isReadButtonEnabled = true;
         private bool isGoToChartsEnabled = false;
         private bool isGenerateSinwaveVisible = false;
         private GenerateSinwaveViewModel sinwaveModel; 
@@ -38,16 +39,25 @@ namespace BrainWaves.ViewModels
         private double progress;
         private bool progressBarIsVisible = false;
         private bool isTestMessage;
+        private string selectedMeasurement;
+        private bool isTimeFreqMesVisible;
+        private bool isWavesVisible;
+        private bool isTestSigVisible;
+        private bool isGameVisible;
+        private int dataPartCounter = 0;
+        List<List<BrainWaveSample>> brainWavesSamples = new List<List<BrainWaveSample>>();
         #endregion
 
         #region ICommands
         public ICommand StartCommand { private set; get; }
+        public ICommand StartOnehourMeasurementCommand { private set; get; }
         public ICommand SendCommand { private set; get; }
         public ICommand GoToChartsCommand { private set; get; }
         public ICommand GenerateCommand { private set; get; }
         public ICommand GoToSettingsCommand { private set; get; }
         public ICommand CheckCommand { private set; get; }
         public ICommand SendTestSignalCommand { private set; get; }
+        public ICommand GoToWaveChartsPageCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -144,6 +154,39 @@ namespace BrainWaves.ViewModels
             get => progressBarIsVisible;
             set => SetProperty(ref progressBarIsVisible, value);
         }
+
+        public string SelectedMeasurement
+        {
+            get => selectedMeasurement;
+            set
+            {
+                SetProperty(ref selectedMeasurement, value);
+                HandleSelectedMeasurement(value);
+            }
+        }
+        public bool IsTimeFreqMesVisible
+        {
+            get => isTimeFreqMesVisible;
+            set => SetProperty(ref isTimeFreqMesVisible, value);
+        }
+
+        public bool IsWavesVisible
+        {
+            get => isWavesVisible;
+            set => SetProperty(ref isWavesVisible, value);
+        }
+
+        public bool IsTestSigVisible
+        {
+            get => isTestSigVisible;
+            set => SetProperty(ref isTestSigVisible, value);
+        }
+
+        public bool IsGameVisible
+        {
+            get => isGameVisible;
+            set => SetProperty(ref isGameVisible, value);
+        }
         #endregion
 
         #region Functions
@@ -164,7 +207,8 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.StartSettingAdvanced,
                 Resources.Strings.Resource.StartSettingFull
             };
-            SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;            
+            SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;   
+            SelectedMeasurement = Resources.Strings.Resource.TimeFreqMeasurement;
         }
 
         private void InitCommands()
@@ -176,6 +220,8 @@ namespace BrainWaves.ViewModels
             GenerateCommand = new Command(Generate);
             CheckCommand = new Command(CheckExercise);
             SendTestSignalCommand = new Command(async () => await SendTestSignal());
+            GoToWaveChartsPageCommand = new Command(async () => await GoToWavesChartPage());
+            StartOnehourMeasurementCommand = new Command(async () => await StartOneHourMeasure());
         }
 
         private async Task StartMeasure()
@@ -195,6 +241,29 @@ namespace BrainWaves.ViewModels
             gameModel.IsBrainRelaxViewVisible = true;
             gameModel.IsBrainActivityViewVisible = false;
             gameModel.LabelText = Resources.Strings.Resource.TimeForRelaxText;
+        }
+
+        private async Task StartOneHourMeasure()
+        {
+
+            /*
+            isTestMessage = false;
+            IsReadButtonEnabled = false;
+            IsGoToChartsEnabled = false;
+
+            DataFromBleDevice.Clear();
+            dataPartCounter = 0;
+            await StartReceiving();
+            string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
+            expectedNumberOfSamples = 200 * 10 * 60; // freq * timeInMinutes*scalingToMinutes
+            Send(message);
+
+            ProgressBarIsVisible = true;
+            gameModel.StopwatchGame.Start();
+            gameModel.IsBrainRelaxViewVisible = true;
+            gameModel.IsBrainActivityViewVisible = false;
+            gameModel.LabelText = Resources.Strings.Resource.TimeForRelaxText;
+            */
         }
 
         private async Task GetCharacteristic()
@@ -325,9 +394,13 @@ namespace BrainWaves.ViewModels
                     {
                         receiveCharacteristic.ValueUpdated += ReadTestValues;
                     }
-                    else
+                    else if(!isTestMessage && isTimeFreqMesVisible)
                     {
                         receiveCharacteristic.ValueUpdated += ReadEEGValues;
+                    }
+                    else
+                    {
+                        receiveCharacteristic.ValueUpdated += ReadOneHourMeasurement;
                     }
 
                     await receiveCharacteristic.StartUpdatesAsync();
@@ -346,14 +419,18 @@ namespace BrainWaves.ViewModels
             {
                 receiveCharacteristic.ValueUpdated -= ReadTestValues;
             }
-            else
+            else if (!isTestMessage && isTimeFreqMesVisible)
             {
                 receiveCharacteristic.ValueUpdated -= ReadEEGValues;
+            }
+            else
+            {
+                receiveCharacteristic.ValueUpdated -= ReadOneHourMeasurement;
             }
         }
 
         private void ReadEEGValues(object o, CharacteristicUpdatedEventArgs args)
-        {//todo upgrade
+        {
             BusyMessage = Resources.Strings.Resource.ReadingText;
             Task.Run(() =>
             {
@@ -415,6 +492,56 @@ namespace BrainWaves.ViewModels
                     // these actions slows down receiving samples
                     Progress = DataFromBleDevice.Count / expectedNumberOfSamples;// todo check len of look up table
 
+                }
+            });
+        }
+
+        private void ReadOneHourMeasurement(object o, CharacteristicUpdatedEventArgs args)
+        {//todo upgrade
+            BusyMessage = Resources.Strings.Resource.ReadingText;
+            Task.Run(() =>
+            {
+                var receivedBytes = args.Characteristic.Value;
+                var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
+                if (string.Equals(stringValue, Constants.EndMeasureEndMessage))
+                {
+                    dataPartCounter++;
+                    if(dataPartCounter >= Constants.DefaultNumOfMeasurementsForWaves)
+                    {
+                        StopReceiving();
+                        IsReadButtonEnabled = true;
+                        IsGoToChartsEnabled = true;
+                        gameModel.StopwatchGame.Reset();
+                        ProgressBarIsVisible = false;
+                    }
+                    else
+                    {
+                        //todo send another start signal
+                    }
+                }
+                else
+                {
+                    if (double.TryParse(stringValue, out var value))
+                    {
+                        DataFromBleDevice.Add(value); // raw value
+                    }
+
+                    OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}";
+
+                    Progress = DataFromBleDevice.Count / expectedNumberOfSamples;
+                    if (gameModel.IsBrainActivityVisible)
+                    {
+                        if (gameModel.StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)
+                        {
+                            gameModel.IsBrainActivityViewVisible = true;
+                            gameModel.LabelText = Resources.Strings.Resource.TimeToFocusText;
+                        }
+
+                        if (!gameModel.IsBrainActivityViewVisible && DataFromBleDevice.Count % 100 == 0)
+                        {
+                            gameModel.LabelText = $"{Resources.Strings.Resource.TimeForRelaxText}";
+                        }
+                    }
                 }
             });
         }
@@ -581,6 +708,44 @@ namespace BrainWaves.ViewModels
                 {
                     await GetCharacteristic();
                 }
+            }
+        }
+
+        private async Task GoToWavesChartPage()
+        {
+            List<List<BrainWaveSample>> brainWavesSamples = new List<List<BrainWaveSample>>();
+            /*Generate random values*/
+            for (int i = 0; i < Constants.DefaultNumOfMeasurementsForWaves; i++)
+            {
+                List<BrainWaveSample> sample = TestSamplesGenerator.GenerateBrainWaveSamples(500);
+                brainWavesSamples.Add(sample);
+            }
+            
+            await OpenPage(new WavesPage(brainWavesSamples));
+        }
+
+        private void HandleSelectedMeasurement(string value)
+        {
+            if(value == Resources.Strings.Resource.TimeFreqMeasurement)
+            {
+                IsTimeFreqMesVisible = true;
+                IsWavesVisible = false;
+                IsTestSigVisible = false;
+                IsGameVisible = true;
+            }
+            else if(value == Resources.Strings.Resource.WavesMeasurements)
+            {
+                IsTimeFreqMesVisible = false;
+                IsWavesVisible = true;
+                IsTestSigVisible = false;
+                IsGameVisible = true;
+            }
+            else if(value == Resources.Strings.Resource.TestMeasurements)
+            {
+                IsTimeFreqMesVisible = false;
+                IsWavesVisible = false;
+                IsTestSigVisible = true;
+                IsGameVisible = false;
             }
         }
 

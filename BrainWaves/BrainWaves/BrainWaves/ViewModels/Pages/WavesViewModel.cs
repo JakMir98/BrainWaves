@@ -27,7 +27,7 @@ namespace BrainWaves.ViewModels
         {
             Title = Resources.Strings.Resource.WavesTitle;
             brainWaveSamples = new List<List<BrainWaveSample>>();
-            for(int i = 0; i < 6; i++)
+            for(int i = 0; i < Constants.DefaultNumOfMeasurementsForWaves; i++)
             {
                 List<BrainWaveSample> samples = TestSamplesGenerator.GenerateBrainWaveSamples(1000);
                 brainWaveSamples.Add(samples);

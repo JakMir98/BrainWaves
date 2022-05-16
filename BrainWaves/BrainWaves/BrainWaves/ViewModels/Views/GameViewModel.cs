@@ -1,12 +1,15 @@
-﻿using BrainWaves.Services;
+﻿using BrainWaves.Helpers;
+using BrainWaves.Services;
 using System;
 using System.Diagnostics;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
 {
     public  class GameViewModel : BaseViewModel
     {
+        #region Variables
         private bool isBrainActivityVisible = false;
         private ImageSource randomImageSource;
         private string answerEntryText;
@@ -16,12 +19,18 @@ namespace BrainWaves.ViewModels
         private Color answerColor;
         private string labelText;
         private string correctAnswersText;
+        #endregion
+
+        #region ICommands
+        public ICommand CheckCommand { private set; get; }
+        #endregion
         public Stopwatch StopwatchGame { get; set; }
         public int ExerciseCounter { get; set; }
         public GameService gameService { get; }
         public int TotalExerciseCounter { get; set; }
         public int TotalCorrectAnswersCounter { get; set; }
 
+        #region Constructors
         public GameViewModel()
         {
             gameService = new GameService();
@@ -30,8 +39,11 @@ namespace BrainWaves.ViewModels
             TotalExerciseCounter = 1;
             TotalCorrectAnswersCounter = 0;
             StopwatchGame = new Stopwatch();
+            CheckCommand = new Command(CheckExercise);
         }
+        #endregion
 
+        #region INotify Getters and Setters
         public bool IsBrainActivityVisible
         {
             get => isBrainActivityVisible;
@@ -88,5 +100,54 @@ namespace BrainWaves.ViewModels
             get => correctAnswersText;
             set => SetProperty(ref correctAnswersText, value);
         }
+        #endregion
+
+        #region Functions
+        private void CheckExercise()
+        {
+            if (int.TryParse(AnswerEntryText, out var number))
+            {
+                if (gameService.CurrentAnswer == number)
+                {
+                    AnswerColor = Color.Green;
+                    TotalCorrectAnswersCounter++;
+                }
+                else
+                {
+                    AnswerColor = Color.Red;
+                }
+            }
+            else
+            {
+                AnswerColor = Color.Red;
+            }
+
+            AnswerEntryText = string.Empty;
+            (gameService.CurrentAnswer, QuestionLabelText) = gameService.GenerateExercise();
+            CorrectAnswersText = $"{Resources.Strings.Resource.CorrectAnswersText}{TotalCorrectAnswersCounter}/{TotalExerciseCounter}";
+            TotalExerciseCounter++;
+            ExerciseCounter++;
+            if (ExerciseCounter > 4 * Constants.DefaultNumOfExercisesToChangeLevel)
+            {
+                ExerciseCounter = 0;
+            }
+            else if (ExerciseCounter > 3 * Constants.DefaultNumOfExercisesToChangeLevel)
+            {
+                gameService.Level = DifficultyLevel.ULTRA;
+            }
+            else if (ExerciseCounter > 2 * Constants.DefaultNumOfExercisesToChangeLevel)
+            {
+                gameService.Level = DifficultyLevel.HARD;
+            }
+            else if (ExerciseCounter > Constants.DefaultNumOfExercisesToChangeLevel)
+            {
+                gameService.Level = DifficultyLevel.MEDIUM;
+            }
+            else if (ExerciseCounter < Constants.DefaultNumOfExercisesToChangeLevel)
+            {
+                gameService.Level = DifficultyLevel.EASY;
+            }
+        }
+        #endregion
     }
 }

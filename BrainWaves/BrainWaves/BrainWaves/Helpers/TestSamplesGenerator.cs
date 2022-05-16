@@ -57,10 +57,10 @@ namespace BrainWaves.Helpers
             for (int i = 0; i < numOfValues; i++)
             {
                 samples.Add(new BrainWaveSample(
-                    random.NextDouble() * 10,
-                    random.NextDouble() * 10,
-                    random.NextDouble() * 10,
-                    random.NextDouble() * 10));
+                    random.NextDouble() * random.Next(1, 10),
+                    random.NextDouble() * random.Next(1, 10),
+                    random.NextDouble() * random.Next(1, 10),
+                    random.NextDouble() * random.Next(1, 10)));
             }
 
             return samples;

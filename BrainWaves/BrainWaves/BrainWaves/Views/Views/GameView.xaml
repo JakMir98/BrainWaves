@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:customControls="clr-namespace:BrainWaves.CustomControls" 
+             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             x:Class="BrainWaves.Views.Views.GameView">
+    <ContentView.BindingContext>
+        <viewModels:GameViewModel/>
+    </ContentView.BindingContext>
+  <ContentView.Content>
+      <ScrollView
+          Orientation="Vertical">
+            <StackLayout
+                Orientation="Vertical">
+                <customControls:CheckboxWithLabel
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="20"
+                    LabelTextColorProp="Red"
+                    CheckboxColorProp="Red"
+                    TitleText="{Static resource:Resource.BrainActivity}"
+                    IsChecked="{Binding IsBrainActivityVisible, Mode=TwoWay}" />
+
+                <StackLayout
+                    Margin="20"
+                    IsVisible="{Binding IsBrainActivityVisible}"
+                    Orientation="Vertical">
+
+                    <Label 
+                        Text="{Binding LabelText}" 
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"
+                        IsVisible="{Binding IsBrainRelaxViewVisible}"/>
+
+                    <Grid 
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding IsBrainActivityViewVisible}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="6*" />
+                        </Grid.ColumnDefinitions>
+                        <Label 
+                            Grid.Column="0"
+                            Text="{Binding QuestionLabelText}" 
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Style="{StaticResource LabelStyleNormal}"/>
+
+                        <Entry
+                            Grid.Column="1"
+                            Placeholder="{Static resource:Resource.AnswerText}"
+                            PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                            BackgroundColor="{Binding AnswerColor}"
+                            VerticalTextAlignment="Center"
+                            Text="{Binding AnswerEntryText,Mode=TwoWay}"
+                            Style="{StaticResource SimpleEntry}"
+                            ReturnCommand="{Binding CheckCommand}"
+                            Keyboard="Numeric"/>
+
+                        <Label 
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="1"
+                            Text="{Binding CorrectAnswersText}" 
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Style="{StaticResource LabelStyleNormal}"/>
+
+                        <Button
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Style="{StaticResource ButtonStyleNormal}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            Text="{Static resource:Resource.CheckText}"
+                            Command="{Binding CheckCommand}"/>
+                    </Grid>
+                </StackLayout>
+            </StackLayout>
+      </ScrollView>
+  </ContentView.Content>
+</ContentView>

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:customControls="clr-namespace:BrainWaves.CustomControls" 
+             xmlns:viewModels="clr-namespace:BrainWaves.ViewModels"
+             xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
+             x:Class="BrainWaves.Views.Views.GenerateSinwaveView">
+    <ContentView.BindingContext>
+        <viewModels:GenerateSinwaveViewModel/>
+    </ContentView.BindingContext>
+  <ContentView.Content>
+      <ScrollView>
+            <StackLayout>
+                <customControls:CheckboxWithLabel
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Margin="20"
+                    LabelTextColorProp="Red"
+                    CheckboxColorProp="Red"
+                    TitleText="{Static resource:Resource.GenerateSinwave}"
+                    IsChecked="{Binding IsGenerateSinwaveVisible}" />
+
+                <Grid Margin="20"
+                  IsVisible="{Binding IsGenerateSinwaveVisible}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Text="{Static resource:Resource.SamplingFreq}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Entry
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Placeholder="{Static resource:Resource.SamplingFreq}"
+                        Text="{Binding SinwaveSamplingFreq, Mode=TwoWay}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
+
+                    <Label
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Text="{Static resource:Resource.SinwaveLength}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Entry
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Placeholder="{Static resource:Resource.SinwaveLength}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        VerticalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{Binding SinwaveLength, Mode=TwoWay}"
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
+
+                    <Label
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        Text="{Static resource:Resource.SinwaveAmplitude}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Entry
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Placeholder="{Static resource:Resource.SinwaveAmplitude}"
+                        Text="{Binding SinwaveAmplitude, Mode=TwoWay}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
+
+                    <Label
+                        Grid.Column="1"
+                        Grid.Row="2"
+                        Text="{Static resource:Resource.SinwaveFreqency}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Entry
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        Placeholder="{Static resource:Resource.SinwaveFreqency}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        VerticalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Text="{Binding SinwaveFrequency,Mode=TwoWay}"
+                        Style="{StaticResource SimpleEntry}"
+                        Keyboard="Numeric"/>
+
+                    <Button
+                        Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource ButtonStyleNormal}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="10"
+                        Text="{Static resource:Resource.GenerateText}"
+                        Command="{Binding GenerateCommand}"/>
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+  </ContentView.Content>
+</ContentView>

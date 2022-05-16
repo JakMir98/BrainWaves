@@ -25,6 +25,7 @@ namespace BrainWaves.Helpers
         public const int DefaultLowPassFilterMaxFreq = 50; //Hz
         public const int DefaultMaxRandomValue = 1_000_000;
         public const int DefaultNumOfExercisesToChangeLevel = 10;
+        public const int DefaultNumOfMeasurementsForWaves = 6;
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";

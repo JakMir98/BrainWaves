@@ -133,7 +133,7 @@
     <value>Sending characteristic UUID</value>
   </data>
   <data name="Charts" xml:space="preserve">
-    <value>Charts</value>
+    <value>Charts t/f</value>
   </data>
   <data name="ConnectText" xml:space="preserve">
     <value>Connect</value>
@@ -392,5 +392,23 @@
   </data>
   <data name="WavesTitle" xml:space="preserve">
     <value>Waves</value>
+  </data>
+  <data name="ChartsWaves" xml:space="preserve">
+    <value>Charts waves</value>
+  </data>
+  <data name="TestMeasurements" xml:space="preserve">
+    <value>Test signal</value>
+  </data>
+  <data name="TimeFreqMeasurement" xml:space="preserve">
+    <value>Simple measurement</value>
+  </data>
+  <data name="WavesMeasurements" xml:space="preserve">
+    <value>Specific waves measurement</value>
+  </data>
+  <data name="MeasurementType" xml:space="preserve">
+    <value>Typ pomiaru</value>
+  </data>
+  <data name="StartOneHourMeasure" xml:space="preserve">
+    <value>Start 1h measure</value>
   </data>
 </root>

@@ -133,7 +133,7 @@
     <value>UUID charakterystyki wysyłania</value>
   </data>
   <data name="Charts" xml:space="preserve">
-    <value>Wykresy</value>
+    <value>Wykresy t/f</value>
   </data>
   <data name="ConnectText" xml:space="preserve">
     <value>Połącz</value>
@@ -392,5 +392,23 @@
   </data>
   <data name="WavesTitle" xml:space="preserve">
     <value>Fale mózgowe</value>
+  </data>
+  <data name="ChartsWaves" xml:space="preserve">
+    <value>Wykresy fale</value>
+  </data>
+  <data name="TestMeasurements" xml:space="preserve">
+    <value>Test sygnał</value>
+  </data>
+  <data name="TimeFreqMeasurement" xml:space="preserve">
+    <value>Zwykły pomiar</value>
+  </data>
+  <data name="WavesMeasurements" xml:space="preserve">
+    <value>Pomiar konkretnych fal</value>
+  </data>
+  <data name="MeasurementType" xml:space="preserve">
+    <value>Typ pomiaru</value>
+  </data>
+  <data name="StartOneHourMeasure" xml:space="preserve">
+    <value>Start pomiaru 1h</value>
   </data>
 </root>
