@@ -26,6 +26,16 @@
 #include <BLE2902.h>
 #include <algorithm>
 #include <string>
+#include <vector>
+#include <cmath>
+
+enum MessageType
+{
+  TIME_FREQ__OR__WAVES_MEASURE,
+  TEST_MEASURE,
+  CANCEL_MEASURE,
+  NONE
+};
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -34,12 +44,25 @@
 #define SEND_CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 #define READ_CHARACTERISTIC_UUID "cba1d466-344c-4be3-ab3f-189f80dd7518"
 
-#define BUFF_LENGTH 25
+#define LOOKUP_TABLE_SIZE 512
+#define BUFFER_SIZE 10
 const std::string EndMessage = "end";
 const std::string StartMessage = "start";
 const std::string CancelMessage = "cancel";
+const std::string StartWavesMeasureStartMessage = "waves";
+const std::string TestSingalMessage = "test";
 const char Delimeter = ';';
 const int eegClickPin = 15;
+const int wavesSamplingFreq = 200;
+const float wavesTimeToMeasureInMinutes = 10.0;
+
+static int16_t SinLookUpTable[] = { // todo make different look up table
+  0x0000,0x0647,0x0c8b,0x12c7,0x18f8,0x1f19,0x2527,0x2b1e,
+  0x30fb,0x36b9,0x3c56,0x41cd,0x471c,0x4c3f,0x5133,0x55f4,
+  0x5a81,0x5ed6,0x62f1,0x66ce,0x6a6c,0x6dc9,0x70e1,0x73b5,
+  0x7640,0x7883,0x7a7c,0x7c29,0x7d89,0x7e9c,0x7f61,0x7fd7,
+  0x7fff
+};
 
 BLEServer* pServer = NULL;
 
@@ -53,82 +76,80 @@ BLEDescriptor writeDescriptor(BLEUUID((uint16_t)0x2903));
 
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
-int value = 0;
-int counter = 0;
 bool sendEndMessage = false;
 bool shouldMeasure = false;
 int samplingFrequency = 200; // 5 mili sec delay
 float timeToMeasureInMinutes = 0;
 int expectedNumOfSamples = 0;
 int currentNumberOfSamples = 0;
+MessageType currentMessageReceived = NONE;
 
-bool get_numbers(std::string inputStr, int * hzOut, float * timeOut)
+std::vector<double> GenerateTimeVector(int samplingFrequency, int length)
 {
-    bool firstFound = false;
-    bool secondFound = false;
-    
-    std::size_t firstDelimeter = inputStr.find(Delimeter);
-    if (firstDelimeter != std::string::npos)
-    {
-        firstFound = true;
-    }
-        
-    std::size_t secondDelimeter = inputStr.find(Delimeter,firstDelimeter+1);
-    if (secondDelimeter!=std::string::npos)
-    {
-        secondFound = true;
-    }
+  double T = (double)1 / samplingFrequency;            // % Sampling period
+  std::vector<double> t(length);
+  for (int i = 0; i < length - 1; i++)
+  {
+      t[i] = i * T;
+  }
 
-    std::string message;
-    if (firstFound)
-    {
-       message = inputStr.substr(0, firstDelimeter);
-       if(secondFound && message.compare("start") == 0)
-        {
-            std::string firstNum = inputStr.substr(firstDelimeter+1,secondDelimeter-firstDelimeter-1);
-            *hzOut = atoi(firstNum.c_str());
-
-            std::string secondNum = inputStr.substr(secondDelimeter+1,inputStr.length()-secondDelimeter);
-            std::replace(secondNum.begin(), secondNum.end(), ',', '.');
-            *timeOut = atof(secondNum.c_str());
-            return true;
-        }
-        else
-        {
-          return false;
-        }
-    }
-    else
-    {
-      return false;
-    }
+  return t;
 }
 
-int decrypt_message(std::string inputStr)// returns 1 when start message, returns 2 when cancel message, returns -1 when error
+std::vector<double> GenerateSinWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
 {
-  bool firstFound = false;
-  
+  std::vector<double> t = GenerateTimeVector(samplingFrequency, length);
+  std::vector<double>sinWave(length);
+  for (int i = 0; i < length; i++)
+  {
+      sinWave[i] = amplitude * sin(2 * PI * signalFrequency * t[i]);
+  }
+  return sinWave;
+}
+
+MessageType decrypt_message(std::string inputStr)// returns 1 when start message, returns 2 when cancel message, returns -1 when error
+{  
   std::size_t firstDelimeter = inputStr.find(Delimeter);
+  std::string message;
   if (firstDelimeter != std::string::npos)
   {
-      firstFound = true;
-  }
-  std::string message;
-  if (firstFound)
+    message = inputStr.substr(0, firstDelimeter);
+    if(message.compare(StartMessage) == 0 || message.compare(StartWavesMeasureStartMessage) == 0)
     {
-       message = inputStr.substr(0, firstDelimeter);
-       if(message.compare(StartMessage) == 0)
-       {
-          return 1;
-       }
-       else if (message.compare(CancelMessage) == 0)
-       {
-          return 2;
-       }
-       return -1;
-    }
+      std::size_t secondDelimeter = inputStr.find(Delimeter, firstDelimeter+1);
+      if (secondDelimeter != std::string::npos)
+      {
+          std::string firstNum = inputStr.substr(firstDelimeter + 1, secondDelimeter - firstDelimeter - 1);
+          samplingFrequency = atoi(firstNum.c_str());
 
-  return -1;
+          std::string secondNum = inputStr.substr(secondDelimeter + 1, inputStr.length() - secondDelimeter);
+          std::replace(secondNum.begin(), secondNum.end(), ',', '.');
+          timeToMeasureInMinutes = atof(secondNum.c_str());
+
+          expectedNumOfSamples = samplingFrequency * timeToMeasureInMinutes * 60;
+          shouldMeasure = true;
+          return TIME_FREQ__OR__WAVES_MEASURE;
+      }
+      else
+      {
+        return NONE;
+      }
+    }
+    else if(message.compare(TestSingalMessage) == 0)
+    {
+      expectedNumOfSamples = LOOKUP_TABLE_SIZE;
+      currentNumberOfSamples = 0;
+      shouldMeasure = true;
+      return TEST_MEASURE;
+    }
+    else if (message.compare(CancelMessage) == 0)
+    {
+      shouldMeasure = false;
+      return CANCEL_MEASURE;
+    }
+    return NONE;
+  }
+  return NONE;
 }
 
 int sample_freq_to_microseconds_delay_converter(int sampleFreq) 
@@ -153,11 +174,19 @@ class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
       std::string value = pCharacteristic->getValue();  
 
-      if (get_numbers(value, &samplingFrequency, &timeToMeasureInMinutes))
+      currentMessageReceived = decrypt_message(value);
+
+      if(currentMessageReceived == TIME_FREQ__OR__WAVES_MEASURE)
       {
-        expectedNumOfSamples = samplingFrequency * timeToMeasureInMinutes * 60;
-        shouldMeasure = true;
-        Serial.println("Received start: " + String(samplingFrequency) +"hz "+ String(timeToMeasureInMinutes) + " min");
+        Serial.println("Received START message: " + String(samplingFrequency) +"hz "+ String(timeToMeasureInMinutes) + " min");
+      }
+      else if(currentMessageReceived == TEST_MEASURE)
+      {
+        Serial.println("Received TEST message: ");
+      }
+      else if(currentMessageReceived == CANCEL_MEASURE)
+      {
+        Serial.println("Received CANCEL message: ");
       }
       else
       {
@@ -217,13 +246,19 @@ void loop() {
       {
         if(!sendEndMessage)
         {
-          int eegClickValue = analogRead(eegClickPin);
-          char outCharArr[10];
-          //itoa(value++, outCharArr, 10);
+          int valueToSend = 6666;
+          if (currentMessageReceived == TIME_FREQ__OR__WAVES_MEASURE)
+          {
+            valueToSend = analogRead(eegClickPin);
+          }
+          else if(currentMessageReceived == TEST_MEASURE)
+          {
+            valueToSend = SinLookUpTable[currentNumberOfSamples];
+          }
           currentNumberOfSamples++;
-          itoa(eegClickValue, outCharArr, 10);
-          std::string s = std::string(outCharArr);
-          writeCharacteristic.setValue(s);
+          char outCharArr[BUFFER_SIZE];
+          itoa(valueToSend, outCharArr, BUFFER_SIZE);
+          writeCharacteristic.setValue(std::string(outCharArr));
           writeCharacteristic.notify();
           if(currentNumberOfSamples > expectedNumOfSamples)
           {
