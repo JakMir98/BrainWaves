@@ -4,7 +4,6 @@
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
              xmlns:views="clr-namespace:BrainWaves.Views.Views" 
-             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
@@ -140,6 +139,7 @@
                     Margin="10"
                     Text="{Static resource:Resource.ChartsWaves}"
                     Command="{Binding GoToWaveChartsPageCommand}"
+                    IsEnabled="{Binding IsGoToWavesChartsEnabled}"
                     />
                 <!--"IsEnabled="{Binding IsGoToChartsEnabled}"-->
             </StackLayout>

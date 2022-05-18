@@ -2,7 +2,6 @@
 using BrainWaves.Models;
 using BrainWaves.Services;
 using Microcharts;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,8 +55,8 @@ namespace BrainWaves.ViewModels
         #region Constructors
         public ChartsViewModel()
         {
-            BasicAndCommandsInit();
-
+            VariabesInit();
+            InitCommands();
             /* Create samples to test Export to excell */
             int samplingFreq = 500;
             int length = 1048576; //2^20
@@ -77,7 +76,8 @@ namespace BrainWaves.ViewModels
         {
             timeSamples = _samples;
             freqSamples = new List<Sample>();
-            BasicAndCommandsInit();
+            VariabesInit();
+            InitCommands();
             InitChartsAndSlider();
         }
 
@@ -85,7 +85,8 @@ namespace BrainWaves.ViewModels
         {
             timeSamples = _samples;
             freqSamples = new List<Sample>();
-            BasicAndCommandsInit();
+            VariabesInit();
+            InitCommands();
             samplingFrequency = fs;
             InitChartsAndSlider();
         }
@@ -180,7 +181,7 @@ namespace BrainWaves.ViewModels
         #endregion
 
         #region Functions
-        private void BasicAndCommandsInit()
+        private void VariabesInit()
         {
             Title = Resources.Strings.Resource.Charts;
             excelService = new ExcelService();
@@ -193,8 +194,7 @@ namespace BrainWaves.ViewModels
             {
                 areFreqSamplesReady = true;
             }
-            samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency,
-                    Constants.MinSamplingFrequency);
+            samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
             AvailableFFTSettings = new List<string>
             {
                 Resources.Strings.Resource.FFTSettingsDefault,
@@ -203,13 +203,6 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.FFTSettingsFilterAndWindow
             };
             selectedFFTSettings = Resources.Strings.Resource.FFTSettingsDefault;
-
-            ExportToExcelCommand = new Command(async () => await ExportToExcel());
-            ExportToCSVCommand = new Command(async () => await ExportToCSV());
-            GoBackCommand = new Command(async () => await GoBack());
-            DragCompletedCommand = new Command(UpdateCharts);
-            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
-            GoToSettingsCommand = new Command(async () => await GoToSettings());
         }
 
         private void InitChartsAndSlider()
@@ -219,6 +212,16 @@ namespace BrainWaves.ViewModels
             numberOfShownSamplesFromTheMiddle = Preferences.Get(Constants.PrefsSamplesToShowFromMiddle, Constants.DefaultLoadedSamples);
             CheckChartLabelOrientation();
             SetupTimeDomainChart();
+        }
+
+        private void InitCommands()
+        {
+            ExportToExcelCommand = new Command(async () => await ExportToExcel());
+            ExportToCSVCommand = new Command(async () => await ExportToCSV());
+            GoBackCommand = new Command(async () => await GoBack());
+            DragCompletedCommand = new Command(UpdateCharts);
+            CalculateFFTCommand = new Command(async () => await FreqChartLoad());
+            GoToSettingsCommand = new Command(async () => await GoToSettings());
         }
 
         private void SelectedFFTSettingsChangedHandle(string value)

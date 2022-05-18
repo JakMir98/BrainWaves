@@ -8,7 +8,6 @@ using Plugin.BLE.Abstractions.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -37,6 +36,7 @@ namespace BrainWaves.ViewModels
         private List<string> availableSettings;
         private bool isReadButtonEnabled = true;
         private bool isGoToChartsEnabled = false;
+        private bool isGoToWavesChartsEnabled = false;
         private bool isGenerateSinwaveVisible = false;
         private GenerateSinwaveViewModel sinwaveModel;
         private GameViewModel gameModel;
@@ -181,6 +181,12 @@ namespace BrainWaves.ViewModels
             get => isTestSigVisible;
             set => SetProperty(ref isTestSigVisible, value);
         }
+
+        public bool IsGoToWavesChartsEnabled
+        {
+            get => isGoToWavesChartsEnabled;
+            set => SetProperty(ref isGoToWavesChartsEnabled, value);
+        }
         #endregion
 
         #region Functions
@@ -310,7 +316,7 @@ namespace BrainWaves.ViewModels
         private async Task StartOneHourMeasure()
         {
             IsReadButtonEnabled = false;
-            IsGoToChartsEnabled = false;
+            IsGoToWavesChartsEnabled = false;
 
             DataFromBleDevice.Clear();
             dataPartCounter = 0;
@@ -346,7 +352,7 @@ namespace BrainWaves.ViewModels
                     {
                         StopReceiving(MeasurementType.WAVES_MEASUREMENT);
                         IsReadButtonEnabled = true;
-                        IsGoToChartsEnabled = true;
+                        IsGoToWavesChartsEnabled = true;
                         ProgressBarIsVisible = false;
                     }
                     else

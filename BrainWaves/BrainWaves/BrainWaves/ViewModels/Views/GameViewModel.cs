@@ -20,16 +20,17 @@ namespace BrainWaves.ViewModels
         private string labelText;
         private string correctAnswersText;
         private bool isGameVisible;
-        #endregion
 
-        #region ICommands
-        public ICommand CheckCommand { private set; get; }
-        #endregion
         public Stopwatch StopwatchGame { get; set; }
         public int ExerciseCounter { get; set; }
         public GameService gameService { get; }
         public int TotalExerciseCounter { get; set; }
         public int TotalCorrectAnswersCounter { get; set; }
+        #endregion
+
+        #region ICommands
+        public ICommand CheckCommand { private set; get; }
+        #endregion
 
         #region Constructors
         public GameViewModel()

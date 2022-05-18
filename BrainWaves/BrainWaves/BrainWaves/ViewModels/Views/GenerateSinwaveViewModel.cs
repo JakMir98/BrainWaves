@@ -1,9 +1,5 @@
 ﻿using BrainWaves.Helpers;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
 {
@@ -16,7 +12,6 @@ namespace BrainWaves.ViewModels
         private int sinwaveFrequency;
         private bool isGenerateSinwaveVisible = false;
         #endregion
-
 
         #region Constructors
         public GenerateSinwaveViewModel()
