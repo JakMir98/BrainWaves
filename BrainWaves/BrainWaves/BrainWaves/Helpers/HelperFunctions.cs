@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BrainWaves.Models;
 using Microcharts;
 using SkiaSharp;
@@ -94,12 +96,65 @@ namespace BrainWaves.Helpers
             return samples;
         }
 
+        public static BrainWaveSample GenerateBrainWavesSampleFromFFTWavesSamples(List<Sample> freqSamples)
+        {
+            IEnumerable<double> alfaWaves = (from sample in freqSamples
+                                             where sample.SampleXValue >= 8 && sample.SampleXValue <= 13
+                                             select sample.SampleYValue).Cast<double>();
+            double avgAlfa = AverageYValues(alfaWaves.ToList());
+
+            IEnumerable<double> betaWaves = ((from sample in freqSamples
+                                              where sample.SampleXValue >= 3 && sample.SampleXValue <= 30
+                                              select sample.SampleYValue)).Cast<double>();
+            double avgBeta = AverageYValues(betaWaves.ToList());
+
+            IEnumerable<double> thetaWaves = ((from sample in freqSamples
+                                               where sample.SampleXValue >= 4 && sample.SampleXValue <= 8
+                                               select sample.SampleYValue)).Cast<double>();
+            double avgTheta = AverageYValues(thetaWaves.ToList());
+
+            IEnumerable<double> deltaWaves = ((from sample in freqSamples
+                                               where sample.SampleXValue >= 0.5 && sample.SampleXValue <= 3
+                                               select sample.SampleYValue)).Cast<double>();
+            double avgDelta = AverageYValues(deltaWaves.ToList());
+
+            return new BrainWaveSample()
+            {
+                AlfaWave = avgAlfa,
+                BetaWave = avgBeta,
+                ThetaWave = avgTheta,
+                DeltaWave = avgDelta
+            };
+        }
+
         public static void PerformZeroPaddingIfNeeded(ref double[] input)
         {
             if (!FftSharp.Pad.IsPowerOfTwo(input.Length))
             {
                 input = FftSharp.Pad.ZeroPad(input);
             }
+        }
+
+        public static double AverageYValues(List<Sample> samples)
+        {
+            double avg = 0;
+            foreach (var item in samples)
+            {
+                avg = item.SampleYValue;
+            }
+            avg /= samples.Count;
+            return avg;
+        }
+
+        public static double AverageYValues(List<double> samples)
+        {
+            double avg = 0;
+            foreach (var item in samples)
+            {
+                avg = item;
+            }
+            avg /= samples.Count;
+            return avg;
         }
     }
 }

@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace BrainWaves.ViewModels
 {
-    public  class GameViewModel : BaseViewModel
+    public class GameViewModel : BaseViewModel
     {
         #region Variables
         private bool isBrainActivityVisible = false;
@@ -19,6 +19,7 @@ namespace BrainWaves.ViewModels
         private Color answerColor;
         private string labelText;
         private string correctAnswersText;
+        private bool isGameVisible;
         #endregion
 
         #region ICommands
@@ -100,6 +101,12 @@ namespace BrainWaves.ViewModels
             get => correctAnswersText;
             set => SetProperty(ref correctAnswersText, value);
         }
+
+        public bool IsGameVisible
+        {
+            get => isGameVisible;
+            set => SetProperty(ref isGameVisible, value);
+        }
         #endregion
 
         #region Functions
@@ -147,6 +154,23 @@ namespace BrainWaves.ViewModels
             {
                 gameService.Level = DifficultyLevel.EASY;
             }
+        }
+
+        public void UpdateUiGame(float timeToMeasureInMins)
+        {
+            if (IsBrainActivityVisible && StopwatchGame.Elapsed.TotalMinutes > timeToMeasureInMins / 2)
+            {
+                IsBrainActivityViewVisible = true;
+                LabelText = Resources.Strings.Resource.TimeToFocusText;
+            }
+        }
+
+        public void SetupGame()
+        {
+            StopwatchGame.Start();
+            IsBrainRelaxViewVisible = true;
+            IsBrainActivityViewVisible = false;
+            LabelText = Resources.Strings.Resource.TimeForRelaxText;
         }
         #endregion
     }

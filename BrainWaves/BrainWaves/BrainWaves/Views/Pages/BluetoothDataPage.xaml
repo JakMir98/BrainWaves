@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:resource="clr-namespace:BrainWaves.Resources.Strings"
              xmlns:customControls="clr-namespace:BrainWaves.CustomControls"
-             xmlns:views="clr-namespace:BrainWaves.Views.Views"
+             xmlns:views="clr-namespace:BrainWaves.Views.Views" 
+             xmlns:helpers="clr-namespace:BrainWaves.Helpers"
              NavigationPage.HasNavigationBar="False"
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
@@ -79,9 +80,9 @@
                 Progress="{Binding Progress}"
                 IsVisible="{Binding ProgressBarIsVisible}"
                 Margin="20"/>
-            <!-- TimeFreqMeasurementsView 
-            <views:TimeFreqMeasurementsView />
-            -->
+            
+            
+            <!-- TIME FREQ MEASUREMENTS-->
             <StackLayout
                 Orientation="Vertical"
                 IsVisible="{Binding IsTimeFreqMesVisible}">
@@ -118,6 +119,7 @@
                     IsEnabled="{Binding IsGoToChartsEnabled}"/>
             </StackLayout>
 
+            <!-- WAVES MEASUREMENTS-->
             <StackLayout
                 Orientation="Vertical"
                 IsVisible="{Binding IsWavesVisible}">
@@ -142,6 +144,7 @@
                 <!--"IsEnabled="{Binding IsGoToChartsEnabled}"-->
             </StackLayout>
 
+            <!-- TEST SIGNAL-->
             <StackLayout
                 IsVisible="{Binding IsTestSigVisible}">
                 <Button
@@ -163,6 +166,7 @@
                     Command="{Binding GoToChartsCommand}"
                     IsEnabled="{Binding IsGoToChartsEnabled}"/>
 
+                <!-- GENERATE SINWAVE -->
                 <customControls:CheckboxWithLabel
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
@@ -198,7 +202,7 @@
                         Grid.Column="0"
                         Grid.Row="1"
                         Placeholder="{Static resource:Resource.SamplingFreq}"
-                        Text="{Binding SinwaveModel.SinwaveSamplingFreq, Mode=TwoWay}"
+                        Text="{Binding SinwaveViewModel.SinwaveSamplingFreq, Mode=TwoWay}"
                         PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         BackgroundColor="Transparent"
@@ -225,7 +229,7 @@
                         VerticalTextAlignment="Center"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
-                        Text="{Binding SinwaveModel.SinwaveLength, Mode=TwoWay}"
+                        Text="{Binding SinwaveViewModel.SinwaveLength, Mode=TwoWay}"
                         Style="{StaticResource SimpleEntry}"
                         Keyboard="Numeric"/>
 
@@ -241,7 +245,7 @@
                         Grid.Column="0"
                         Grid.Row="3"
                         Placeholder="{Static resource:Resource.SinwaveAmplitude}"
-                        Text="{Binding SinwaveModel.SinwaveAmplitude, Mode=TwoWay}"
+                        Text="{Binding SinwaveViewModel.SinwaveAmplitude, Mode=TwoWay}"
                         PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
                         BackgroundColor="Transparent"
@@ -268,7 +272,7 @@
                         VerticalTextAlignment="Center"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
-                        Text="{Binding SinwaveModel.SinwaveFrequency,Mode=TwoWay}"
+                        Text="{Binding SinwaveViewModel.SinwaveFrequency,Mode=TwoWay}"
                         Style="{StaticResource SimpleEntry}"
                         Keyboard="Numeric"/>
 
@@ -283,94 +287,8 @@
                         Command="{Binding GenerateCommand}"/>
                 </Grid>
             </StackLayout>
-            
 
-            
-            <!-- Generate sinwave view
-            <views:GenerateSinwaveView />
-            -->
-            
-            <!-- Game view
-            <views:GameView />
-            -->
-            <StackLayout
-                Orientation="Vertical"
-                IsVisible="{Binding IsGameVisible}">
-                <customControls:CheckboxWithLabel
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Margin="20"
-                    LabelTextColorProp="Red"
-                    CheckboxColorProp="Red"
-                    TitleText="{Static resource:Resource.BrainActivity}"
-                    IsChecked="{Binding Game.IsBrainActivityVisible, Mode=TwoWay}" />
-
-                <StackLayout
-                Margin="20"
-                IsVisible="{Binding Game.IsBrainActivityVisible}"
-                Orientation="Vertical">
-
-                    <Label 
-                    Text="{Binding Game.LabelText}" 
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Style="{StaticResource LabelStyleNormal}"
-                    IsVisible="{Binding Game.IsBrainRelaxViewVisible}"/>
-
-                    <Grid 
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    IsVisible="{Binding Game.IsBrainActivityViewVisible}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="6*" />
-                        </Grid.ColumnDefinitions>
-                        <Label 
-                            Grid.Column="0"
-                            Text="{Binding Game.QuestionLabelText}" 
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Style="{StaticResource LabelStyleNormal}"/>
-
-                        <Entry
-                            Grid.Column="1"
-                            Placeholder="{Static resource:Resource.AnswerText}"
-                            PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
-                            TextColor="{AppThemeBinding Dark=White, Light=Black}"
-                            BackgroundColor="{Binding Game.AnswerColor}"
-                            VerticalTextAlignment="Center"
-                            Text="{Binding Game.AnswerEntryText,Mode=TwoWay}"
-                            Style="{StaticResource SimpleEntry}"
-                            ReturnCommand="{Binding CheckCommand}"
-                            Keyboard="Numeric"/>
-
-                        <Label 
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Grid.Row="1"
-                            Text="{Binding Game.CorrectAnswersText}" 
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Style="{StaticResource LabelStyleNormal}"/>
-
-                        <Button
-                            Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            Style="{StaticResource ButtonStyleNormal}"
-                            VerticalOptions="Center"
-                            HorizontalOptions="Center"
-                            Text="{Static resource:Resource.CheckText}"
-                            Command="{Binding CheckCommand}"/>
-                    </Grid>
-                </StackLayout>
-            </StackLayout>            
-             
-
+            <views:GameView BindingContext="{Binding GameViewModel}"/>
         </StackLayout>
     </ScrollView>
 </ContentPage>

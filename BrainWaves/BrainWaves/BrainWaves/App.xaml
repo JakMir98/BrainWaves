@@ -12,7 +12,7 @@
         <Color x:Key="ButtonDisabledColor">#808080</Color>
 
         <Color x:Key="BackgroundColorDarkTheme">#222222</Color>
-        <Color x:Key="BackgroundColorLight">#D3D3D3</Color>
+        <Color x:Key="BackgroundColorLight">#D58500</Color>
 
         <Color x:Key="TextColorDarkTheme">#FFFFFF</Color>
         <Color x:Key="TextColorLight">#000000</Color>

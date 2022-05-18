@@ -10,7 +10,8 @@
     </ContentView.BindingContext>
   <ContentView.Content>
       <ScrollView
-          Orientation="Vertical">
+          Orientation="Vertical"
+          IsVisible="{Binding IsGameVisible}">
             <StackLayout
                 Orientation="Vertical">
                 <customControls:CheckboxWithLabel

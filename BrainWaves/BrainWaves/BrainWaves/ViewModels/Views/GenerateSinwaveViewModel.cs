@@ -17,9 +17,6 @@ namespace BrainWaves.ViewModels
         private bool isGenerateSinwaveVisible = false;
         #endregion
 
-        #region ICommands
-        public ICommand GenerateCommand { private set; get; }
-        #endregion
 
         #region Constructors
         public GenerateSinwaveViewModel()
@@ -28,7 +25,6 @@ namespace BrainWaves.ViewModels
             SinwaveLength = Preferences.Get(Constants.PrefsSinwaveLength, Constants.DefaultSinwaveLength);
             SinwaveAmplitude = Preferences.Get(Constants.PrefsSinwaveAmplitude, Constants.DefaultSinwaveAmplitude);
             SinwaveFrequency = Preferences.Get(Constants.PrefsSinwaveFreq, Constants.DefaultSinwaveFreq);
-            //GenerateCommand = new Command(Generate);
         }
         #endregion
 
@@ -118,41 +114,6 @@ namespace BrainWaves.ViewModels
                 //IsReadButtonEnabled = !value;
             }
         }
-        #endregion
-
-        #region Functions 
-        private async Task<ObservableCollection<double>> Generate()
-        {
-            await Task.Run(() =>
-            {
-                //IsReadButtonEnabled = false;
-                //IsGoToChartsEnabled = false;
-                IsBusy = true;
-                BusyMessage = Resources.Strings.Resource.GenerateSinwave;
-                double[] sinWave;
-
-                if (FftSharp.Pad.IsPowerOfTwo(SinwaveLength))
-                {
-                    sinWave = TestSamplesGenerator.GenerateSinWave(
-                        SinwaveSamplingFreq, SinwaveLength, SinwaveAmplitude, SinwaveFrequency);
-                }
-                else
-                {// zero padding so array is power of 2
-                    sinWave = FftSharp.Pad.ZeroPad(TestSamplesGenerator.GenerateSinWave(
-                        SinwaveSamplingFreq, SinwaveLength, SinwaveAmplitude, SinwaveFrequency));
-                }
-
-                IsBusy = false;
-                //IsGoToChartsEnabled = true;
-                //IsReadButtonEnabled = true;
-
-                return new ObservableCollection<double>(sinWave);
-                
-            });
-
-            return new ObservableCollection<double>();
-        }
-
         #endregion
     }
 }

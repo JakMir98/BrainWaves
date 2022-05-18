@@ -65,5 +65,71 @@ namespace BrainWaves.Helpers
 
             return samples;
         }
+
+        public static List<List<double>> GenerateWavesSamples(int numOfValues)
+        {
+            List<List<double>> returnSamples = new List<List<double>>();
+
+            for (int i = 0; i < Constants.DefaultNumOfMeasurementsForWaves; i++)
+            {
+                double[] samples;
+                switch (i)
+                {
+                    case 0:
+                        samples = GenerateSinWave(200, numOfValues, 1, 2);
+                        break;
+                    case 1:
+                        samples = GenerateSinWave(200, numOfValues, 1, 5);
+                        break;
+                    case 2:
+                        samples = GenerateSinWave(200, numOfValues, 1, 10);
+                        break;
+                    case 3:
+                        samples = GenerateSinWave(200, numOfValues, 1, 20);
+                        break;
+                    default:
+                        samples = GenerateSinWave(200, numOfValues, 1, 100);
+                        break;
+                }
+
+                returnSamples.Add(new List<double>(samples));
+            }
+
+            return returnSamples;
+        }
+
+        public static List<List<double>> GenerateRandomWavesSamples(int numOfValues)
+        {
+            List<List<double>> returnSamples = new List<List<double>>();
+            Random random = new Random();
+            for (int i = 0; i < Constants.DefaultNumOfMeasurementsForWaves; i++)
+            {
+                List<double> samples = new List<double>();
+                int divider = numOfValues / 4;
+                for (int j = 0; j < numOfValues; j++)
+                {
+                    if (j < divider)
+                    {
+                        samples.Add(8 + random.NextDouble());
+                    }
+                    else if (j < 2 * divider)
+                    {
+                        samples.Add(3 + random.NextDouble());
+                    }
+                    else if (j < 3 * divider)
+                    {
+                        samples.Add(6 + random.NextDouble());
+                    }
+                    else
+                    {
+                        samples.Add(2 + random.NextDouble());
+                    }
+                }
+
+                returnSamples.Add(samples);
+            }
+
+            return returnSamples;
+        }
     }
 }
