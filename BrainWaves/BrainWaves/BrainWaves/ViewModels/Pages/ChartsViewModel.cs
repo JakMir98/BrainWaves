@@ -396,26 +396,28 @@ namespace BrainWaves.ViewModels
                 freqSamples = HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), samplingFrequency);
             });
         }
+
+        private void CheckIfOriginalSamplesAndReloadIfNeeded()
+        {
+            if (areOriginalSamples)
+            {
+                backupTimeSamples = new List<double>(timeSamples);
+            }
+            else
+            {
+                timeSamples = new List<double>(backupTimeSamples);
+            }
+            areOriginalSamples = false;
+        }
         
         private void FilterSamples()
         {
             Task.Run(() =>
             {
                 IsBusy = true;
-                if (areOriginalSamples)
-                {
-                    backupTimeSamples = new List<double>(timeSamples);
-                }
-                else
-                {
-                    timeSamples = new List<double>(backupTimeSamples);
-                }
-                areOriginalSamples = false;
-                double[] fValues = timeSamples.ToArray();
-                HelperFunctions.PerformZeroPaddingIfNeeded(ref fValues);
+                CheckIfOriginalSamplesAndReloadIfNeeded();
                 var cutoffFreq = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
-                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, cutoffFreq);
-                timeSamples = new List<double>(fValues);
+                HelperFunctions.ApplyLowPassFilter(ref timeSamples, samplingFrequency, cutoffFreq);
                 IsBusy = false;
             });
 
@@ -427,21 +429,8 @@ namespace BrainWaves.ViewModels
             Task.Run(() =>
             {
                 IsBusy = true;
-                if(areOriginalSamples)
-                {
-                    backupTimeSamples = new List<double>(timeSamples);
-                }
-                else
-                {
-                    timeSamples = new List<double>(backupTimeSamples);
-                }
-                areOriginalSamples = false;
-
-                double[] fValues = timeSamples.ToArray();
-                HelperFunctions.PerformZeroPaddingIfNeeded(ref fValues);
-                var window = new FftSharp.Windows.Hanning();
-                window.ApplyInPlace(fValues);
-                timeSamples = new List<double>(fValues);
+                CheckIfOriginalSamplesAndReloadIfNeeded();
+                HelperFunctions.ApplyWindow(ref timeSamples, new FftSharp.Windows.Hanning());
                 IsBusy = false;
             });
 
@@ -453,22 +442,10 @@ namespace BrainWaves.ViewModels
             Task.Run(() =>
             {
                 IsBusy = true;
-                if (areOriginalSamples)
-                {
-                    backupTimeSamples = new List<double>(timeSamples);
-                }
-                else
-                {
-                    timeSamples = new List<double>(backupTimeSamples);
-                }
-                areOriginalSamples = false;
-                double[] fValues = timeSamples.ToArray();
-                HelperFunctions.PerformZeroPaddingIfNeeded(ref fValues);
-                var window = new FftSharp.Windows.Hanning();
-                window.ApplyInPlace(fValues);
+                CheckIfOriginalSamplesAndReloadIfNeeded();
                 var cutoffFreq = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
-                fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, cutoffFreq);
-                timeSamples = new List<double>(fValues);
+                HelperFunctions.ApplyWindow(ref timeSamples, new FftSharp.Windows.Hanning());
+                HelperFunctions.ApplyLowPassFilter(ref timeSamples, samplingFrequency, cutoffFreq);
                 IsBusy = false;
             });
 

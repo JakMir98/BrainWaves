@@ -661,7 +661,7 @@ namespace BrainWaves.ViewModels
             IsBusy = false;
         }
 
-        private void HandleSelectedMeasurement(string value)
+        public void HandleSelectedMeasurement(string value)
         {
             if(value == Resources.Strings.Resource.TimeFreqMeasurement)
             {

@@ -229,7 +229,7 @@ namespace BrainWaves.ViewModels
         #endregion
 
         #region Functions
-        private void HandleThemeChange(bool value)
+        public void HandleThemeChange(bool value)
         {
             if (value)
             {
@@ -243,7 +243,7 @@ namespace BrainWaves.ViewModels
             }
         }
 
-        private void HandleLanguageChange(string value)
+        public void HandleLanguageChange(string value)
         {
             CultureInfo cultureInfo;
             if (value == Resources.Strings.Resource.LanguageENG)

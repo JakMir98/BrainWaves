@@ -57,10 +57,10 @@ namespace BrainWaves.Helpers
             for (int i = 0; i < numOfValues; i++)
             {
                 samples.Add(new BrainWaveSample(
-                    random.NextDouble() * random.Next(1, 10),
-                    random.NextDouble() * random.Next(1, 10),
-                    random.NextDouble() * random.Next(1, 10),
-                    random.NextDouble() * random.Next(1, 10)));
+                    random.NextDouble() + random.Next(8, 13),
+                    random.NextDouble() + random.Next(3, 30),
+                    random.NextDouble() + random.Next(1, 3),
+                    random.NextDouble() + random.Next(4, 8)));
             }
 
             return samples;
@@ -76,16 +76,16 @@ namespace BrainWaves.Helpers
                 switch (i)
                 {
                     case 0:
-                        samples = GenerateSinWave(200, numOfValues, 1, 2);
+                        samples = GenerateSinWave(200, numOfValues, 1, 2); // delta waves
                         break;
                     case 1:
-                        samples = GenerateSinWave(200, numOfValues, 1, 5);
+                        samples = GenerateSinWave(200, numOfValues, 1, 5); // theta waves
                         break;
                     case 2:
-                        samples = GenerateSinWave(200, numOfValues, 1, 10);
+                        samples = GenerateSinWave(200, numOfValues, 1, 10); // alfa waves
                         break;
                     case 3:
-                        samples = GenerateSinWave(200, numOfValues, 1, 20);
+                        samples = GenerateSinWave(200, numOfValues, 1, 20); // beta waves
                         break;
                     default:
                         samples = GenerateSinWave(200, numOfValues, 1, 100);

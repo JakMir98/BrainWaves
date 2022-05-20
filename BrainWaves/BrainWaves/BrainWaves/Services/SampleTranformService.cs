@@ -13,7 +13,7 @@ namespace BrainWaves.Services
         public const int BitResolution = 4095;
         public const float ConstantComponent = 2.048f;
         public const int VolatgeScalingFactor = 1_000_000; // convert to volt
-        public const int EegAmplification = 2_000;
+        public const int EegAmplification = 3_000;
 
         //var trasferedString = cos z string zrobic;
         //var sampleValInVolt = ((((trasferedString * 3.3 * 2) / 4095) - 2.048) * 1_000_000) / 2000;
@@ -36,7 +36,7 @@ namespace BrainWaves.Services
             //samples[i]//4095*3.3*2)-2.048)/3000
             if (float.TryParse(receivedString, out var voltage))
             {
-                return ((((voltage * McuVoltage * VoltageDividerRescale) / BitResolution) - ConstantComponent) * VolatgeScalingFactor) / EegAmplification;
+                return ((voltage / BitResolution * McuVoltage * VoltageDividerRescale) - ConstantComponent) / EegAmplification;
             }
 
             return 0.0f;

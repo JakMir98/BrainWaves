@@ -100,6 +100,7 @@ namespace BrainWaves.ViewModels
         #endregion
 
         #region Functions
+        public IAdapter BluetoothAdapter { get; set; }
         public async Task SetupAdapterAsync()
         {
             try

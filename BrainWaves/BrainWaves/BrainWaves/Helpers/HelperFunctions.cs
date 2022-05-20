@@ -95,6 +95,22 @@ namespace BrainWaves.Helpers
             return samples;
         }
 
+        public static void ApplyLowPassFilter(ref List<double> samples,int samplingFrequency, int lowPassCutoffFreq)
+        {
+            double[] fValues = samples.ToArray();
+            PerformZeroPaddingIfNeeded(ref fValues);
+            fValues = FftSharp.Filter.LowPass(fValues, samplingFrequency, lowPassCutoffFreq);
+            samples = new List<double>(fValues);
+        }
+
+        public static void ApplyWindow(ref List<double> samples, FftSharp.IWindow window)
+        {
+            double[] fValues = samples.ToArray();
+            PerformZeroPaddingIfNeeded(ref fValues);
+            window.ApplyInPlace(fValues);
+            samples = new List<double>(fValues);
+        }
+
         public static BrainWaveSample GenerateBrainWavesSampleFromFFTWavesSamples(List<Sample> freqSamples)
         {
             IEnumerable<double> alfaWaves = (from sample in freqSamples
@@ -118,12 +134,12 @@ namespace BrainWaves.Helpers
             double avgDelta = AverageYValues(deltaWaves.ToList());
 
             return new BrainWaveSample()
-            {
-                AlfaWave = avgAlfa,
-                BetaWave = avgBeta,
-                ThetaWave = avgTheta,
-                DeltaWave = avgDelta
-            };
+                {
+                    AlfaWave = avgAlfa,
+                    BetaWave = avgBeta,
+                    ThetaWave = avgTheta,
+                    DeltaWave = avgDelta
+                };
         }
 
         public static void PerformZeroPaddingIfNeeded(ref double[] input)
@@ -139,7 +155,7 @@ namespace BrainWaves.Helpers
             double avg = 0;
             foreach (var item in samples)
             {
-                avg = item.SampleYValue;
+                avg += item.SampleYValue;
             }
             avg /= samples.Count;
             return avg;
@@ -150,7 +166,7 @@ namespace BrainWaves.Helpers
             double avg = 0;
             foreach (var item in samples)
             {
-                avg = item;
+                avg += item;
             }
             avg /= samples.Count;
             return avg;
