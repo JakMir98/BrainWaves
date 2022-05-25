@@ -40,29 +40,33 @@
         
         <ScrollView>
             <StackLayout
-            Orientation="Vertical">
+                Orientation="Vertical">
                 <StackLayout 
-                RadioButtonGroup.GroupName="MeasureType" 
-                RadioButtonGroup.SelectedValue="{Binding SelectedMeasurement}"
-                HorizontalOptions="Center">
-                    <Label 
-                    Text="{Static resource:Resource.MeasurementType}"
-                    VerticalOptions="Center"
+                    RadioButtonGroup.GroupName="MeasureType" 
+                    RadioButtonGroup.SelectedValue="{Binding SelectedMeasurement}"
                     HorizontalOptions="Center"
-                    Style="{StaticResource LabelStyleTitle}"/>
+                    Margin="20">
+                    <Label 
+                        Text="{Static resource:Resource.MeasurementType}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleTitle}"/>
 
                     <RadioButton 
-                    Content="{Static resource:Resource.TimeFreqMeasurement}"
-                    Value="{Static resource:Resource.TimeFreqMeasurement}"
-                    IsChecked="True"/>
+                        Content="{Static resource:Resource.TimeFreqMeasurement}"
+                        Value="{Static resource:Resource.TimeFreqMeasurement}"
+                        BackgroundColor="Transparent"
+                        IsChecked="True"/>
 
                     <RadioButton 
-                    Content="{Static resource:Resource.WavesMeasurements}"
-                    Value="{Static resource:Resource.WavesMeasurements}"/>
+                        Content="{Static resource:Resource.WavesMeasurements}"
+                        Value="{Static resource:Resource.WavesMeasurements}"
+                        BackgroundColor="Transparent"/>
 
                     <RadioButton 
-                    Content="{Static resource:Resource.TestMeasurements}"
-                    Value="{Static resource:Resource.TestMeasurements}"/>
+                        Content="{Static resource:Resource.TestMeasurements}"
+                        Value="{Static resource:Resource.TestMeasurements}"
+                        BackgroundColor="Transparent"/>
                 </StackLayout>
 
                 <Label
