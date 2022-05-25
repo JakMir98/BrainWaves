@@ -8,15 +8,14 @@
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
 
-    <ScrollView>
-        <StackLayout
-            Orientation="Vertical">
-            <StackLayout.Margin>
-                <OnPlatform x:TypeArguments="Thickness">
-                    <On Platform="iOS" Value="0,20,0,0" />
-                </OnPlatform>
-            </StackLayout.Margin>
-            <customControls:CustomToolbar
+    <StackLayout
+        Orientation="Vertical">
+        <StackLayout.Margin>
+            <OnPlatform x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,20,0,0" />
+            </OnPlatform>
+        </StackLayout.Margin>
+        <customControls:CustomToolbar
                 BackgroundColorProp="{StaticResource PrimaryColor}"
                 LeftButtonTextSizeProp="15.0"
                 LeftButtonIsVisibleProp="True"
@@ -32,60 +31,58 @@
                 RightButtonTitleTextProp="{Static resource:Resource.Settings}"
                 RightButtonCommand="{Binding GoToSettingsCommand}"
                 RightButtonCommandParameter="{Binding GoToSettingsCommand}"
-                RightButtonTextColorProp="White"/>
-
-            <customControls:ActivityIndicatorWithLabel
-                HorizontalOptionsProp="Center"
-                VerticalOptions="Center"
-                LeftLabelIsVisible="True"
-                LeftTitleText="{Binding BusyMessage}"
-                LabelTextColorProp="ForestGreen"
-                RightLabelIsVisible="False"
-                ActivityIndicatorColorProp="ForestGreen"
-                ActivityIndicatorIsVisible="{Binding IsBusy}" />
-
-            <StackLayout 
+                RightButtonTextColorProp="White"
+                ActivityIndicatorColorProp="Red"
+                ActivityIndicatorIsVisible="{Binding IsBusy}"
+                ActivityIndicatorLabelTextColorProp="Red"
+                ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+                ActivityIndicatorWidthProp="75"/>
+        
+        <ScrollView>
+            <StackLayout
+            Orientation="Vertical">
+                <StackLayout 
                 RadioButtonGroup.GroupName="MeasureType" 
                 RadioButtonGroup.SelectedValue="{Binding SelectedMeasurement}"
                 HorizontalOptions="Center">
-                <Label 
+                    <Label 
                     Text="{Static resource:Resource.MeasurementType}"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     Style="{StaticResource LabelStyleTitle}"/>
 
-                <RadioButton 
+                    <RadioButton 
                     Content="{Static resource:Resource.TimeFreqMeasurement}"
                     Value="{Static resource:Resource.TimeFreqMeasurement}"
                     IsChecked="True"/>
-                
-                <RadioButton 
+
+                    <RadioButton 
                     Content="{Static resource:Resource.WavesMeasurements}"
                     Value="{Static resource:Resource.WavesMeasurements}"/>
-                
-                <RadioButton 
+
+                    <RadioButton 
                     Content="{Static resource:Resource.TestMeasurements}"
                     Value="{Static resource:Resource.TestMeasurements}"/>
-            </StackLayout>
+                </StackLayout>
 
-            <Label
+                <Label
                 Text="{Binding OutputText}"
                 VerticalOptions="Center"
                 HorizontalOptions="Center"
                 Style="{StaticResource LabelStyleNormal}"/>
 
-            <ProgressBar 
+                <ProgressBar 
                 ProgressColor="Red"
                 Progress="{Binding Progress}"
                 IsVisible="{Binding ProgressBarIsVisible}"
                 Margin="20"/>
-            
-            
-            <!-- TIME FREQ MEASUREMENTS-->
-            <StackLayout
+
+
+                <!-- TIME FREQ MEASUREMENTS-->
+                <StackLayout
                 Orientation="Vertical"
                 IsVisible="{Binding IsTimeFreqMesVisible}">
-                <Picker
+                    <Picker
                     Title="{Binding SelectedSettings}"
                     TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
                     TextColor="{AppThemeBinding Dark=White, Light=Black}"
@@ -96,9 +93,9 @@
                     Margin="20"
                     ItemsSource="{Binding AvailableSettings}"
                     SelectedItem="{Binding SelectedSettings}">
-                </Picker>
+                    </Picker>
 
-                <Button
+                    <Button
                     Grid.Column="0"
                     Grid.Row="0"
                     Style="{StaticResource ButtonStyleNormal}"
@@ -108,7 +105,7 @@
                     Command="{Binding StartCommand}"
                     IsEnabled="{Binding IsReadButtonEnabled}"/>
 
-                <Button
+                    <Button
                     Grid.Column="0"
                     Grid.Row="1"
                     Style="{StaticResource ButtonStyleNormal}"
@@ -116,13 +113,13 @@
                     Text="{Static resource:Resource.Charts}"
                     Command="{Binding GoToChartsCommand}"
                     IsEnabled="{Binding IsGoToChartsEnabled}"/>
-            </StackLayout>
+                </StackLayout>
 
-            <!-- WAVES MEASUREMENTS-->
-            <StackLayout
+                <!-- WAVES MEASUREMENTS-->
+                <StackLayout
                 Orientation="Vertical"
                 IsVisible="{Binding IsWavesVisible}">
-                <Button
+                    <Button
                     Grid.Column="0"
                     Grid.Row="0"
                     Style="{StaticResource ButtonStyleNormal}"
@@ -132,7 +129,7 @@
                     Command="{Binding StartOnehourMeasurementCommand}"
                     IsEnabled="{Binding IsReadButtonEnabled}"/>
 
-                <Button
+                    <Button
                     Grid.Column="1"
                     Grid.Row="1"
                     Style="{StaticResource ButtonStyleNormal}"
@@ -141,13 +138,13 @@
                     Command="{Binding GoToWaveChartsPageCommand}"
                     IsEnabled="{Binding IsGoToWavesChartsEnabled}"
                     />
-                <!--"IsEnabled="{Binding IsGoToChartsEnabled}"-->
-            </StackLayout>
+                    <!--"IsEnabled="{Binding IsGoToChartsEnabled}"-->
+                </StackLayout>
 
-            <!-- TEST SIGNAL-->
-            <StackLayout
+                <!-- TEST SIGNAL-->
+                <StackLayout
                 IsVisible="{Binding IsTestSigVisible}">
-                <Button
+                    <Button
                     Grid.Column="1"
                     Grid.Row="0"
                     Style="{StaticResource ButtonStyleNormal}"
@@ -157,7 +154,7 @@
                     Command="{Binding SendTestSignalCommand}"
                     IsEnabled="{Binding IsReadButtonEnabled}"/>
 
-                <Button
+                    <Button
                     Grid.Column="0"
                     Grid.Row="1"
                     Style="{StaticResource ButtonStyleNormal}"
@@ -166,8 +163,8 @@
                     Command="{Binding GoToChartsCommand}"
                     IsEnabled="{Binding IsGoToChartsEnabled}"/>
 
-                <!-- GENERATE SINWAVE -->
-                <customControls:CheckboxWithLabel
+                    <!-- GENERATE SINWAVE -->
+                    <customControls:CheckboxWithLabel
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     Margin="20"
@@ -176,21 +173,21 @@
                     TitleText="{Static resource:Resource.GenerateSinwave}"
                     IsChecked="{Binding IsGenerateSinwaveVisible}" />
 
-                <Grid Margin="20"
+                    <Grid Margin="20"
                   IsVisible="{Binding IsGenerateSinwaveVisible}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
 
-                    <Label
+                        <Label
                         Grid.Column="0"
                         Grid.Row="0"
                         Text="{Static resource:Resource.SamplingFreq}"
@@ -198,7 +195,7 @@
                         HorizontalOptions="Center"
                         Style="{StaticResource LabelStyleNormal}"/>
 
-                    <Entry
+                        <Entry
                         Grid.Column="0"
                         Grid.Row="1"
                         Placeholder="{Static resource:Resource.SamplingFreq}"
@@ -211,7 +208,7 @@
                         Style="{StaticResource SimpleEntry}"
                         Keyboard="Numeric"/>
 
-                    <Label
+                        <Label
                         Grid.Column="1"
                         Grid.Row="0"
                         Text="{Static resource:Resource.SinwaveLength}"
@@ -219,7 +216,7 @@
                         HorizontalOptions="Center"
                         Style="{StaticResource LabelStyleNormal}"/>
 
-                    <Entry
+                        <Entry
                         Grid.Column="1"
                         Grid.Row="1"
                         Placeholder="{Static resource:Resource.SinwaveLength}"
@@ -233,7 +230,7 @@
                         Style="{StaticResource SimpleEntry}"
                         Keyboard="Numeric"/>
 
-                    <Label
+                        <Label
                         Grid.Column="0"
                         Grid.Row="2"
                         Text="{Static resource:Resource.SinwaveAmplitude}"
@@ -241,7 +238,7 @@
                         HorizontalOptions="Center"
                         Style="{StaticResource LabelStyleNormal}"/>
 
-                    <Entry
+                        <Entry
                         Grid.Column="0"
                         Grid.Row="3"
                         Placeholder="{Static resource:Resource.SinwaveAmplitude}"
@@ -254,7 +251,7 @@
                         Style="{StaticResource SimpleEntry}"
                         Keyboard="Numeric"/>
 
-                    <Label
+                        <Label
                         Grid.Column="1"
                         Grid.Row="2"
                         Text="{Static resource:Resource.SinwaveFreqency}"
@@ -262,7 +259,7 @@
                         HorizontalOptions="Center"
                         Style="{StaticResource LabelStyleNormal}"/>
 
-                    <Entry
+                        <Entry
                         Grid.Column="1"
                         Grid.Row="3"
                         Placeholder="{Static resource:Resource.SinwaveFreqency}"
@@ -276,7 +273,7 @@
                         Style="{StaticResource SimpleEntry}"
                         Keyboard="Numeric"/>
 
-                    <Button
+                        <Button
                         Grid.Row="4"
                         Grid.ColumnSpan="2"
                         Style="{StaticResource ButtonStyleNormal}"
@@ -285,10 +282,11 @@
                         Margin="10"
                         Text="{Static resource:Resource.GenerateText}"
                         Command="{Binding GenerateCommand}"/>
-                </Grid>
-            </StackLayout>
+                    </Grid>
+                </StackLayout>
 
-            <views:GameView BindingContext="{Binding GameViewModel}"/>
-        </StackLayout>
-    </ScrollView>
+                <views:GameView BindingContext="{Binding GameViewModel}"/>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
 </ContentPage>

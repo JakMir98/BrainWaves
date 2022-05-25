@@ -29,10 +29,14 @@
                     RightButtonTitleTextProp="{Static resource:Resource.Settings}"
                     RightButtonCommand="{Binding GoToSettingsCommand}"
                     RightButtonCommandParameter="{Binding GoToSettingsCommand}"
-                    RightButtonTextColorProp="White"/>
+                    RightButtonTextColorProp="White"
+                    ActivityIndicatorColorProp="Red"
+                    ActivityIndicatorIsVisible="{Binding IsBusy}"
+                    ActivityIndicatorLabelTextColorProp="Red"
+                    ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+                    ActivityIndicatorWidthProp="75"/>
             <ScrollView>
                 <StackLayout>
-
                     <Label
                         Text="{Static resource:Resource.NumberOfSamplesToShow}"
                         VerticalOptions="Center"
@@ -108,16 +112,6 @@
                         WidthRequest="250"
                         Style="{StaticResource ButtonStyleNormal}"/>
 
-                    <customControls:ActivityIndicatorWithLabel
-                        HorizontalOptionsProp="Center"
-                        VerticalOptions="Center"
-                        LeftLabelIsVisible="True"
-                        LeftTitleText="{Binding BusyMessage}"
-                        LabelTextColorProp="ForestGreen"
-                        RightLabelIsVisible="False"
-                        ActivityIndicatorColorProp="ForestGreen"
-                        ActivityIndicatorIsVisible="{Binding IsBusy}" />
-
                     <Picker
                         Title="{Binding SelectedFFTSettings}"
                         TitleColor="{AppThemeBinding Dark=NavajoWhite, Light=Black}"
@@ -169,8 +163,6 @@
                         RightLabelIsVisible="True"
                         RightLabelTextColorProp="Red"
                         RightTitleText="{Static resource:Resource.ExportTimeSamples}"/>
-
-
 
                     <StackLayout
                         Orientation="Horizontal"

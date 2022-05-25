@@ -3,88 +3,119 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Name="CustomToolbarParent"
              x:Class="BrainWaves.CustomControls.CustomToolbar">
-  <ContentView.Content>
-      <StackLayout
-          x:Name="StackParent"
-          Orientation="Horizontal"
-          HorizontalOptions="FillAndExpand"
-          VerticalOptions="Start"
-          HeightRequest="{Binding ToolbarHeightProp, Source={x:Reference CustomToolbarParent}}"
-          BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}">
-
-          <Button
-              x:Name="LeftButton"
-              HorizontalOptions="Start"
-              MinimumWidthRequest="50"
-              Text="{Binding LeftButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
-              TextColor="{Binding LeftButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
-              FontSize="{Binding LeftButtonTextSizeProp, Source={x:Reference CustomToolbarParent}}"
-              Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonCheckCommand}"
-              BorderWidth="{Binding LeftButtonBorderWidthProp, Source={x:Reference CustomToolbarParent}}"
-              BorderColor="{Binding LeftButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
-              CornerRadius="{Binding LeftButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
-              Margin="20,5,0,5"
-              BackgroundColor="Transparent"
-              IsVisible="{Binding LeftButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" >
-                            <VisualState.Setters>
-                                <Setter Property="Scale"
+    <ContentView.Content>
+        <StackLayout
+            x:Name="StackParent"
+            Orientation="Vertical"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="Start"
+            HeightRequest="{Binding ToolbarHeightProp, Source={x:Reference CustomToolbarParent}}"
+            BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}"
+            Margin="0,0,0,50">
+            <StackLayout
+                Orientation="Horizontal"
+                BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}">
+                <Button
+                  x:Name="LeftButton"
+                  HorizontalOptions="Start"
+                  MinimumWidthRequest="50"
+                  Text="{Binding LeftButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
+                  TextColor="{Binding LeftButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
+                  FontSize="{Binding LeftButtonTextSizeProp, Source={x:Reference CustomToolbarParent}}"
+                  Command="{Binding Source={x:Reference CustomToolbarParent}, Path=LeftButtonCheckCommand}"
+                  BorderWidth="{Binding LeftButtonBorderWidthProp, Source={x:Reference CustomToolbarParent}}"
+                  BorderColor="{Binding LeftButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
+                  CornerRadius="{Binding LeftButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
+                  Margin="20,5,0,5"
+                  BackgroundColor="Transparent"
+                  IsVisible="{Binding LeftButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" >
+                                <VisualState.Setters>
+                                    <Setter Property="Scale"
                                         Value="0.8" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Pressed">
-                            <VisualState.Setters>
-                                <Setter Property="Scale"
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale"
                                         Value="0.6" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-          </Button>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
 
-          <Label
-              x:Name="ToolbarLabel"
-              Text="{Binding Source={x:Reference CustomToolbarParent}, Path=TitleText}"
-              Style="{StaticResource LabelStyleTitle}"
-              FontSize="{Binding LabelSizeProp, Source={x:Reference CustomToolbarParent}}"
-              TextColor="{Binding CustomTextColorProp, Source={x:Reference CustomToolbarParent}}" 
-              VerticalOptions="Center"
-              HorizontalOptions="Start"
-              Margin="20,0,0,0"/>
+                <Label
+                  x:Name="ToolbarLabel"
+                  Text="{Binding Source={x:Reference CustomToolbarParent}, Path=TitleText}"
+                  Style="{StaticResource LabelStyleTitle}"
+                  FontSize="{Binding LabelSizeProp, Source={x:Reference CustomToolbarParent}}"
+                  TextColor="{Binding CustomTextColorProp, Source={x:Reference CustomToolbarParent}}" 
+                  VerticalOptions="Center"
+                  HorizontalOptions="Start"
+                  Margin="20,0,0,0"/>
 
-          <Button
-              x:Name="RightButton"
-              MinimumWidthRequest="50"
-              Text="{Binding RightButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
-              TextColor="{Binding RightButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
-              FontSize="{Binding RightButtonTextSizeProp, Source={x:Reference CustomToolbarParent}}"
-              Command="{Binding Source={x:Reference CustomToolbarParent}, Path=RightButtonCheckCommand}"
-              BorderWidth="{Binding RightButtonBorderWidthProp, Source={x:Reference CustomToolbarParent}}"
-              BorderColor="{Binding RightButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
-              CornerRadius="{Binding RightButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
-              Margin="0,5,20,5"
-              BackgroundColor="Transparent"
-              HorizontalOptions="EndAndExpand"
-              IsVisible="{Binding RightButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" >
-                            <VisualState.Setters>
-                                <Setter Property="Scale"
+                <Button
+                  x:Name="RightButton"
+                  MinimumWidthRequest="50"
+                  Text="{Binding RightButtonTitleTextProp, Source={x:Reference CustomToolbarParent}}"
+                  TextColor="{Binding RightButtonTextColorProp, Source={x:Reference CustomToolbarParent}}"
+                  FontSize="{Binding RightButtonTextSizeProp, Source={x:Reference CustomToolbarParent}}"
+                  Command="{Binding Source={x:Reference CustomToolbarParent}, Path=RightButtonCheckCommand}"
+                  BorderWidth="{Binding RightButtonBorderWidthProp, Source={x:Reference CustomToolbarParent}}"
+                  BorderColor="{Binding RightButtonBorderColorProp, Source={x:Reference CustomToolbarParent}}"
+                  CornerRadius="{Binding RightButtonCornerRadiusProp, Source={x:Reference CustomToolbarParent}}"
+                  Margin="0,5,20,5"
+                  BackgroundColor="Transparent"
+                  HorizontalOptions="EndAndExpand"
+                  IsVisible="{Binding RightButtonIsVisibleProp, Source={x:Reference CustomToolbarParent}}">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" >
+                                <VisualState.Setters>
+                                    <Setter Property="Scale"
                                         Value="0.8" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Pressed">
-                            <VisualState.Setters>
-                                <Setter Property="Scale"
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale"
                                         Value="0.6" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-              </Button>
-      </StackLayout>
-  </ContentView.Content>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Button>
+            </StackLayout>
+            <StackLayout
+                Orientation="Horizontal"
+                HorizontalOptions="FillAndExpand" 
+                VerticalOptions="Center"
+                BackgroundColor="Transparent">
+                <Label 
+                    x:Name="ActivityIndicatorLabel"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center"
+                    HorizontalOptions="CenterAndExpand" 
+                    Style="{StaticResource LabelStyleNormal}"
+                    Text="{Binding ActivityIndicatorLabelTitleText, Source={x:Reference CustomToolbarParent}}"
+                    TextColor="{Binding ActivityIndicatorLabelTextColorProp, Source={x:Reference CustomToolbarParent}}"
+                    IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"/>
+
+                <ActivityIndicator 
+                    x:Name="ActivityIndicator"
+                    HorizontalOptions="CenterAndExpand"  
+                    WidthRequest="{Binding ActivityIndicatorWidthProp, Source={x:Reference CustomToolbarParent}}"
+                    IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
+                    IsRunning="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
+                    IsEnabled="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
+                    Color="{Binding ActivityIndicatorColorProp, Source={x:Reference CustomToolbarParent}}"
+                    Scale="{Binding ActivityIndicatorScale, Source={x:Reference CustomToolbarParent}}"/>
+
+            </StackLayout>
+        </StackLayout>
+    </ContentView.Content>
 </ContentView>

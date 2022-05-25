@@ -35,7 +35,12 @@
             RightButtonTitleTextProp="{Static resource:Resource.Settings}"
             RightButtonCommand="{Binding GoToSettingsCommand}"
             RightButtonCommandParameter="{Binding GoToSettingsCommand}"
-            RightButtonTextColorProp="White"/>
+            RightButtonTextColorProp="White"
+            ActivityIndicatorColorProp="Red"
+            ActivityIndicatorIsVisible="{Binding IsBusy}"
+            ActivityIndicatorLabelTextColorProp="Red"
+            ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+            ActivityIndicatorWidthProp="75"/>
 
         <ScrollView
             Orientation="Vertical">

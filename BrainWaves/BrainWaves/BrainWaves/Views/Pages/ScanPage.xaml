@@ -31,8 +31,13 @@
                 RightButtonTitleTextProp="{Static resource:Resource.Settings}"
                 RightButtonCommand="{Binding GoToSettingsCommand}"
                 RightButtonCommandParameter="{Binding GoToSettingsCommand}"
-                RightButtonTextColorProp="White"/>
-            
+                RightButtonTextColorProp="White"
+                ActivityIndicatorColorProp="Red"
+                ActivityIndicatorIsVisible="{Binding IsBusy}"
+                ActivityIndicatorLabelTextColorProp="Red"
+                ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+                ActivityIndicatorWidthProp="75"/>
+
             <Button
                 Style="{StaticResource ButtonStyleNormal}"
                 BorderWidth="2"
@@ -56,16 +61,6 @@
                 VerticalOptions="Center"
                 IsVisible="{Binding IsInfoVisible}"
                 TextColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"/>
-
-            <customControls:ActivityIndicatorWithLabel
-                HorizontalOptionsProp="Center"
-                VerticalOptions="Center"
-                LeftLabelIsVisible="True"
-                LeftTitleText="{Binding BusyMessage}"
-                LabelTextColorProp="ForestGreen"
-                RightLabelIsVisible="False"
-                ActivityIndicatorColorProp="ForestGreen"
-                ActivityIndicatorIsVisible="{Binding IsBusy}" />
 
             <ListView
                 ItemsSource="{Binding GattDevices}"

@@ -29,7 +29,13 @@
                     TitleText="{Binding Title}"
                     LabelSizeProp="25.0"
                     CustomTextColorProp="White"
-                    RightButtonIsVisibleProp="False"/>
+                    RightButtonIsVisibleProp="False"
+                    ActivityIndicatorColorProp="Red"
+                    ActivityIndicatorIsVisible="{Binding IsBusy}"
+                    ActivityIndicatorLabelTextColorProp="Red"
+                    ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+                    ActivityIndicatorWidthProp="75"/>
+            
             <ScrollView Orientation="Vertical">
                 <StackLayout Orientation="Vertical">
                     <customControls:SwitchWithLabel
@@ -141,7 +147,7 @@
                             VerticalTextAlignment="Center"
                             Text="{Binding ServiceUUID}"
                             Style="{StaticResource SimpleEntry}"/>
-                
+
                         <Label
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Text="{Static resource:Resource.CharacteristicSendUUIDLabel}"
@@ -155,7 +161,7 @@
                             VerticalTextAlignment="Center"
                             Text="{Binding SendCharacteristicUUID}"
                             Style="{StaticResource SimpleEntry}"/>
-                
+
                         <Label
                             IsVisible="{Binding IsAutomaticServiceChoosingActive, Converter={helpers:InverseBoolConverter}}"
                             Text="{Static resource:Resource.CharacteristicReceiveUUIDLabel}"
@@ -170,17 +176,6 @@
                             Text="{Binding ReceiveCharacteristicUUID}"
                             Style="{StaticResource SimpleEntry}"/>
                     </StackLayout>
-
-                    <customControls:ActivityIndicatorWithLabel
-                        HorizontalOptionsProp="Center"
-                        VerticalOptions="Center"
-                        LeftLabelIsVisible="True"
-                        LeftTitleText="{Binding BusyMessage}"
-                        LabelTextColorProp="ForestGreen"
-                        RightLabelIsVisible="False"
-                        ActivityIndicatorColorProp="ForestGreen"
-                        ActivityIndicatorIsVisible="{Binding IsBusy}" />
-
                 </StackLayout>
             </ScrollView>
         </StackLayout>

@@ -181,6 +181,7 @@ namespace BrainWaves.CustomControls
             set => SetValue(RightLabelIsVisibleProperty, value);
         }
         #endregion
+        #endregion
 
         #region Activity indicator
         public static readonly BindableProperty ActivityIndicatorColorProperty =
@@ -246,6 +247,6 @@ namespace BrainWaves.CustomControls
             set => SetValue(ActivityIndicatorScaleProperty, value);
         }
         #endregion
-        #endregion
+        
     }
 }

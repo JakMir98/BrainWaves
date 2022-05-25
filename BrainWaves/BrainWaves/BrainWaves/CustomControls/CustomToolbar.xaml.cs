@@ -30,7 +30,7 @@ namespace BrainWaves.CustomControls
         private static void BackgroundColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (CustomToolbar)bindable;
-            control.BackgroundColor = (Color)newValue;
+            control.StackParent.BackgroundColor = (Color)newValue;
         }
 
         public Color BackgroundColorProp
@@ -51,7 +51,7 @@ namespace BrainWaves.CustomControls
         private static void ToolbarHeightPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var control = (CustomToolbar)bindable;
-            control.HeightRequest = (double)newValue;
+            control.StackParent.HeightRequest = (double)newValue;
         }
 
         public double ToolbarHeightProp
@@ -498,6 +498,136 @@ namespace BrainWaves.CustomControls
         {
             get => (double)GetValue(RightButtonTextSizeProperty);
             set => SetValue(RightButtonTextSizeProperty, value);
+        }
+        #endregion
+
+        #region Activity indicator
+        public static readonly BindableProperty ActivityIndicatorColorProperty =
+            BindableProperty.Create(
+                nameof(ActivityIndicatorColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: Color.Gray,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: ActivityIndicatorColorPropertyChanged);
+
+        private static void ActivityIndicatorColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ActivityIndicator.Color = (Color)newValue;
+        }
+
+        public Color ActivityIndicatorColorProp
+        {
+            get => (Color)GetValue(ActivityIndicatorColorProperty);
+            set => SetValue(ActivityIndicatorColorProperty, value);
+        }
+
+        public static readonly BindableProperty ActivityIndicatorIsVisibleProperty =
+            BindableProperty.Create(
+               nameof(ActivityIndicatorIsVisible),
+               typeof(bool),
+               typeof(CustomToolbar),
+               defaultValue: true,
+               defaultBindingMode: BindingMode.OneWay,
+               propertyChanged: ActivityIndicatorIsVisiblePropertyChanged);
+
+        private static void ActivityIndicatorIsVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ActivityIndicator.IsVisible = (bool)newValue;
+        }
+
+        public bool ActivityIndicatorIsVisible
+        {
+            get => (bool)GetValue(ActivityIndicatorIsVisibleProperty);
+            set => SetValue(ActivityIndicatorIsVisibleProperty, value);
+        }
+
+        public static readonly BindableProperty ActivityIndicatorScaleProperty =
+            BindableProperty.Create(
+               nameof(ActivityIndicatorScale),
+               typeof(double),
+               typeof(CustomToolbar),
+               defaultValue: 1.0,
+               defaultBindingMode: BindingMode.OneWay,
+               propertyChanged: ActivityIndicatorScalePropertyChanged);
+
+        private static void ActivityIndicatorScalePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ActivityIndicator.Scale = (double)newValue;
+        }
+
+        public double ActivityIndicatorScale
+        {
+            get => (double)GetValue(ActivityIndicatorScaleProperty);
+            set => SetValue(ActivityIndicatorScaleProperty, value);
+        }
+
+        public static readonly BindableProperty ActivityIndicatorWidthProperty =
+            BindableProperty.Create(
+                nameof(ActivityIndicatorWidthProp),
+                typeof(double),
+                typeof(CustomToolbar),
+                defaultValue: 50.0,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: ActivityIndicatorWidthPropertyChanged);
+
+        private static void ActivityIndicatorWidthPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ActivityIndicator.WidthRequest = (double)newValue;
+        }
+
+        public double ActivityIndicatorWidthProp
+        {
+            get => (double)GetValue(ActivityIndicatorWidthProperty);
+            set => SetValue(ActivityIndicatorWidthProperty, value);
+        }
+        #endregion
+
+        #region Activity indicator label
+        public static readonly BindableProperty ActivityIndicatorLabelTitleTextProperty =
+            BindableProperty.Create(
+                nameof(ActivityIndicatorLabelTitleText),
+                typeof(string),
+                typeof(CustomToolbar),
+                defaultValue: string.Empty,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: ActivityIndicatorLabelTitleTextPropertyChanged);
+
+        private static void ActivityIndicatorLabelTitleTextPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ActivityIndicatorLabel.Text = newValue?.ToString();
+        }
+
+        public string ActivityIndicatorLabelTitleText
+        {
+            get => GetValue(ActivityIndicatorLabelTitleTextProperty)?.ToString();
+            set => SetValue(ActivityIndicatorLabelTitleTextProperty, value);
+        }
+
+        public static readonly BindableProperty ActivityIndicatorLabelTextColorProperty =
+            BindableProperty.Create(
+                nameof(ActivityIndicatorLabelTextColorProp),
+                typeof(Color),
+                typeof(CustomToolbar),
+                defaultValue: Color.White,
+                defaultBindingMode: BindingMode.OneWay,
+                propertyChanged: ActivityIndicatorLabelTextColorPropertyChanged);
+
+        private static void ActivityIndicatorLabelTextColorPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var control = (CustomToolbar)bindable;
+            control.ActivityIndicatorLabel.TextColor = (Color)newValue;
+        }
+
+        public Color ActivityIndicatorLabelTextColorProp
+        {
+            get => (Color)GetValue(ActivityIndicatorLabelTextColorProperty);
+            set => SetValue(ActivityIndicatorLabelTextColorProperty, value);
         }
         #endregion
     }
