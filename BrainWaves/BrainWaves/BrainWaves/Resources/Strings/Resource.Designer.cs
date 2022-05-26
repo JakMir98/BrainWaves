@@ -97,6 +97,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Bad samples received .
+        /// </summary>
+        internal static string BadSamplesReceived {
+            get {
+                return ResourceManager.GetString("BadSamplesReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Beta waves.
         /// </summary>
         internal static string BetaWavesText {
@@ -183,6 +192,15 @@ namespace BrainWaves.Resources.Strings {
         internal static string CalculateFFTButtonText {
             get {
                 return ResourceManager.GetString("CalculateFFTButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Stop measure.
+        /// </summary>
+        internal static string CancelMeasure {
+            get {
+                return ResourceManager.GetString("CancelMeasure", resourceCulture);
             }
         }
         

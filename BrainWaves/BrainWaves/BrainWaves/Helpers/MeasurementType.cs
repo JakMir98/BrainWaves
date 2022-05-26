@@ -4,6 +4,7 @@
     {
         TIME_FREQUENCY_MEASUREMENT,
         TEST_MEASUREMENT,
-        WAVES_MEASUREMENT
+        WAVES_MEASUREMENT,
+        NONE
     }
 }

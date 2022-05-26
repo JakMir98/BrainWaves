@@ -290,6 +290,14 @@
                 </StackLayout>
 
                 <views:GameView BindingContext="{Binding GameViewModel}"/>
+
+                <Button
+                    Style="{StaticResource ButtonStyleNormal}"
+                    WidthRequest="150"
+                    Margin="10,10,10,40"
+                    Text="{Static resource:Resource.CancelMeasure}"
+                    Command="{Binding CancelCommand}"
+                    IsVisible="{Binding IsCancelVisible}"/>
             </StackLayout>
         </ScrollView>
     </StackLayout>

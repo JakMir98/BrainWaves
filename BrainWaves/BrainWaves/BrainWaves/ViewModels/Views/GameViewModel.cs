@@ -168,7 +168,7 @@ namespace BrainWaves.ViewModels
 
         public void SetupGame()
         {
-            StopwatchGame.Start();
+            StopwatchGame.Restart();
             IsBrainRelaxViewVisible = true;
             IsBrainActivityViewVisible = false;
             LabelText = Resources.Strings.Resource.TimeForRelaxText;

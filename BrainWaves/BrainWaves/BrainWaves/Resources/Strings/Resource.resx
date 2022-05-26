@@ -411,4 +411,10 @@
   <data name="StartOneHourMeasure" xml:space="preserve">
     <value>Start 1h measure</value>
   </data>
+  <data name="CancelMeasure" xml:space="preserve">
+    <value>Stop measure</value>
+  </data>
+  <data name="BadSamplesReceived" xml:space="preserve">
+    <value>Bad samples received </value>
+  </data>
 </root>

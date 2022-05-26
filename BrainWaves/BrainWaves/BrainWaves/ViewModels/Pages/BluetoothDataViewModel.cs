@@ -30,6 +30,7 @@ namespace BrainWaves.ViewModels
         private float timeToMeasureInMins;
         private float expectedNumberOfSamples;
         private int dataPartCounter;
+        private MeasurementType currentMeasruementType;
         #region ViewVariables
         private string outputText;
         private string selectedSettings;
@@ -46,6 +47,7 @@ namespace BrainWaves.ViewModels
         private bool isTimeFreqMesVisible;
         private bool isWavesVisible;
         private bool isTestSigVisible;
+        private bool isCancelVisible;
         #endregion
         #endregion
 
@@ -58,6 +60,7 @@ namespace BrainWaves.ViewModels
         public ICommand GoToSettingsCommand { private set; get; }
         public ICommand SendTestSignalCommand { private set; get; }
         public ICommand GoToWaveChartsPageCommand { private set; get; }
+        public ICommand CancelCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -187,6 +190,12 @@ namespace BrainWaves.ViewModels
             get => isGoToWavesChartsEnabled;
             set => SetProperty(ref isGoToWavesChartsEnabled, value);
         }
+
+        public bool IsCancelVisible
+        {
+            get => isCancelVisible;
+            set => SetProperty(ref isCancelVisible, value);
+        }
         #endregion
 
         #region Functions
@@ -222,8 +231,9 @@ namespace BrainWaves.ViewModels
             SendTestSignalCommand = new Command(async () => await SendTestSignal());
             GoToWaveChartsPageCommand = new Command(async () => await GoToWavesChartPage());
             StartOnehourMeasurementCommand = new Command(async () => await StartOneHourMeasure());
+            CancelCommand = new Command(SendStopCommand);
         }
-
+        
         #region Time Freq Measurements
         private async Task StartTimeFreqMeasure()
         {
@@ -235,6 +245,7 @@ namespace BrainWaves.ViewModels
             string message = $"{Constants.StartMeasureStartMessage}{Constants.Delimeter}{samplingFreq}{Constants.Delimeter}{timeToMeasureInMins}";
             expectedNumberOfSamples = samplingFreq * timeToMeasureInMins * 60;
             Send(message);
+            IsCancelVisible = true;
 
             ProgressBarIsVisible = true;
             gameModel.SetupGame();
@@ -253,11 +264,16 @@ namespace BrainWaves.ViewModels
                     IsReadButtonEnabled = true;
                     IsGoToChartsEnabled = true;
                     gameModel.StopwatchGame.Reset();
+                    IsCancelVisible = false;
                     ProgressBarIsVisible = false;
                 }
                 else
                 {
-                    DataFromBleDevice.Add(sampleTransformService.ConvertToVoltage(stringValue));
+                    if(double.TryParse(stringValue, out var value))
+                    {
+                        DataFromBleDevice.Add(value);
+                    }
+                    //DataFromBleDevice.Add(sampleTransformService.ConvertToVoltage(stringValue));
                     OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{expectedNumberOfSamples}";
                     // todo check possible loss of samples 
                     // these actions slows down receiving samples
@@ -318,6 +334,7 @@ namespace BrainWaves.ViewModels
             IsReadButtonEnabled = false;
             IsGoToWavesChartsEnabled = false;
 
+            dataToWavesPage.Clear();
             DataFromBleDevice.Clear();
             dataPartCounter = 0;
             await StartReceiving(MeasurementType.WAVES_MEASUREMENT);
@@ -330,10 +347,10 @@ namespace BrainWaves.ViewModels
         private void SendStartTenMinuteMeasurementMessage()
         {
             int fs = 200;
-            int measureInMin = 10;
-            string message = $"{Constants.StartWavesMeasureStartMessage}{Constants.Delimeter}{fs}{Constants.Delimeter}{measureInMin}";
-            expectedNumberOfSamples = fs * measureInMin * 60; // freq * timeInMinutes * scalingToMinutes
+            string message = $"{Constants.StartWavesMeasureStartMessage}{Constants.Delimeter}{fs}{Constants.Delimeter}{Constants.DefaultTimeInMinutesForWavesMeasurement}";
+            expectedNumberOfSamples = fs * Constants.DefaultTimeInMinutesForWavesMeasurement * 60; // freq * timeInMinutes * scalingToMinutes
             Send(message);
+            IsCancelVisible = true;
         }
 
         private void ReadOneHourMeasurement(object o, CharacteristicUpdatedEventArgs args)
@@ -354,13 +371,13 @@ namespace BrainWaves.ViewModels
                         IsReadButtonEnabled = true;
                         IsGoToWavesChartsEnabled = true;
                         ProgressBarIsVisible = false;
+                        IsCancelVisible = false;
                     }
                     else
                     {
                         SendStartTenMinuteMeasurementMessage();
-                        gameModel.LabelText = Resources.Strings.Resource.TimeForRelaxText;
                     }
-                    gameModel.StopwatchGame.Reset();
+                    gameModel.SetupGame();
                 }
                 else
                 {
@@ -369,7 +386,7 @@ namespace BrainWaves.ViewModels
                         DataFromBleDevice.Add(value); // raw value
                     }
                     UpdateProgressBar(expectedNumberOfSamples);
-                    gameModel.UpdateUiGame(timeToMeasureInMins);
+                    gameModel.UpdateUiGame(Constants.DefaultTimeInMinutesForWavesMeasurement);
                 }
             });
         }
@@ -378,7 +395,7 @@ namespace BrainWaves.ViewModels
         {
             IsBusy = true;
             /* TESTING */
-            dataToWavesPage = TestSamplesGenerator.GenerateWavesSamples(128); // todo delete 
+            //dataToWavesPage = TestSamplesGenerator.GenerateWavesSamples(128); // todo delete 
             //dataToWavesPage = TestSamplesGenerator.GenerateRandomWavesSamples(128);
             /*TESTING */
 
@@ -412,6 +429,21 @@ namespace BrainWaves.ViewModels
                     StopReceiving(MeasurementType.TEST_MEASUREMENT);
                     IsReadButtonEnabled = true;
                     ProgressBarIsVisible = false;
+                    IsCancelVisible = false;
+
+                    int counter = 0;
+                    int badSamplesCounter = 0;
+                    foreach(var value in DataFromBleDevice)
+                    {
+                        int intVal = Convert.ToInt32(System.Math.Floor(value));
+                        if (intVal != Constants.SinLookUpTable[counter++])
+                        {
+                            badSamplesCounter++;
+                        }
+                    }
+
+                    OutputText += $"\n{Resources.Strings.Resource.BadSamplesReceived} {badSamplesCounter}/{DataFromBleDevice.Count}";
+                    IsGoToChartsEnabled = true;
                 }
                 else
                 {
@@ -419,16 +451,19 @@ namespace BrainWaves.ViewModels
                     {
                         DataFromBleDevice.Add(value);
                     }
-                    UpdateProgressBar(expectedNumberOfSamples);// todo check len of look up table
+                    UpdateProgressBar(Constants.SinLookUpTable.Length);// todo check len of look up table
                 }
             });
         }
 
         private async Task SendTestSignal()
         {
+            DataFromBleDevice.Clear();
             await StartReceiving(MeasurementType.TEST_MEASUREMENT);
-            string message = $"{Constants.TestSingalMessage}";
+            string message = $"{Constants.TestSingalMessage}{Constants.Delimeter}";
             Send(message);
+            IsCancelVisible = true;
+            ProgressBarIsVisible = true;
         }
 
         private async void Generate()
@@ -600,6 +635,7 @@ namespace BrainWaves.ViewModels
 
         private void StopReceiving(MeasurementType type)
         {
+            currentMeasruementType = type;
             switch (type)
             {
                 case MeasurementType.TIME_FREQUENCY_MEASUREMENT:
@@ -627,6 +663,16 @@ namespace BrainWaves.ViewModels
                     await GetCharacteristic();
                 }
             }
+        }
+
+        private void SendStopCommand()
+        {
+            Send($"{Constants.CancelMessage}{Constants.Delimeter}");
+            StopReceiving(currentMeasruementType);
+            currentMeasruementType = MeasurementType.NONE;
+            IsCancelVisible = false;
+            IsReadButtonEnabled = true;
+            ProgressBarIsVisible = false;
         }
         #endregion
 
