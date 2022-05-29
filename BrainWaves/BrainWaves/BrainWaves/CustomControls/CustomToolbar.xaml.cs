@@ -9,7 +9,7 @@ namespace BrainWaves.CustomControls
     {
         private static Color DefaultBorderColor = Color.Silver;
         private static double DefaultBorderWidth = 0.5;
-        private static int DefaultCornerRadius = 10;
+        private static int DefaultCornerRadius = 4;
         private static double DefaultLabelTextSize = 20.0;
 
         public CustomToolbar()
@@ -38,7 +38,7 @@ namespace BrainWaves.CustomControls
             get => (Color)GetValue(CustomBackgroundColorProperty);
             set => SetValue(CustomBackgroundColorProperty, value);
         }
-
+        /*
         public static readonly BindableProperty ToolbarHeightProperty =
             BindableProperty.Create(
                 nameof(ToolbarHeightProp),
@@ -58,7 +58,7 @@ namespace BrainWaves.CustomControls
         {
             get => (double)GetValue(ToolbarHeightProperty);
             set => SetValue(ToolbarHeightProperty, value);
-        }
+        }*/
         #endregion
 
         #region Label 

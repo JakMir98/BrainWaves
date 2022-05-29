@@ -9,14 +9,22 @@
              BackgroundColor="{AppThemeBinding Dark={StaticResource BackgroundColorDarkTheme}, Light={StaticResource BackgroundColorLight}}"
              x:Class="BrainWaves.Views.BluetoothDataPage">
 
-    <StackLayout
-        Orientation="Vertical">
-        <StackLayout.Margin>
+    <Grid>
+        <Grid.Margin>
             <OnPlatform x:TypeArguments="Thickness">
                 <On Platform="iOS" Value="0,20,0,0" />
             </OnPlatform>
-        </StackLayout.Margin>
+        </Grid.Margin>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="8*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
         <customControls:CustomToolbar
+            Grid.Row="0"
                 BackgroundColorProp="{StaticResource PrimaryColor}"
                 LeftButtonTextSizeProp="15.0"
                 LeftButtonIsVisibleProp="True"
@@ -39,7 +47,8 @@
                 ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
                 ActivityIndicatorWidthProp="75"/>
         
-        <ScrollView>
+        <ScrollView
+            Grid.Row="1">
             <StackLayout
                 Orientation="Vertical">
                 <StackLayout 
@@ -168,6 +177,7 @@
                         Text="{Binding HowManyTimesSendTestSignal, Mode=TwoWay}"
                         PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
                         TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
                         VerticalOptions="Center"
                         HorizontalOptions="Center"
                         Style="{StaticResource SimpleEntry}"
@@ -322,5 +332,5 @@
                 <views:GameView BindingContext="{Binding GameViewModel}"/>
             </StackLayout>
         </ScrollView>
-    </StackLayout>
+    </Grid>
 </ContentPage>

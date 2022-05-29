@@ -12,13 +12,21 @@
         <viewModels:SettingsViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <StackLayout.Margin>
+        <Grid>
+            <Grid.Margin>
                 <OnPlatform x:TypeArguments="Thickness">
                     <On Platform="iOS" Value="0,20,0,0" />
                 </OnPlatform>
-            </StackLayout.Margin>
+            </Grid.Margin>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
             <customControls:CustomToolbar
+                Grid.Row="0"
                     BackgroundColorProp="{StaticResource PrimaryColor}"
                     LeftButtonIsVisibleProp="True"
                     LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
@@ -36,7 +44,9 @@
                     ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
                     ActivityIndicatorWidthProp="75"/>
             
-            <ScrollView Orientation="Vertical">
+            <ScrollView
+                Grid.Row="1"
+                Orientation="Vertical">
                 <StackLayout Orientation="Vertical">
                     <customControls:SwitchWithLabel
                         VerticalOptions="Center"
@@ -178,6 +188,6 @@
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

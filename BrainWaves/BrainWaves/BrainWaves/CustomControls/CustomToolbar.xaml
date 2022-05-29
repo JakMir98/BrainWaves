@@ -3,16 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Name="CustomToolbarParent"
              x:Class="BrainWaves.CustomControls.CustomToolbar">
-    <ContentView.Content>
-        <StackLayout
+    <Grid
             x:Name="StackParent"
-            Orientation="Vertical"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="Start"
-            HeightRequest="{Binding ToolbarHeightProp, Source={x:Reference CustomToolbarParent}}"
-            BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}"
-            Margin="0,0,0,50">
+            BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
             <StackLayout
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
                 Orientation="Horizontal"
                 BackgroundColor="{Binding BackgroundColorProp, Source={x:Reference CustomToolbarParent}}">
                 <Button
@@ -89,33 +95,27 @@
                     </VisualStateManager.VisualStateGroups>
                 </Button>
             </StackLayout>
-            <StackLayout
-                Orientation="Horizontal"
-                HorizontalOptions="FillAndExpand" 
+            <Label
+                Grid.Column="0"
+                Grid.Row="1"
+                x:Name="ActivityIndicatorLabel"
                 VerticalOptions="Center"
-                BackgroundColor="Transparent">
-                <Label 
-                    x:Name="ActivityIndicatorLabel"
-                    VerticalOptions="Center"
-                    VerticalTextAlignment="Center"
-                    HorizontalTextAlignment="Center"
-                    HorizontalOptions="CenterAndExpand" 
-                    Style="{StaticResource LabelStyleNormal}"
-                    Text="{Binding ActivityIndicatorLabelTitleText, Source={x:Reference CustomToolbarParent}}"
-                    TextColor="{Binding ActivityIndicatorLabelTextColorProp, Source={x:Reference CustomToolbarParent}}"
-                    IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"/>
+                VerticalTextAlignment="Center"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource LabelStyleNormal}"
+                Text="{Binding ActivityIndicatorLabelTitleText, Source={x:Reference CustomToolbarParent}}"
+                TextColor="{Binding ActivityIndicatorLabelTextColorProp, Source={x:Reference CustomToolbarParent}}"
+                IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"/>
 
-                <ActivityIndicator 
-                    x:Name="ActivityIndicator"
-                    HorizontalOptions="CenterAndExpand"  
-                    WidthRequest="{Binding ActivityIndicatorWidthProp, Source={x:Reference CustomToolbarParent}}"
-                    IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
-                    IsRunning="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
-                    IsEnabled="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
-                    Color="{Binding ActivityIndicatorColorProp, Source={x:Reference CustomToolbarParent}}"
-                    Scale="{Binding ActivityIndicatorScale, Source={x:Reference CustomToolbarParent}}"/>
-
-            </StackLayout>
-        </StackLayout>
-    </ContentView.Content>
+            <ActivityIndicator
+                Grid.Column="1"
+                Grid.Row="1"
+                x:Name="ActivityIndicator"
+                WidthRequest="{Binding ActivityIndicatorWidthProp, Source={x:Reference CustomToolbarParent}}"
+                IsVisible="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
+                IsRunning="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
+                IsEnabled="{Binding ActivityIndicatorIsVisible, Source={x:Reference CustomToolbarParent}}"
+                Color="{Binding ActivityIndicatorColorProp, Source={x:Reference CustomToolbarParent}}"
+                Scale="{Binding ActivityIndicatorScale, Source={x:Reference CustomToolbarParent}}"/>
+        </Grid>
 </ContentView>

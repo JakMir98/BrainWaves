@@ -29,6 +29,7 @@ namespace BrainWaves.ViewModels
         private List<List<double>> accumulatedDataFromBle = new List<List<double>>();
         private List<TestResult> testResults = new List<TestResult>();
         private SampleTranformService sampleTransformService;
+        private ExcelService excelService;
         private int samplingFreq;
         private float timeToMeasureInMins;
         private float expectedNumberOfSamples;
@@ -229,6 +230,7 @@ namespace BrainWaves.ViewModels
         private void InitVariables()
         {
             sampleTransformService = new SampleTranformService();
+            excelService = new ExcelService();
             gameModel = new GameViewModel();
             sinwaveModel = new GenerateSinwaveViewModel();
 
@@ -550,9 +552,8 @@ namespace BrainWaves.ViewModels
                 stringBuilder.AppendLine($"{value};");
             }
             
-            ExcelService service = new ExcelService();
-            var filename = $"{Constants.TestResultFileName}-{DateTime.Now:G}.csv";
-            await service.ExportCsvFile(filename, Constants.TestResultFileName, stringBuilder.ToString());
+            var filename = $"{Constants.TestResultFileName}-{DateTime.Now:dd.MM.yyyy-HH:mm:ss}.csv";
+            await excelService.ExportCsvFile(filename, Constants.TestResultFileName, stringBuilder.ToString());
         }
 
         private async void Generate()
