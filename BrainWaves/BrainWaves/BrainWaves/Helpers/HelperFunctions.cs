@@ -113,25 +113,21 @@ namespace BrainWaves.Helpers
 
         public static BrainWaveSample GenerateBrainWavesSampleFromFFTWavesSamples(List<Sample> freqSamples)
         {
-            IEnumerable<double> alfaWaves = (from sample in freqSamples
-                                             where sample.SampleXValue >= 8 && sample.SampleXValue <= 13
-                                             select sample.SampleYValue).Cast<double>();
-            double avgAlfa = AverageYValues(alfaWaves.ToList());
+            double avgAlfa = (from sample in freqSamples
+                              where sample.SampleXValue >= 8 && sample.SampleXValue <= 13
+                              select sample.SampleYValue).Average();
 
-            IEnumerable<double> betaWaves = ((from sample in freqSamples
-                                              where sample.SampleXValue >= 3 && sample.SampleXValue <= 30
-                                              select sample.SampleYValue)).Cast<double>();
-            double avgBeta = AverageYValues(betaWaves.ToList());
+            double avgBeta = (from sample in freqSamples
+                              where sample.SampleXValue >= 3 && sample.SampleXValue <= 30
+                              select sample.SampleYValue).Average();
 
-            IEnumerable<double> thetaWaves = ((from sample in freqSamples
-                                               where sample.SampleXValue >= 4 && sample.SampleXValue <= 8
-                                               select sample.SampleYValue)).Cast<double>();
-            double avgTheta = AverageYValues(thetaWaves.ToList());
+            double avgTheta = (from sample in freqSamples
+                               where sample.SampleXValue >= 4 && sample.SampleXValue <= 8
+                               select sample.SampleYValue).Average();
 
-            IEnumerable<double> deltaWaves = ((from sample in freqSamples
-                                               where sample.SampleXValue >= 0.5 && sample.SampleXValue <= 3
-                                               select sample.SampleYValue)).Cast<double>();
-            double avgDelta = AverageYValues(deltaWaves.ToList());
+            double avgDelta = (from sample in freqSamples
+                               where sample.SampleXValue >= 0.5 && sample.SampleXValue <= 3
+                               select sample.SampleYValue).Average();
 
             return new BrainWaveSample()
                 {

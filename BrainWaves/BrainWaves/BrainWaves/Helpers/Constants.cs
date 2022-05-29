@@ -27,6 +27,7 @@ namespace BrainWaves.Helpers
         public const int DefaultNumOfExercisesToChangeLevel = 10;
         public const int DefaultNumOfMeasurementsForWaves = 6;
         public const float DefaultTimeInMinutesForWavesMeasurement = 0.1f; // 10.0
+        public const int DefaultNumOfTestSignalsToSend = 1000;
 
         public const string EnglishLanguageCode = "en-us";
         public const string PolishLanguageCode = "pl";
@@ -34,7 +35,7 @@ namespace BrainWaves.Helpers
         public const string StartWavesMeasureStartMessage = "waves";
         public const char Delimeter = ';';
         public const string EndMeasureEndMessage = "end";
-        public const string TestSingalMessage = "test";
+        public const string TestSignalMessage = "test";
         public const string CancelMessage = "cancel";
 
         public const string PrefsCurrentLanguage = "currentLanguage";
@@ -54,6 +55,7 @@ namespace BrainWaves.Helpers
         public const string PrefsSinwaveLength = "sinwaveLength";
         public const string PrefsSinwaveFreq = "sinwaveFreq";
         public const string PrefsCutoffFreqOfLowPassFilter = "cutoffFreqLowPass";
+        public const string PrefsHowManyTimesSendTestSignal = "howManyTimesSendTestSignal";
 
         public const string ExcellSheetName = "Samples";
         public static string[] ExcelSheetNames =
@@ -69,6 +71,7 @@ namespace BrainWaves.Helpers
             "Samples 8M-9M",
             "Samples 9M-10M"
         };
+        public const string TestResultFileName = "TestResult";
 
         public static SKColor[] Colors =
         {

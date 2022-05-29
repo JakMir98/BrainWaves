@@ -110,13 +110,13 @@
                     IsEnabled="{Binding IsReadButtonEnabled}"/>
 
                     <Button
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    Text="{Static resource:Resource.Charts}"
-                    Command="{Binding GoToChartsCommand}"
-                    IsEnabled="{Binding IsGoToChartsEnabled}"/>
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Style="{StaticResource ButtonStyleNormal}"
+                        Margin="10"
+                        Text="{Static resource:Resource.Charts}"
+                        Command="{Binding GoToChartsCommand}"
+                        IsEnabled="{Binding IsGoToChartsEnabled}"/>
                 </StackLayout>
 
                 <!-- WAVES MEASUREMENTS-->
@@ -147,38 +147,52 @@
 
                 <!-- TEST SIGNAL-->
                 <StackLayout
-                IsVisible="{Binding IsTestSigVisible}">
-                    <Button
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    WidthRequest="150"
-                    Margin="10"
-                    Text="{Static resource:Resource.TestSignalButton}"
-                    Command="{Binding SendTestSignalCommand}"
-                    IsEnabled="{Binding IsReadButtonEnabled}"/>
+                    IsVisible="{Binding IsTestSigVisible}">
+                     <Entry 
+                        Placeholder="Static resource:Resource.HowManyTimesToSendTestSignal"
+                        Text="{Binding HowManyTimesSendTestSingal, Mode=TwoWay}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource SimpleEntry}"
+                        Margin="20"
+                        Keyboard="Numeric"/>
 
                     <Button
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    Style="{StaticResource ButtonStyleNormal}"
-                    Margin="10"
-                    Text="{Static resource:Resource.Charts}"
-                    Command="{Binding GoToChartsCommand}"
-                    IsEnabled="{Binding IsGoToChartsEnabled}"/>
+                        Style="{StaticResource ButtonStyleNormal}"
+                        WidthRequest="150"
+                        Margin="10"
+                        Text="{Static resource:Resource.TestSignalButton}"
+                        Command="{Binding SendTestSignalCommand}"
+                        IsEnabled="{Binding IsReadButtonEnabled}"/>
+
+                    <Button
+                        Style="{StaticResource ButtonStyleNormal}"
+                        Margin="10"
+                        Text="{Static resource:Resource.Charts}"
+                        Command="{Binding GoToChartsCommand}"
+                        IsEnabled="{Binding IsGoToChartsEnabled}"/>
+
+                    <Button
+                        Style="{StaticResource ButtonStyleNormal}"
+                        Margin="10"
+                        Text="{Static resource:Resource.ExportData}"
+                        Command="{Binding ExportTestResultCommand}"
+                        IsEnabled="{Binding IsExportTestResultEnabled}"/>
 
                     <!-- GENERATE SINWAVE -->
                     <customControls:CheckboxWithLabel
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Margin="20"
-                    LabelTextColorProp="Red"
-                    CheckboxColorProp="Red"
-                    TitleText="{Static resource:Resource.GenerateSinwave}"
-                    IsChecked="{Binding IsGenerateSinwaveVisible}" />
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Margin="20"
+                        LabelTextColorProp="Red"
+                        CheckboxColorProp="Red"
+                        TitleText="{Static resource:Resource.GenerateSinwave}"
+                        IsChecked="{Binding IsGenerateSinwaveVisible}" />
 
                     <Grid Margin="20"
-                  IsVisible="{Binding IsGenerateSinwaveVisible}">
+                        IsVisible="{Binding IsGenerateSinwaveVisible}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
                             <RowDefinition Height="1*" />

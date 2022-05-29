@@ -417,4 +417,7 @@
   <data name="BadSamplesReceived" xml:space="preserve">
     <value>Bad samples received </value>
   </data>
+  <data name="HowManyTimesToSendTestSignal" xml:space="preserve">
+    <value>How many times send test signal</value>
+  </data>
 </root>

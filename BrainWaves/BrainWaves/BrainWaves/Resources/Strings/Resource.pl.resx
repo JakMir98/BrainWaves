@@ -417,4 +417,7 @@
   <data name="BadSamplesReceived" xml:space="preserve">
     <value>Otrzymano błędne próbki</value>
   </data>
+  <data name="HowManyTimesToSendTestSignal" xml:space="preserve">
+    <value>Ile razy wysłać sygnał testowy</value>
+  </data>
 </root>

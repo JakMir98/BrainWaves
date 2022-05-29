@@ -8,6 +8,8 @@ using Plugin.BLE.Abstractions.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,13 +26,14 @@ namespace BrainWaves.ViewModels
         private ICharacteristic sendCharacteristic;
         private ICharacteristic receiveCharacteristic;
         private ObservableCollection<double> dataFromBleDevice = new ObservableCollection<double>();
-        private List<List<double>> dataToWavesPage = new List<List<double>>();
+        private List<List<double>> accumulatedDataFromBle = new List<List<double>>();
+        private List<TestResult> testResults = new List<TestResult>();
         private SampleTranformService sampleTransformService;
         private int samplingFreq;
         private float timeToMeasureInMins;
         private float expectedNumberOfSamples;
-        private int dataPartCounter;
-        private MeasurementType currentMeasruementType;
+        private int dataPartCounter; // used for test samples and waves measurement
+        private MeasurementType currentMeasruementType; // keep track of which read function is currently used
         #region ViewVariables
         private string outputText;
         private string selectedSettings;
@@ -48,6 +51,8 @@ namespace BrainWaves.ViewModels
         private bool isWavesVisible;
         private bool isTestSigVisible;
         private bool isCancelVisible;
+        private int howManyTimesSendTestSignal;
+        private bool isExportTestResultEnabled;
         #endregion
         #endregion
 
@@ -61,6 +66,7 @@ namespace BrainWaves.ViewModels
         public ICommand SendTestSignalCommand { private set; get; }
         public ICommand GoToWaveChartsPageCommand { private set; get; }
         public ICommand CancelCommand { private set; get; }
+        public ICommand ExportTestResultCommand { private set; get; }
         #endregion
 
         #region Constructors
@@ -196,6 +202,27 @@ namespace BrainWaves.ViewModels
             get => isCancelVisible;
             set => SetProperty(ref isCancelVisible, value);
         }
+
+        public int HowManyTimesSendTestSignal
+        {
+            get => howManyTimesSendTestSignal;
+            set
+            {
+                int temp = 1;
+                if(value > 1)
+                {
+                    temp = value;
+                }
+                SetProperty(ref howManyTimesSendTestSignal, temp);
+                Preferences.Set(Constants.PrefsHowManyTimesSendTestSignal, temp);
+            }
+        }
+
+        public bool IsExportTestResultEnabled
+        {
+            get => isExportTestResultEnabled;
+            set => SetProperty(ref isExportTestResultEnabled, value);
+        }
         #endregion
 
         #region Functions
@@ -219,6 +246,8 @@ namespace BrainWaves.ViewModels
             };
             SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;   
             SelectedMeasurement = Resources.Strings.Resource.TimeFreqMeasurement;
+
+            HowManyTimesSendTestSignal = Preferences.Get(Constants.PrefsHowManyTimesSendTestSignal, Constants.DefaultNumOfTestSignalsToSend);
         }
 
         private void InitCommands()
@@ -228,12 +257,13 @@ namespace BrainWaves.ViewModels
             GoBackCommand = new Command(async () => await Disconnect());
             GoToSettingsCommand = new Command(async () => await GoToSettings());
             GenerateCommand = new Command(Generate);
-            SendTestSignalCommand = new Command(async () => await SendTestSignal());
+            SendTestSignalCommand = new Command(async () => await StartSendTestSignal());
             GoToWaveChartsPageCommand = new Command(async () => await GoToWavesChartPage());
             StartOnehourMeasurementCommand = new Command(async () => await StartOneHourMeasure());
             CancelCommand = new Command(SendStopCommand);
+            ExportTestResultCommand = new Command(async () => await ExportTestResult());
         }
-        
+
         #region Time Freq Measurements
         private async Task StartTimeFreqMeasure()
         {
@@ -334,7 +364,7 @@ namespace BrainWaves.ViewModels
             IsReadButtonEnabled = false;
             IsGoToWavesChartsEnabled = false;
 
-            dataToWavesPage.Clear();
+            accumulatedDataFromBle.Clear();
             DataFromBleDevice.Clear();
             dataPartCounter = 0;
             await StartReceiving(MeasurementType.WAVES_MEASUREMENT);
@@ -363,7 +393,7 @@ namespace BrainWaves.ViewModels
                 if (string.Equals(stringValue, Constants.EndMeasureEndMessage))
                 {
                     dataPartCounter++;
-                    dataToWavesPage.Add(new List<double>(DataFromBleDevice));
+                    accumulatedDataFromBle.Add(new List<double>(DataFromBleDevice));
                     DataFromBleDevice.Clear();
                     if (dataPartCounter >= Constants.DefaultNumOfMeasurementsForWaves)
                     {
@@ -400,7 +430,7 @@ namespace BrainWaves.ViewModels
             /*TESTING */
 
             List<BrainWaveSample> brainWavesSamples = new List<BrainWaveSample>();
-            foreach (var timeSamples in dataToWavesPage)
+            foreach (var timeSamples in accumulatedDataFromBle)
             {
                 List<Sample> freqSamples = new List<Sample>();
                 await Task.Run(() =>
@@ -426,24 +456,26 @@ namespace BrainWaves.ViewModels
                 var stringValue = Encoding.ASCII.GetString(receivedBytes, 0, receivedBytes.Length);
                 if (string.Equals(stringValue, Constants.EndMeasureEndMessage))
                 {
-                    StopReceiving(MeasurementType.TEST_MEASUREMENT);
-                    IsReadButtonEnabled = true;
-                    ProgressBarIsVisible = false;
-                    IsCancelVisible = false;
-
-                    int counter = 0;
-                    int badSamplesCounter = 0;
-                    foreach(var value in DataFromBleDevice)
-                    {
-                        int intVal = Convert.ToInt32(System.Math.Floor(value));
-                        if (intVal != Constants.SinLookUpTable[counter++])
-                        {
-                            badSamplesCounter++;
-                        }
-                    }
-
+                    int badSamplesCounter = CompareReceivedValuesWithLookUpTable();
+                    testResults.Add(new TestResult(DateTime.Now, DataFromBleDevice.Count, badSamplesCounter));
                     OutputText += $"\n{Resources.Strings.Resource.BadSamplesReceived} {badSamplesCounter}/{DataFromBleDevice.Count}";
-                    IsGoToChartsEnabled = true;
+                    
+                    dataPartCounter++;
+                    accumulatedDataFromBle.Add(new List<double>(DataFromBleDevice));
+                    DataFromBleDevice.Clear();
+                    if (dataPartCounter >= Constants.DefaultNumOfTestSignalsToSend)
+                    {
+                        StopReceiving(MeasurementType.TEST_MEASUREMENT);
+                        IsReadButtonEnabled = true;
+                        ProgressBarIsVisible = false;
+                        IsCancelVisible = false;
+                        IsGoToChartsEnabled = true;
+                        IsExportTestResultEnabled = true;
+                    }
+                    else
+                    {
+                        SendTestSignal();
+                    }
                 }
                 else
                 {
@@ -456,14 +488,51 @@ namespace BrainWaves.ViewModels
             });
         }
 
-        private async Task SendTestSignal()
+        private async Task StartSendTestSignal()
         {
             DataFromBleDevice.Clear();
+            dataPartCounter = 0; 
             await StartReceiving(MeasurementType.TEST_MEASUREMENT);
-            string message = $"{Constants.TestSingalMessage}{Constants.Delimeter}";
-            Send(message);
+            SendTestSignal();
             IsCancelVisible = true;
             ProgressBarIsVisible = true;
+            IsExportTestResultEnabled = false;
+        }
+
+        private void SendTestSignal()
+        {
+            string message = $"{Constants.TestSignalMessage}{Constants.Delimeter}";
+            Send(message);
+            IsCancelVisible = true;
+        }
+
+        private async Task ExportTestResult()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            //stringBuilder.Append($"{};{};{}");
+            foreach (var testResult in testResults)
+            {
+                stringBuilder.Append(testResult.DataToStringInLine());
+            }
+
+            var averagePacketsReceived = (from result in testResults
+                                          select result.NumberOfReceivedPackets).Average();
+
+            var averageIncorrectPacketsReceived = (from result in testResults
+                                                   select result.NumberOfIncorrectPacketsReceived).Average();
+            stringBuilder.Append("\n\n\n");
+            stringBuilder.Append($"Average packet received = {averagePacketsReceived}");
+            stringBuilder.Append($"Average incorrect packet received = {averageIncorrectPacketsReceived}");
+
+            var filename = $"{Constants.TestResultFileName}-{DateTime.Now}.txt";//todo change datetime format
+            var file = Path.Combine(FileSystem.CacheDirectory, filename);
+            File.WriteAllText(file, stringBuilder.ToString());
+
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = Constants.TestResultFileName,
+                File = new ShareFile(file)
+            });
         }
 
         private async void Generate()
@@ -730,6 +799,22 @@ namespace BrainWaves.ViewModels
                 IsTestSigVisible = true;
                 gameModel.IsGameVisible = false;
             }
+        }
+
+        private int CompareReceivedValuesWithLookUpTable() // returns how many bad samples received
+        {
+            int counter = 0;
+            int badSamplesCounter = 0;
+            foreach (var value in DataFromBleDevice)
+            {
+                int intVal = Convert.ToInt32(System.Math.Floor(value));
+                if (intVal != Constants.SinLookUpTable[counter++])
+                {
+                    badSamplesCounter++;
+                }
+            }
+
+            return badSamplesCounter;
         }
         #endregion
     }

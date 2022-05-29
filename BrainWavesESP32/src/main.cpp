@@ -197,6 +197,7 @@ MessageType decrypt_message(std::string inputStr)// returns 1 when start message
     else if(message.compare(TestSingalMessage) == 0)
     {
       expectedNumOfSamples = LOOKUP_TABLE_SIZE;
+      samplingFrequency = 50; 
       currentNumberOfSamples = 0;
       shouldMeasure = true;
       return TEST_MEASURE;
