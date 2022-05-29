@@ -18,6 +18,7 @@ namespace BrainWaves.Models
 		public int NumberOfReceivedPackets { get; set; }
 		public int NumberOfIncorrectPacketsReceived { get; set; }
 		public int NumberOfCorrectPacketsReceived { get => NumberOfReceivedPackets - NumberOfIncorrectPacketsReceived; }
+		public double CorrectAllRatioInPercentage { get => Math.Round((double)NumberOfCorrectPacketsReceived / NumberOfReceivedPackets * 100, 2); }
 
 		public static string StringFirstLine()
         {
@@ -26,7 +27,7 @@ namespace BrainWaves.Models
 
 		public string DataToStringInLine()
         {
-			return $"{Timestamp};{NumberOfReceivedPackets};{NumberOfIncorrectPacketsReceived}";
+			return $"{Timestamp:dd.MM.yyyy-HH:mm:ss};{NumberOfReceivedPackets};{NumberOfIncorrectPacketsReceived};{CorrectAllRatioInPercentage}%";
         }
 
 	}

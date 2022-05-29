@@ -420,4 +420,16 @@
   <data name="HowManyTimesToSendTestSignal" xml:space="preserve">
     <value>Ile razy wysłać sygnał testowy</value>
   </data>
+  <data name="TestReportIncorrectSamples" xml:space="preserve">
+    <value>Błędne próbki</value>
+  </data>
+  <data name="TestReportSamplesCount" xml:space="preserve">
+    <value>Liczba odebranych próbek</value>
+  </data>
+  <data name="TestReportTimestamp" xml:space="preserve">
+    <value>Data/czas</value>
+  </data>
+  <data name="TestReportSamplesCorrectness" xml:space="preserve">
+    <value>Poprawne dane</value>
+  </data>
 </root>

@@ -641,7 +641,7 @@ namespace BrainWaves.ViewModels
             }
             else
             {
-                excelService.ExportCsvFile(fileName, Constants.ExcellSheetName, text.ToString());
+                await excelService.ExportCsvFile(fileName, Constants.ExcellSheetName, text.ToString());
             }
 
             IsExportButtonEnabled = true;

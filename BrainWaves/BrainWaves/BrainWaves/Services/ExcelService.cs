@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BrainWaves.Helpers;
 using BrainWaves.Models;
 using DocumentFormat.OpenXml;
@@ -168,7 +169,7 @@ namespace BrainWaves.Services
             ssDoc.Close();
         }
 
-        public async void ExportCsvFile(string filename, string title, string text)
+        public async Task ExportCsvFile(string filename, string title, string text)
         {
             var file = Path.Combine(FileSystem.CacheDirectory, filename);
             File.WriteAllText(file, text);

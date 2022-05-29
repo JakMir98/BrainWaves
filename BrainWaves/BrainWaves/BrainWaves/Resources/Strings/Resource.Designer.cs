@@ -529,6 +529,15 @@ namespace BrainWaves.Resources.Strings {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu How many times send test signal.
+        /// </summary>
+        internal static string HowManyTimesToSendTestSignal {
+            get {
+                return ResourceManager.GetString("HowManyTimesToSendTestSignal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu ID.
         /// </summary>
         internal static string ID {
@@ -867,6 +876,42 @@ namespace BrainWaves.Resources.Strings {
         internal static string TestMeasurements {
             get {
                 return ResourceManager.GetString("TestMeasurements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Incorrect received samples.
+        /// </summary>
+        internal static string TestReportIncorrectSamples {
+            get {
+                return ResourceManager.GetString("TestReportIncorrectSamples", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Correct data.
+        /// </summary>
+        internal static string TestReportSamplesCorrectness {
+            get {
+                return ResourceManager.GetString("TestReportSamplesCorrectness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Samples count.
+        /// </summary>
+        internal static string TestReportSamplesCount {
+            get {
+                return ResourceManager.GetString("TestReportSamplesCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Timestamp.
+        /// </summary>
+        internal static string TestReportTimestamp {
+            get {
+                return ResourceManager.GetString("TestReportTimestamp", resourceCulture);
             }
         }
         

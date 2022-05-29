@@ -247,7 +247,7 @@ namespace BrainWaves.ViewModels
             SelectedSettings = Resources.Strings.Resource.StartSettingUserDefined;   
             SelectedMeasurement = Resources.Strings.Resource.TimeFreqMeasurement;
 
-            HowManyTimesSendTestSignal = Preferences.Get(Constants.PrefsHowManyTimesSendTestSignal, Constants.DefaultNumOfTestSignalsToSend);
+            howManyTimesSendTestSignal = Preferences.Get(Constants.PrefsHowManyTimesSendTestSignal, Constants.DefaultNumOfTestSignalsToSend);
         }
 
         private void InitCommands()
@@ -458,19 +458,18 @@ namespace BrainWaves.ViewModels
                 {
                     int badSamplesCounter = CompareReceivedValuesWithLookUpTable();
                     testResults.Add(new TestResult(DateTime.Now, DataFromBleDevice.Count, badSamplesCounter));
-                    OutputText += $"\n{Resources.Strings.Resource.BadSamplesReceived} {badSamplesCounter}/{DataFromBleDevice.Count}";
                     
                     dataPartCounter++;
                     accumulatedDataFromBle.Add(new List<double>(DataFromBleDevice));
                     DataFromBleDevice.Clear();
-                    if (dataPartCounter >= Constants.DefaultNumOfTestSignalsToSend)
+                    if (dataPartCounter >= howManyTimesSendTestSignal)
                     {
                         StopReceiving(MeasurementType.TEST_MEASUREMENT);
                         IsReadButtonEnabled = true;
                         ProgressBarIsVisible = false;
                         IsCancelVisible = false;
-                        IsGoToChartsEnabled = true;
                         IsExportTestResultEnabled = true;
+                        UpdateProgressBarTestSignal(Constants.SinLookUpTable.Length);
                     }
                     else
                     {
@@ -483,7 +482,7 @@ namespace BrainWaves.ViewModels
                     {
                         DataFromBleDevice.Add(value);
                     }
-                    UpdateProgressBar(Constants.SinLookUpTable.Length);// todo check len of look up table
+                    UpdateProgressBarTestSignal(Constants.SinLookUpTable.Length);
                 }
             });
         }
@@ -491,6 +490,7 @@ namespace BrainWaves.ViewModels
         private async Task StartSendTestSignal()
         {
             DataFromBleDevice.Clear();
+            IsReadButtonEnabled = false;
             dataPartCounter = 0; 
             await StartReceiving(MeasurementType.TEST_MEASUREMENT);
             SendTestSignal();
@@ -509,30 +509,50 @@ namespace BrainWaves.ViewModels
         private async Task ExportTestResult()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            //stringBuilder.Append($"{};{};{}");
+            stringBuilder.AppendLine($"{Resources.Strings.Resource.TestReportTimestamp};{Resources.Strings.Resource.TestReportSamplesCount};{Resources.Strings.Resource.TestReportIncorrectSamples};{Resources.Strings.Resource.TestReportSamplesCorrectness}");
             foreach (var testResult in testResults)
             {
-                stringBuilder.Append(testResult.DataToStringInLine());
+                stringBuilder.AppendLine(testResult.DataToStringInLine());
             }
 
-            var averagePacketsReceived = (from result in testResults
-                                          select result.NumberOfReceivedPackets).Average();
+            var averagePacketReceivedRounded = (float)Math.Round((from result in testResults
+                                                                  select result.NumberOfReceivedPackets).Average(), Constants.NumOfDecimalPlaces);
 
-            var averageIncorrectPacketsReceived = (from result in testResults
-                                                   select result.NumberOfIncorrectPacketsReceived).Average();
-            stringBuilder.Append("\n\n\n");
-            stringBuilder.Append($"Average packet received = {averagePacketsReceived}");
-            stringBuilder.Append($"Average incorrect packet received = {averageIncorrectPacketsReceived}");
+            var averageIncorrectPacketsReceivedRounded = (float)Math.Round((from result in testResults
+                                                                     select result.NumberOfIncorrectPacketsReceived).Average(), Constants.NumOfDecimalPlaces);
 
-            var filename = $"{Constants.TestResultFileName}-{DateTime.Now}.txt";//todo change datetime format
-            var file = Path.Combine(FileSystem.CacheDirectory, filename);
-            File.WriteAllText(file, stringBuilder.ToString());
+            var loss = (float)Math.Round((averageIncorrectPacketsReceivedRounded / averagePacketReceivedRounded) * 100, Constants.NumOfDecimalPlaces);
 
-            await Share.RequestAsync(new ShareFileRequest
+            stringBuilder.AppendLine("\nSTATISTIC:");
+            stringBuilder.AppendLine($"Average packet received = {averagePacketReceivedRounded}");
+            stringBuilder.AppendLine($"Average incorrect packet received = {averageIncorrectPacketsReceivedRounded}");
+            stringBuilder.AppendLine($"Average incorrect packets = {loss}%");
+
+            stringBuilder.AppendLine("\nRECEIVED DATA:");
+            int counter = 0;
+            while(counter < Constants.SinLookUpTable.Length)
             {
-                Title = Constants.TestResultFileName,
-                File = new ShareFile(file)
-            });
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < accumulatedDataFromBle.Count; i++)
+                {
+                    if(accumulatedDataFromBle[i].Count > counter)
+                    {
+                        builder.Append($"{accumulatedDataFromBle[i][counter]};");
+                    }
+                }
+                stringBuilder.AppendLine(builder.ToString());
+                counter++;
+            }
+
+            stringBuilder.AppendLine("\nSINE WAVE LOOK UP TABLE:");
+            foreach(var value in Constants.SinLookUpTable)
+            {
+                stringBuilder.AppendLine($"{value};");
+            }
+            
+            ExcelService service = new ExcelService();
+            var filename = $"{Constants.TestResultFileName}-{DateTime.Now:G}.csv";
+            await service.ExportCsvFile(filename, Constants.TestResultFileName, stringBuilder.ToString());
         }
 
         private async void Generate()
@@ -748,10 +768,15 @@ namespace BrainWaves.ViewModels
         private void UpdateProgressBar(float maxReceivedNumOfSamples)
         {
             OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {DataFromBleDevice.Count}/{maxReceivedNumOfSamples}";
-
             Progress = DataFromBleDevice.Count / maxReceivedNumOfSamples;
         }
-       
+
+        private void UpdateProgressBarTestSignal(float maxReceivedNumOfSamples)
+        {
+            OutputText = $"{Resources.Strings.Resource.ReceivedDataText}: {dataPartCounter}/{howManyTimesSendTestSignal}";
+            Progress = DataFromBleDevice.Count / maxReceivedNumOfSamples;
+        }
+
         private async Task GoToChartsPage()
         {
             IsBusy = true;
