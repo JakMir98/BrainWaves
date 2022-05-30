@@ -26,7 +26,7 @@ namespace BrainWaves.Helpers
         public const int DefaultMaxRandomValue = 1_000_000;
         public const int DefaultNumOfExercisesToChangeLevel = 10;
         public const int DefaultNumOfMeasurementsForWaves = 6;
-        public const float DefaultTimeInMinutesForWavesMeasurement = 0.1f; // 10.0
+        public const float DefaultTimeInMinutesForWavesMeasurement = 10.0f; // 10.0
         public const int DefaultNumOfTestSignalsToSend = 1000;
 
         public const string EnglishLanguageCode = "en-us";

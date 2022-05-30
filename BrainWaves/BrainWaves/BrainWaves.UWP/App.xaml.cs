@@ -61,10 +61,7 @@ namespace BrainWaves.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 global::Xamarin.Forms.Forms.SetFlags("Shell_UWP_Experimental");
                 Rg.Plugins.Popup.Popup.Init();
-                var assembliesToInclude = new List<Assembly>
-                {
-                    typeof(OxyPlot.Xamarin.Forms.Platform.UWP.PlotViewRenderer).GetTypeInfo().Assembly
-                };
+
                 Xamarin.Forms.Forms.Init(e, Rg.Plugins.Popup.Popup.GetExtraAssemblies());
                 ApplicationView.PreferredLaunchViewSize = new Size(800, 1000); // change size of window
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;

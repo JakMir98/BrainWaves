@@ -12,14 +12,21 @@
     <ContentPage.BindingContext>
         <viewModels:WavesViewModel/>
     </ContentPage.BindingContext>
-    <StackLayout
-        Orientation="Vertical">
-        <StackLayout.Margin>
+    <Grid>
+        <Grid.Margin>
             <OnPlatform x:TypeArguments="Thickness">
                 <On Platform="iOS" Value="0,20,0,0" />
             </OnPlatform>
-        </StackLayout.Margin>
+        </Grid.Margin>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="8*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
         <customControls:CustomToolbar
+            Grid.Row="0"
             BackgroundColorProp="{StaticResource PrimaryColor}"
             LeftButtonTextSizeProp="15.0"
             LeftButtonIsVisibleProp="True"
@@ -43,6 +50,7 @@
             ActivityIndicatorWidthProp="75"/>
 
         <ScrollView
+            Grid.Row="1"
             Orientation="Vertical">
             <StackLayout
                 Orientation="Vertical">
@@ -96,5 +104,5 @@
                     Margin="0,0,0,40"/>
             </StackLayout>
         </ScrollView>
-    </StackLayout>
+    </Grid>
 </ContentPage>
