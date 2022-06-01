@@ -21,6 +21,7 @@ namespace BrainWaves.Views
         private async void DevicesList_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             await (BindingContext as ScanViewModel).ItemClicked(sender, e);
+            ((ListView)sender).SelectedItem = null;
         }
     }
 }

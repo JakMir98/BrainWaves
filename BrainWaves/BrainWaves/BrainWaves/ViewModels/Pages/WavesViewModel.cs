@@ -86,37 +86,30 @@ namespace BrainWaves.ViewModels
             BusyMessage = Resources.Strings.Resource.SettingUpChartsMessage;
             List<ChartEntry> samples = new List<ChartEntry>();
 
-            for (int i = 0; i < brainWaveSamples.Count; i++)
-            {
-                switch (type)
-                {
-                    case ChartType.ALFA:
-                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].AlfaWave, i));
-                        break;
-                    case ChartType.BETA:
-                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].BetaWave, i));
-                        break;
-                    case ChartType.THETA:
-                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].ThetaWave, i));
-                        break;
-                    case ChartType.DELTA:
-                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].DeltaWave, i));
-                        break;
-                }
-            }
-
             switch (type)
             {
                 case ChartType.ALFA:
+                    for (int i = 0; i < brainWaveSamples.Count; i++)
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].AlfaWave, i));
+
                     AlfaWavesChart = HelperFunctions.GenerateBarChart(samples, Orientation.Horizontal);
                     break;
                 case ChartType.BETA:
+                    for (int i = 0; i < brainWaveSamples.Count; i++)
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].BetaWave, i));
+
                     BetaWavesChart = HelperFunctions.GenerateBarChart(samples, Orientation.Horizontal);
                     break;
                 case ChartType.THETA:
+                    for (int i = 0; i < brainWaveSamples.Count; i++)
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].ThetaWave, i));
+
                     ThetaWavesChart = HelperFunctions.GenerateBarChart(samples, Orientation.Horizontal);
                     break;
                 case ChartType.DELTA:
+                    for (int i = 0; i < brainWaveSamples.Count; i++)
+                        samples.Add(HelperFunctions.GenerateChartEntryForWaves(brainWaveSamples[i].DeltaWave, i));
+
                     DeltaWavesChart = HelperFunctions.GenerateBarChart(samples, Orientation.Horizontal);
                     break;
             }

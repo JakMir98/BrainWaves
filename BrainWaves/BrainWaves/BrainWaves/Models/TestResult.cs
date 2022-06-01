@@ -5,6 +5,9 @@ namespace BrainWaves.Models
 	{
 		public TestResult()
 		{
+			Timestamp = DateTime.Now;
+			NumberOfReceivedPackets = 0;
+			NumberOfIncorrectPacketsReceived = 0;
 		}
 
 		public TestResult(DateTime timestamp, int numOfReceivedPackets, int numOfIncorrectRecivedPackets)
@@ -22,7 +25,7 @@ namespace BrainWaves.Models
 
 		public static string StringFirstLine()
         {
-			return $"{nameof(Timestamp)};{nameof(NumberOfReceivedPackets)};{nameof(NumberOfIncorrectPacketsReceived)}";
+			return $"{nameof(Timestamp)};{nameof(NumberOfReceivedPackets)};{nameof(NumberOfIncorrectPacketsReceived)};{nameof(CorrectAllRatioInPercentage)}";
         }
 
 		public string DataToStringInLine()

@@ -429,9 +429,8 @@ namespace BrainWaves.ViewModels
         {
             IsBusy = true;
             /* TESTING */
-            //dataToWavesPage = TestSamplesGenerator.GenerateWavesSamples(128); // todo delete 
-            //dataToWavesPage = TestSamplesGenerator.GenerateRandomWavesSamples(128);
-            /*TESTING */
+            //accumulatedDataFromBle = TestSamplesGenerator.GenerateWavesSamples(1024); // todo delete 
+            //accumulatedDataFromBle = TestSamplesGenerator.GenerateRandomWavesSamples(128);
 
             List<BrainWaveSample> brainWavesSamples = new List<BrainWaveSample>();
             foreach (var timeSamples in accumulatedDataFromBle)
@@ -701,6 +700,7 @@ namespace BrainWaves.ViewModels
             {
                 if (receiveCharacteristic != null)
                 {
+                    currentMeasruementType = type;
                     switch (type)
                     {
                         case MeasurementType.TIME_FREQUENCY_MEASUREMENT:
@@ -725,7 +725,6 @@ namespace BrainWaves.ViewModels
 
         private void StopReceiving(MeasurementType type)
         {
-            currentMeasruementType = type;
             switch (type)
             {
                 case MeasurementType.TIME_FREQUENCY_MEASUREMENT:

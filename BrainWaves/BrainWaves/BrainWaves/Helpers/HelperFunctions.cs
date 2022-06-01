@@ -131,10 +131,10 @@ namespace BrainWaves.Helpers
 
             return new BrainWaveSample()
                 {
-                    AlfaWave = avgAlfa,
-                    BetaWave = avgBeta,
-                    ThetaWave = avgTheta,
-                    DeltaWave = avgDelta
+                    AlfaWave = Math.Round(avgAlfa, Constants.NumOfDecimalPlaces),
+                    BetaWave = Math.Round(avgBeta, Constants.NumOfDecimalPlaces),
+                    ThetaWave = Math.Round(avgTheta, Constants.NumOfDecimalPlaces),
+                    DeltaWave = Math.Round(avgDelta, Constants.NumOfDecimalPlaces)
                 };
         }
 

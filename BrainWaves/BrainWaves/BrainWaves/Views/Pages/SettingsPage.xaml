@@ -27,22 +27,22 @@
             </Grid.ColumnDefinitions>
             <customControls:CustomToolbar
                 Grid.Row="0"
-                    BackgroundColorProp="{StaticResource PrimaryColor}"
-                    LeftButtonIsVisibleProp="True"
-                    LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
-                    LeftButtonTextSizeProp="15.0"
-                    LeftButtonCommand="{Binding GoBackCommand}"
-                    LeftButtonCommandParameter="{Binding GoBackCommand}"
-                    LeftButtonTextColorProp="White"
-                    TitleText="{Binding Title}"
-                    LabelSizeProp="25.0"
-                    CustomTextColorProp="White"
-                    RightButtonIsVisibleProp="False"
-                    ActivityIndicatorColorProp="Red"
-                    ActivityIndicatorIsVisible="{Binding IsBusy}"
-                    ActivityIndicatorLabelTextColorProp="Red"
-                    ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
-                    ActivityIndicatorWidthProp="75"/>
+                BackgroundColorProp="{StaticResource PrimaryColor}"
+                LeftButtonIsVisibleProp="True"
+                LeftButtonTitleTextProp="{Static resource:Resource.GoBackText}"
+                LeftButtonTextSizeProp="15.0"
+                LeftButtonCommand="{Binding GoBackCommand}"
+                LeftButtonCommandParameter="{Binding GoBackCommand}"
+                LeftButtonTextColorProp="White"
+                TitleText="{Binding Title}"
+                LabelSizeProp="25.0"
+                CustomTextColorProp="White"
+                RightButtonIsVisibleProp="False"
+                ActivityIndicatorColorProp="Red"
+                ActivityIndicatorIsVisible="{Binding IsBusy}"
+                ActivityIndicatorLabelTextColorProp="Red"
+                ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+                ActivityIndicatorWidthProp="75"/>
             
             <ScrollView
                 Grid.Row="1"

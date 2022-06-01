@@ -14,29 +14,39 @@
     </ContentPage.BindingContext>
 
     <Grid>
-        <StackLayout Orientation="Vertical">
-            <StackLayout.Margin>
-                <OnPlatform x:TypeArguments="Thickness">
-                    <On Platform="iOS" Value="0,20,0,0" />
-                </OnPlatform>
-            </StackLayout.Margin>
-            <customControls:CustomToolbar
-                BackgroundColorProp="{StaticResource PrimaryColor}"
-                LeftButtonIsVisibleProp="False"
-                TitleText="{Binding Title}"
-                CustomTextColorProp="White"
-                LabelSizeProp="25.0"
-                RightButtonTextSizeProp="15.0"
-                RightButtonIsVisibleProp="True"
-                RightButtonTitleTextProp="{Static resource:Resource.Settings}"
-                RightButtonCommand="{Binding GoToSettingsCommand}"
-                RightButtonCommandParameter="{Binding GoToSettingsCommand}"
-                RightButtonTextColorProp="White"
-                ActivityIndicatorColorProp="Red"
-                ActivityIndicatorIsVisible="{Binding IsBusy}"
-                ActivityIndicatorLabelTextColorProp="Red"
-                ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
-                ActivityIndicatorWidthProp="75"/>
+        <Grid.Margin>
+            <OnPlatform x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,20,0,0" />
+            </OnPlatform>
+        </Grid.Margin>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="8*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        
+        <customControls:CustomToolbar
+            Grid.Row="0"
+            BackgroundColorProp="{StaticResource PrimaryColor}"
+            LeftButtonIsVisibleProp="False"
+            TitleText="{Binding Title}"
+            CustomTextColorProp="White"
+            LabelSizeProp="25.0"
+            RightButtonTextSizeProp="15.0"
+            RightButtonIsVisibleProp="True"
+            RightButtonTitleTextProp="{Static resource:Resource.Settings}"
+            RightButtonCommand="{Binding GoToSettingsCommand}"
+            RightButtonCommandParameter="{Binding GoToSettingsCommand}"
+            RightButtonTextColorProp="White"
+            ActivityIndicatorColorProp="Red"
+            ActivityIndicatorIsVisible="{Binding IsBusy}"
+            ActivityIndicatorLabelTextColorProp="Red"
+            ActivityIndicatorLabelTitleText="{Binding BusyMessage}"
+            ActivityIndicatorWidthProp="75"/>
+        <StackLayout
+            Grid.Row="1">
 
             <Button
                 Style="{StaticResource ButtonStyleNormal}"

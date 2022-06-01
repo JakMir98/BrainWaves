@@ -81,6 +81,12 @@ namespace BrainWaves.Helpers
             SkiaSharp.SKColor.Parse("#8B4513"),
             SkiaSharp.SKColor.Parse("#800080"),
             SkiaSharp.SKColor.Parse("#FF8C00"),
+            SkiaSharp.SKColor.Parse("#FF3333"),
+            SkiaSharp.SKColor.Parse("61FF33"),
+            SkiaSharp.SKColor.Parse("#33FFF6"),
+            SkiaSharp.SKColor.Parse("#3352FF"),
+            SkiaSharp.SKColor.Parse("#D733FF"),
+            SkiaSharp.SKColor.Parse("#DFFF11")
         };
 
         public static string[] WavesChartLabels =
@@ -91,6 +97,12 @@ namespace BrainWaves.Helpers
             "30 - 40 min",
             "40 - 50 min",
             "50 - 60 min",
+            "60 - 70 min",
+            "70 - 80 min",
+            "80 - 90 min",
+            "90 - 100 min",
+            "100 - 110 min",
+            "110 - 120 min"
         };
 
         public static int[] SinLookUpTable = {
