@@ -19,7 +19,7 @@
             <CheckBox 
                 x:Name="CheckboxToggle"
                 VerticalOptions="Center"
-                IsEnabled="{Binding IsControlEnabledProperty, Source={x:Reference CustomCheckboxParent}}"
+                IsEnabled="{Binding IsControlEnabled, Source={x:Reference CustomCheckboxParent}}"
                 IsChecked="{Binding IsChecked, Source={x:Reference CustomCheckboxParent}}"
                 Color="{Binding CheckboxColorProp, Source={x:Reference CustomCheckboxParent}}"/>
         </StackLayout>

@@ -95,7 +95,7 @@ namespace BrainWaves.Helpers
             return samples;
         }
 
-        public static void ApplyLowPassFilter(ref List<double> samples,int samplingFrequency, int lowPassCutoffFreq)
+        public static void ApplyLowPassFilter(ref List<double> samples, int samplingFrequency, int lowPassCutoffFreq)
         {
             double[] fValues = samples.ToArray();
             PerformZeroPaddingIfNeeded(ref fValues);

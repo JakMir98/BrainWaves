@@ -1,6 +1,7 @@
 ﻿using BrainWaves.Helpers;
 using BrainWaves.Models;
 using BrainWaves.Services;
+using BrainWaves.ViewModels.Views;
 using BrainWaves.Views;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
@@ -8,7 +9,6 @@ using Plugin.BLE.Abstractions.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -737,6 +737,7 @@ namespace BrainWaves.ViewModels
                     receiveCharacteristic.ValueUpdated -= ReadOneHourMeasurement;
                     break;
             }
+            currentMeasruementType = MeasurementType.NONE;
         }
 
         public async Task SetupCharacteristicAsync()
@@ -757,8 +758,7 @@ namespace BrainWaves.ViewModels
         private void SendStopCommand()
         {
             Send($"{Constants.CancelMessage}{Constants.Delimeter}");
-            StopReceiving(currentMeasruementType);
-            currentMeasruementType = MeasurementType.NONE;
+            StopReceiving(currentMeasruementType);            
             IsCancelVisible = false;
             IsReadButtonEnabled = true;
             ProgressBarIsVisible = false;

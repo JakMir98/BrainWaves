@@ -1,4 +1,4 @@
-﻿using BrainWaves.ViewModels;
+﻿using BrainWaves.ViewModels.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

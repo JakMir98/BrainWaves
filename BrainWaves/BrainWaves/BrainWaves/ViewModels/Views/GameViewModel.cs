@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace BrainWaves.ViewModels
+namespace BrainWaves.ViewModels.Views
 {
     public class GameViewModel : BaseViewModel
     {
