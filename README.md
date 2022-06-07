@@ -4,7 +4,7 @@
 * [Design assumptions](#design-assumptions)
 * [Technologies](#technologies)
 * [Used hardware](#used-hardware)
-* [UI] (#user-interface)
+* [UI](#user-interface)
 * [Authors](#authors)
 
 ## Design assumptions:
@@ -31,34 +31,48 @@ Project is created with:
 
 ## UI
 Scan Page
-![Scan Page - Android](https://github.com/JakMir98/BrainWaves/blob/main/Images/ScanDevices_IMG_Android.jpeg)
-![Scan Page - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/ScanDevices_IMG_MacOS.jpeg)
+<p float="left">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/ScanDevices_IMG_Android.jpg" width="250" height="500">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/ScanDevices_IMG_MacOS.png" width="500" height="500">
+</p>
 
 Generate Test Sine wave
-![Generate Test Sine wave - Android](https://github.com/JakMir98/BrainWaves/blob/main/Images/GenerateTestSinewave_IMG_Android.jpeg)
-![Generate Test Sine wave - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/GenerateTestSinewave_IMG_MacOS.jpeg)
+<p float="left">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/GenerateTestSinewave_IMG_Android.jpg" width="250" height="500">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/GenerateTestSinewave_IMG_MacOS.png" width="500" height="500">
+</p>
 
 Time and Frequency Charts
-![Time and Frequency Page - Android](https://github.com/JakMir98/BrainWaves/blob/main/Images/ChartsTimeFreq_IMG_Android.jpeg)
-![Time and Frequency Page - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/ChartsTimeFreq_IMG_MacOS.jpeg)
+<p float="left">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/ChartsTimeFreq_IMG_Android.jpg" width="250" height="500">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/ChartsTimeFreq_IMG_MacOS.png" width="500" height="500">
+</p>
 
 Settings Page
-![Settings Page - Android](https://github.com/JakMir98/BrainWaves/blob/main/Images/SettingsPage_IMG_Android.jpeg)
-![Settings Page - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/SettingsPage_IMG_MacOS.jpeg)
+<p float="left">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/SettingsPage_IMG_Android.jpg" width="250" height="500">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/SettingsPage_IMG_MacOS.png" width="500" height="500">
+</p>
 
 Simple measurement 
-![Simple measurement - Android](https://github.com/JakMir98/BrainWaves/blob/main/Images/SimpleMeasurement_IMG_Android.jpeg)
-![Simple measurement - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/SimpleMeasurement_IMG_MacOS.jpeg)
+<p float="left">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/SimpleMeasurement_IMG_Android.jpg" width="250" height="500">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/SimpleMeasurement_IMG_MacOS.png" width="500" height="500">
+</p>
 
 Brain Waves Page
-![Brain Waves Page - Android](https://github.com/JakMir98/BrainWaves/blob/main/Images/BrainWaves_IMG_Android.jpeg)
-![Brain Waves Page - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/BrainWaves_IMG_MacOS.jpeg)
+<p float="left">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/BrainWaves_IMG_Android.jpg" width="250" height="500">
+  <img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/BrainWaves_IMG_MacOS.png" width="500" height="500">
+</p>
 
 Export Test Data look
-![Test Data](https://github.com/JakMir98/BrainWaves/blob/main/Images/ExportTestData_IMG_MacOS.jpeg)
+
+<img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/ExportTestData_IMG_MacOS.png" width="500" height="500">
 
 Export Time Data
-![Settings Page - MacOS](https://github.com/JakMir98/BrainWaves/blob/main/Images/ExportTimeData_IMG_MacOS.jpeg)
+
+<img src="https://github.com/JakMir98/BrainWaves/blob/main/Images/ExportTimeData_IMG_MacOS.png" width="500" height="500">
 
 ## Authors
 Jakub Mirota, Bartosz Wójcik
