@@ -184,6 +184,24 @@
                         Margin="20,10,20,10"
                         Keyboard="Numeric"/>
 
+                    <Label
+                        Text="{Static resource:Resource.SamplingFreq}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource LabelStyleNormal}"/>
+
+                    <Entry 
+                        Placeholder="{Static resource:Resource.SamplingFreq}"
+                        Text="{Binding TestSingnalSamplingFreq, Mode=TwoWay}"
+                        PlaceholderColor="{AppThemeBinding Dark=NavajoWhite, Light={StaticResource TextColorLight}}"
+                        TextColor="{AppThemeBinding Dark=White, Light=Black}"
+                        BackgroundColor="Transparent"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource SimpleEntry}"
+                        Margin="20,10,20,10"
+                        Keyboard="Numeric"/>
+
                     <Button
                         Style="{StaticResource ButtonStyleNormal}"
                         WidthRequest="150"

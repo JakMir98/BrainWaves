@@ -167,5 +167,29 @@ namespace BrainWaves.Helpers
             avg /= samples.Count;
             return avg;
         }
+
+        public static SortedDictionary<int, int> CalculateSimpleHistogram(int[] input)
+        {
+            SortedDictionary<int, int> histogram = new SortedDictionary<int, int>();
+            foreach (int item in input)
+            {
+                if (histogram.ContainsKey(item))
+                {
+                    histogram[item]++;
+                }
+                else
+                {
+                    histogram[item] = 1;
+                }
+            }
+
+            /*
+            foreach (KeyValuePair<int, int> pair in histogram)
+            {
+                Console.WriteLine("{0} occurred {1} times", pair.Key, pair.Value);
+            }
+            */
+            return histogram;
+        }
     }
 }

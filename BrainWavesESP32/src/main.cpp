@@ -1,23 +1,4 @@
-/*
-    Video: https://www.youtube.com/watch?v=oCMOYS71NIU
-    Based on Neil Kolban example for IDF: https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/tests/BLE%20Tests/SampleNotify.cpp
-    Ported to Arduino ESP32 by Evandro Copercini
-    updated by chegewara
-    changed by jm bw
-
-   The design of creating the BLE server is:
-   1. Create a BLE Server
-   2. Create a BLE Service
-   3. Create a BLE Characteristic on the Service
-   4. Create a BLE Descriptor on the characteristic
-   5. Start the service.
-   6. Start advertising.
-
-   A connect hander associated with the server starts a background task that performs notification
-   every couple of seconds.
-
-   See the following for generating UUIDs: https://www.uuidgenerator.net/
-*/
+//Generating UUIDs: https://www.uuidgenerator.net/
 
 /**************************************************************************************\
 * Includes
@@ -29,7 +10,6 @@
 #include <BLE2902.h>
 #include <algorithm>
 #include <string>
-#include <vector>
 #include <cmath>
 
 /**************************************************************************************\
@@ -153,28 +133,6 @@ MessageType currentMessageReceived = NONE;
 /**************************************************************************************\
 * Functions
 \**************************************************************************************/
-std::vector<double> GenerateTimeVector(int samplingFrequency, int length)
-{
-  double T = (double)1 / samplingFrequency;            // % Sampling period
-  std::vector<double> t(length);
-  for (int i = 0; i < length - 1; i++)
-  {
-      t[i] = i * T;
-  }
-
-  return t;
-}
-
-std::vector<double> GenerateSinWave(int samplingFrequency, int length, float amplitude, int signalFrequency)
-{
-  std::vector<double> t = GenerateTimeVector(samplingFrequency, length);
-  std::vector<double>sinWave(length);
-  for (int i = 0; i < length; i++)
-  {
-      sinWave[i] = amplitude * sin(2 * PI * signalFrequency * t[i]);
-  }
-  return sinWave;
-}
 
 MessageType decrypt_message(std::string inputStr)// returns 1 when start message, returns 2 when cancel message, returns -1 when error
 {  
@@ -206,11 +164,21 @@ MessageType decrypt_message(std::string inputStr)// returns 1 when start message
     }
     else if(message.compare(TestSingalMessage) == 0)
     {
-      expectedNumOfSamples = LOOKUP_TABLE_SIZE;
-      samplingFrequency = 50; 
-      currentNumberOfSamples = 0;
-      shouldMeasure = true;
-      return TEST_MEASURE;
+      std::size_t secondDelimeter = inputStr.find(Delimeter, firstDelimeter+1);
+      if (secondDelimeter != std::string::npos)
+      {
+          std::string firstNum = inputStr.substr(firstDelimeter + 1, secondDelimeter - firstDelimeter - 1);
+          samplingFrequency = atoi(firstNum.c_str());
+
+          expectedNumOfSamples = LOOKUP_TABLE_SIZE;
+          currentNumberOfSamples = 0;
+          shouldMeasure = true;
+          return TEST_MEASURE;
+      }
+      else
+      {
+        return NONE;
+      }
     }
     else if (message.compare(CancelMessage) == 0)
     {
@@ -252,11 +220,11 @@ class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
 
       if(currentMessageReceived == TIME_FREQ__OR__WAVES_MEASURE)
       {
-        Serial.println("Received START message: " + String(samplingFrequency) +"hz "+ String(timeToMeasureInMinutes) + " min");
+        Serial.println("Received START message: " + String(samplingFrequency) + "hz "+ String(timeToMeasureInMinutes) + " min");
       }
       else if(currentMessageReceived == TEST_MEASURE)
       {
-        Serial.println("Received TEST message: ");
+        Serial.println("Received TEST message: " + String(samplingFrequency) + "hz ");
       }
       else if(currentMessageReceived == CANCEL_MEASURE)
       {
@@ -347,7 +315,7 @@ void loop() {
         {
           writeCharacteristic.setValue(EndMessage);
           writeCharacteristic.notify();
-           Serial.println("Sended end message");
+          Serial.println("Sended end message");
           sendEndMessage = false;
           shouldMeasure = false;
         }

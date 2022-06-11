@@ -54,6 +54,7 @@ namespace BrainWaves.ViewModels
         private bool isCancelVisible;
         private int howManyTimesSendTestSignal;
         private bool isExportTestResultEnabled;
+        private int testSingnalSamplingFreq;
         #endregion
         #endregion
 
@@ -224,6 +225,21 @@ namespace BrainWaves.ViewModels
             get => isExportTestResultEnabled;
             set => SetProperty(ref isExportTestResultEnabled, value);
         }
+
+        public int TestSingnalSamplingFreq
+        {
+            get => testSingnalSamplingFreq;
+            set
+            {
+                int temp = 50;
+                if (value >= 1 && value <= Constants.MaxSamplingFrequency)
+                {
+                    temp = value;
+                }
+                SetProperty(ref testSingnalSamplingFreq, temp);
+                Preferences.Set(Constants.PrefsTestSignalSamplingFreq, temp);
+            }
+        }
         #endregion
 
         #region Functions
@@ -250,6 +266,7 @@ namespace BrainWaves.ViewModels
             SelectedMeasurement = Resources.Strings.Resource.TimeFreqMeasurement;
 
             howManyTimesSendTestSignal = Preferences.Get(Constants.PrefsHowManyTimesSendTestSignal, Constants.DefaultNumOfTestSignalsToSend);
+            testSingnalSamplingFreq = Preferences.Get(Constants.PrefsTestSignalSamplingFreq, Constants.DefaultSinwaveFreq);
         }
 
         private void InitCommands()
@@ -502,7 +519,7 @@ namespace BrainWaves.ViewModels
 
         private void SendTestSignal()
         {
-            string message = $"{Constants.TestSignalMessage}{Constants.Delimeter}";
+            string message = $"{Constants.TestSignalMessage}{Constants.Delimeter}{testSingnalSamplingFreq}{Constants.Delimeter}";
             Send(message);
             IsCancelVisible = true;
         }
@@ -524,7 +541,7 @@ namespace BrainWaves.ViewModels
 
             var loss = (float)Math.Round((averageIncorrectPacketsReceivedRounded / averagePacketReceivedRounded) * 100, Constants.NumOfDecimalPlaces);
 
-            stringBuilder.AppendLine("\nSTATISTIC:");
+            stringBuilder.AppendLine($"\nSTATISTIC for {testSingnalSamplingFreq}Hz:");
             stringBuilder.AppendLine($"Average packet received = {averagePacketReceivedRounded}");
             stringBuilder.AppendLine($"Average incorrect packet received = {averageIncorrectPacketsReceivedRounded}");
             stringBuilder.AppendLine($"Average incorrect packets = {loss}%");
