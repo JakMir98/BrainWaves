@@ -176,7 +176,6 @@ namespace BrainWaves.ViewModels
             {
                 IsScanning = false;
             }
-            
         }
 
         public async Task ItemClicked(object sender, ItemTappedEventArgs e)

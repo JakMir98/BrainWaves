@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BrainWaves.Models;
 using Microcharts;
 using SkiaSharp;
@@ -109,33 +108,6 @@ namespace BrainWaves.Helpers
             PerformZeroPaddingIfNeeded(ref fValues);
             window.ApplyInPlace(fValues);
             samples = new List<double>(fValues);
-        }
-
-        public static BrainWaveSample GenerateBrainWavesSampleFromFFTWavesSamples(List<Sample> freqSamples)
-        {
-            double avgAlfa = (from sample in freqSamples
-                              where sample.SampleXValue >= 8 && sample.SampleXValue <= 13
-                              select sample.SampleYValue).Average();
-
-            double avgBeta = (from sample in freqSamples
-                              where sample.SampleXValue >= 3 && sample.SampleXValue <= 30
-                              select sample.SampleYValue).Average();
-
-            double avgTheta = (from sample in freqSamples
-                               where sample.SampleXValue >= 4 && sample.SampleXValue <= 8
-                               select sample.SampleYValue).Average();
-
-            double avgDelta = (from sample in freqSamples
-                               where sample.SampleXValue >= 0.5 && sample.SampleXValue <= 3
-                               select sample.SampleYValue).Average();
-
-            return new BrainWaveSample()
-                {
-                    AlfaWave = Math.Round(avgAlfa, Constants.NumOfDecimalPlaces),
-                    BetaWave = Math.Round(avgBeta, Constants.NumOfDecimalPlaces),
-                    ThetaWave = Math.Round(avgTheta, Constants.NumOfDecimalPlaces),
-                    DeltaWave = Math.Round(avgDelta, Constants.NumOfDecimalPlaces)
-                };
         }
 
         public static void PerformZeroPaddingIfNeeded(ref double[] input)

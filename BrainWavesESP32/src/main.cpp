@@ -24,6 +24,54 @@ enum MessageType
 };
 
 /**************************************************************************************\
+* BLE custom types
+\**************************************************************************************/
+class ServerCallbacks: public BLEServerCallbacks {
+    void onConnect(BLEServer* pServer) {
+      deviceConnected = true;
+      Serial.println("Connected");
+    };
+
+    void onDisconnect(BLEServer* pServer) {
+      deviceConnected = false;
+      Serial.println("Disconnected");
+    }
+};
+
+class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+      std::string value = pCharacteristic->getValue();  
+
+      currentMessageReceived = decrypt_message(value);
+
+      if(currentMessageReceived == TIME_FREQ__OR__WAVES_MEASURE)
+      {
+        Serial.println("Received START message: " + String(samplingFrequency) + "hz "+ String(timeToMeasureInMinutes) + " min");
+      }
+      else if(currentMessageReceived == TEST_MEASURE)
+      {
+        Serial.println("Received TEST message: " + String(samplingFrequency) + "hz ");
+      }
+      else if(currentMessageReceived == CANCEL_MEASURE)
+      {
+        Serial.println("Received CANCEL message: ");
+      }
+      else
+      {
+        if (value.length() > 0) 
+        {
+          Serial.println("*********");
+          Serial.print("Received value: ");
+          for (int i = 0; i < value.length(); i++)
+            Serial.print(value[i]);
+          Serial.println();
+          Serial.println("*********");
+        }
+      }
+    }
+};
+
+/**************************************************************************************\
 * Constants
 \**************************************************************************************/
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
@@ -196,54 +244,6 @@ int sample_freq_to_microseconds_delay_converter(int sampleFreq)
   double delayInMicroSeconds = (1.0/sampleFreq) * 1000000; 
   return (int) delayInMicroSeconds;
 }
-
-/**************************************************************************************\
-* BLE Functions
-\**************************************************************************************/
-class ServerCallbacks: public BLEServerCallbacks {
-    void onConnect(BLEServer* pServer) {
-      deviceConnected = true;
-      Serial.println("Connected");
-    };
-
-    void onDisconnect(BLEServer* pServer) {
-      deviceConnected = false;
-      Serial.println("Disconnected");
-    }
-};
-
-class ReadCharacteristicCallback: public BLECharacteristicCallbacks {
-    void onWrite(BLECharacteristic *pCharacteristic) {
-      std::string value = pCharacteristic->getValue();  
-
-      currentMessageReceived = decrypt_message(value);
-
-      if(currentMessageReceived == TIME_FREQ__OR__WAVES_MEASURE)
-      {
-        Serial.println("Received START message: " + String(samplingFrequency) + "hz "+ String(timeToMeasureInMinutes) + " min");
-      }
-      else if(currentMessageReceived == TEST_MEASURE)
-      {
-        Serial.println("Received TEST message: " + String(samplingFrequency) + "hz ");
-      }
-      else if(currentMessageReceived == CANCEL_MEASURE)
-      {
-        Serial.println("Received CANCEL message: ");
-      }
-      else
-      {
-        if (value.length() > 0) 
-        {
-          Serial.println("*********");
-          Serial.print("Received value: ");
-          for (int i = 0; i < value.length(); i++)
-            Serial.print(value[i]);
-          Serial.println();
-          Serial.println("*********");
-        }
-      }
-    }
-};
 
 /**************************************************************************************\
 * Main

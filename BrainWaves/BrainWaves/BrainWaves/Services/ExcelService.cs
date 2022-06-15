@@ -174,10 +174,10 @@ namespace BrainWaves.Services
             var file = Path.Combine(FileSystem.CacheDirectory, filename);
             File.WriteAllText(file, text);
 
-            await Share.RequestAsync(new ShareFileRequest
+            await Launcher.OpenAsync(new OpenFileRequest()
             {
+                File = new ReadOnlyFile(file),
                 Title = title,
-                File = new ShareFile(file)
             });
         }
     }

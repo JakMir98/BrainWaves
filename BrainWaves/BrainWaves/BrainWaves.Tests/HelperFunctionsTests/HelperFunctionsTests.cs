@@ -133,7 +133,7 @@ namespace BrainWaves.Tests.HelperFunctionTests
             }
             var expectedAverage = alfaValues.Average();
 
-            BrainWaveSample brainWaveSample = HelperFunctions.GenerateBrainWavesSampleFromFFTWavesSamples(freqSamples);
+            BrainWaveSample brainWaveSample = new BrainWaveSample(freqSamples);
 
             brainWaveSample.AlfaWave.Should().BeApproximately(expectedAverage, 0.01);
         }
@@ -152,7 +152,7 @@ namespace BrainWaves.Tests.HelperFunctionTests
             }
             var expectedAverage = betaValues.Average();
 
-            BrainWaveSample brainWaveSample = HelperFunctions.GenerateBrainWavesSampleFromFFTWavesSamples(freqSamples);
+            BrainWaveSample brainWaveSample = new BrainWaveSample(freqSamples);
 
             brainWaveSample.BetaWave.Should().BeApproximately(expectedAverage, 0.01);
         }
@@ -171,7 +171,7 @@ namespace BrainWaves.Tests.HelperFunctionTests
             }
             var expectedAverage = thetaValues.Average();
 
-            BrainWaveSample brainWaveSample = HelperFunctions.GenerateBrainWavesSampleFromFFTWavesSamples(freqSamples);
+            BrainWaveSample brainWaveSample = new BrainWaveSample(freqSamples);
 
             brainWaveSample.ThetaWave.Should().BeApproximately(expectedAverage, 0.01);
         }
@@ -190,7 +190,7 @@ namespace BrainWaves.Tests.HelperFunctionTests
             }
             var expectedAverage = deltaValues.Average();
 
-            BrainWaveSample brainWaveSample = HelperFunctions.GenerateBrainWavesSampleFromFFTWavesSamples(freqSamples);
+            BrainWaveSample brainWaveSample = new BrainWaveSample(freqSamples);
 
             brainWaveSample.DeltaWave.Should().BeApproximately(expectedAverage, 0.01);
 

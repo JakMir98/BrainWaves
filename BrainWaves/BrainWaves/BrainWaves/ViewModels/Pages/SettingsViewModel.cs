@@ -37,30 +37,10 @@ namespace BrainWaves.ViewModels
                 Resources.Strings.Resource.LanguageENG,
                 Resources.Strings.Resource.LanguagePL
             };
-            selectedLanguage = Preferences.Get(Constants.PrefsCurrentLanguage, 
-                new CultureInfo(Constants.EnglishLanguageCode, false).Name);
 
-            isAutomaticServiceChoosingActive = Preferences.Get(Constants.PrefsAutomaticServiceChossing, true);
-            serviceUUID = Preferences.Get(Constants.PrefsSavedServiceUUID, Constants.UartGattServiceId.ToString());
-            sendCharacteristicUUID = Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Constants.GattCharacteristicReceiveId.ToString());
-            receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Constants.GattCharacteristicSendId.ToString());
+            LoadPreferences();
 
-            timeToReadMindInMinutes = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
-            samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
-            shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
-            cutoffFreqOfLowPassFilter = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
-
-            OSAppTheme currentTheme = Application.Current.RequestedTheme;
-            if (currentTheme == OSAppTheme.Light)
-            {
-                IsDarkThemeOn = false;
-                Preferences.Set(Constants.PrefsTheme, Constants.PrefsLightTheme);
-            }
-            else
-            {
-                IsDarkThemeOn = true;
-                Preferences.Set(Constants.PrefsTheme, Constants.PrefsDarkTheme);
-            }
+            LoadTheme();
 
             GoBackCommand = new Command(async () => await GoBack());
         }
@@ -243,6 +223,21 @@ namespace BrainWaves.ViewModels
             }
         }
 
+        private void LoadTheme()
+        {
+            OSAppTheme currentTheme = Application.Current.RequestedTheme;
+            if (currentTheme == OSAppTheme.Light)
+            {
+                IsDarkThemeOn = false;
+                Preferences.Set(Constants.PrefsTheme, Constants.PrefsLightTheme);
+            }
+            else
+            {
+                IsDarkThemeOn = true;
+                Preferences.Set(Constants.PrefsTheme, Constants.PrefsDarkTheme);
+            }
+        }
+
         public void HandleLanguageChange(string value)
         {
             CultureInfo cultureInfo;
@@ -266,6 +261,22 @@ namespace BrainWaves.ViewModels
             {
                 Application.Current.MainPage = new NavigationPage(new ScanPage());
             }
+        }
+
+        private void LoadPreferences()
+        {
+            selectedLanguage = Preferences.Get(Constants.PrefsCurrentLanguage,
+                new CultureInfo(Constants.EnglishLanguageCode, false).Name);
+
+            isAutomaticServiceChoosingActive = Preferences.Get(Constants.PrefsAutomaticServiceChossing, true);
+            serviceUUID = Preferences.Get(Constants.PrefsSavedServiceUUID, Constants.UartGattServiceId.ToString());
+            sendCharacteristicUUID = Preferences.Get(Constants.PrefsSavedSendCharacteristicUUID, Constants.GattCharacteristicReceiveId.ToString());
+            receiveCharacteristicUUID = Preferences.Get(Constants.PrefsSavedReceiveCharacteristicUUID, Constants.GattCharacteristicSendId.ToString());
+
+            timeToReadMindInMinutes = Preferences.Get(Constants.PrefsSavedTimeToReadMindInMinutes, Constants.MinTimeToReadInMinutes);
+            samplingFrequency = Preferences.Get(Constants.PrefsSavedSamplingFrequency, Constants.MinSamplingFrequency);
+            shouldCalculateFftOnLoad = Preferences.Get(Constants.PrefsShouldCalculateFFT, false);
+            cutoffFreqOfLowPassFilter = Preferences.Get(Constants.PrefsCutoffFreqOfLowPassFilter, Constants.DefaultLowPassFilterMaxFreq);
         }
         #endregion
     }

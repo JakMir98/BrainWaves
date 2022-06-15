@@ -117,6 +117,7 @@ namespace BrainWaves.ViewModels
             IsBusy = false;
         }
         #endregion
+
         private enum ChartType
         {
             ALFA,

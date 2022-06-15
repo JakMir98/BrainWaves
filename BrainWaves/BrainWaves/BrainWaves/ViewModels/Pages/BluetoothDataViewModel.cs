@@ -445,9 +445,6 @@ namespace BrainWaves.ViewModels
         private async Task GoToWavesChartPage()
         {
             IsBusy = true;
-            /* TESTING */
-            //accumulatedDataFromBle = TestSamplesGenerator.GenerateWavesSamples(1024); // todo delete 
-            //accumulatedDataFromBle = TestSamplesGenerator.GenerateRandomWavesSamples(128);
 
             List<BrainWaveSample> brainWavesSamples = new List<BrainWaveSample>();
             foreach (var timeSamples in accumulatedDataFromBle)
@@ -455,7 +452,7 @@ namespace BrainWaves.ViewModels
                 await Task.Run(() =>
                 {
                     BusyMessage = Resources.Strings.Resource.CalculateFFT;
-                    brainWavesSamples.Add(HelperFunctions.GenerateBrainWavesSampleFromFFTWavesSamples(HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), 200)));
+                    brainWavesSamples.Add(new BrainWaveSample(HelperFunctions.GenerateFreqSamples(timeSamples.ToArray(), 200)));
                 });
             }
             IsBusy = false;
